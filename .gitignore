@@ -1,0 +1,38 @@
+# Config files
+config_inc.php
+custom_constants_inc.php
+custom_functions_inc.php
+custom_relationships_inc.php
+custom_strings_inc.php
+mantis_offline.php
+
+# Docbook builds
+docbook/*/*/builddate
+docbook/*/*/build
+docbook/*/*/install
+docbook/*/tmp
+
+# Build output
+build/
+
+# Untracked plugins
+plugins/*
+!plugins/MantisCoreFormatting
+!plugins/MantisGraph
+!plugins/XmlImportExport
+
+# IDE/Editor temporary files
+*~
+*.swp
+*.bak
+.buildpath
+.cache
+.project
+.settings
+
+# IIS7 
+web.config
+
+#libraries
+library/jpgraph
+library/FirePHPCore
