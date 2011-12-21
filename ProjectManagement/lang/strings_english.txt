@@ -5,6 +5,8 @@
    $s_plugin_ProjectManagement_est = 'Est';
    $s_plugin_ProjectManagement_done = 'Done';
    $s_plugin_ProjectManagement_todo = 'Todo';
+   $s_plugin_ProjectManagement_diff = 'Difference';
+   $s_plugin_ProjectManagement_total = 'total';
    
    $s_plugin_ProjectManagement_worktype = 'Type of work';
 ?>

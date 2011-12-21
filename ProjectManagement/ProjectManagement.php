@@ -89,20 +89,43 @@ class ProjectManagementPlugin extends MantisPlugin {
 		
 		# Get the different worktypes as an array
 		$t_worktypes = MantisEnum::getAssocArrayIndexedByValues( plugin_config_get( 'worktypes' ) );
+		if ( sizeof( $t_worktypes ) > 1 ) {
+			$t_worktypes[PLUGIN_PM_WORKTYPE_TOTAL] = plugin_lang_get( 'total' );
+		}
 		
 		# Build a two-dimentional array with the data
 		$t_work = array(PLUGIN_PM_EST => array(), PLUGIN_PM_DONE => array(), PLUGIN_PM_TODO => array());
 		for ( $i=0; $i < $num_fetch_est; $i++ ) {
 			$row = db_fetch_array( $result_fetch_est );
-			$t_work[PLUGIN_PM_EST][$row["work_type"]] = number_format($row["est"], 2, '.', ',');
+			$t_work[PLUGIN_PM_EST][$row["work_type"]] = $row["est"];
+			$t_work[PLUGIN_PM_EST][PLUGIN_PM_WORKTYPE_TOTAL] += $row["est"];
 		}
 		for ( $i=0; $i < $num_fetch_done; $i++ ) {
 			$row = db_fetch_array( $result_fetch_done );
-			$t_work[PLUGIN_PM_DONE][$row["work_type"]] = number_format($row["done"], 2, '.', ',');
+			$t_work[PLUGIN_PM_DONE][$row["work_type"]] = $row["done"];
+			$t_work[PLUGIN_PM_DONE][PLUGIN_PM_WORKTYPE_TOTAL] += $row["done"];
 		}
 		for ( $i=0; $i < $num_fetch_todo; $i++ ) {
 			$row = db_fetch_array( $result_fetch_todo );
-			$t_work[PLUGIN_PM_TODO][$row["work_type"]] = number_format($row["todo"], 2, '.', ',');
+			$t_work[PLUGIN_PM_TODO][$row["work_type"]] = $row["todo"];
+			$t_work[PLUGIN_PM_TODO][PLUGIN_PM_WORKTYPE_TOTAL] += $row["todo"];
+		}
+		
+		foreach ( $t_work[PLUGIN_PM_EST] as $t_worktype_code => $t_worktype_label ) {
+			# Calculate remaining
+			if ( $t_work[PLUGIN_PM_EST][$t_worktype_code] !== null ) {
+				$t_work[PLUGIN_PM_REMAINING][$t_worktype_code] = 
+					$t_work[PLUGIN_PM_EST][$t_worktype_code] 
+						- $t_work[PLUGIN_PM_DONE][$t_worktype_code];
+				
+				# Calculate difference between remaining and todo
+				if ( $t_work[PLUGIN_PM_TODO][$t_worktype_code] !== null ) {
+					$t_work[PLUGIN_PM_DIFF][$t_worktype_code] =
+					$t_work[PLUGIN_PM_EST][$t_worktype_code] 
+						- $t_work[PLUGIN_PM_DONE][$t_worktype_code] 
+						- $t_work[PLUGIN_PM_TODO][$t_worktype_code];
+				}
+			}
 		}
 
 		echo ( '<br />' );
@@ -125,18 +148,42 @@ class ProjectManagementPlugin extends MantisPlugin {
 				</td>
 				<td><div align="center"><?php echo plugin_lang_get( 'todo' ) ?></div>
 				</td>
+				<td><div align="center"><?php echo plugin_lang_get( 'diff' ) ?></div>
+				</td>
 			</tr>
 		<?php 
 		foreach ( $t_worktypes as $t_worktype_code => $t_worktype_label ) {
-		?>
-		<tr <?php echo helper_alternate_class() ?>>
-		<td class="category"><?php echo $t_worktype_label ?></td> 
-		<td><?php echo $t_work[PLUGIN_PM_EST][$t_worktype_code] ?></td>
-		<td><?php echo $t_work[PLUGIN_PM_DONE][$t_worktype_code] ?></td>
-		<td><?php echo $t_work[PLUGIN_PM_TODO][$t_worktype_code] ?></td>
-		</tr>
-		<?php 
-			}
+			?>
+			<tr <?php echo ( $t_worktype_code == PLUGIN_PM_WORKTYPE_TOTAL ? 
+					'class="row-category-history"' : helper_alternate_class() ) ?>>
+					
+				<td class="category"><?php echo $t_worktype_label ?></td> 
+				
+				<td><?php echo hours_to_time( $t_work[PLUGIN_PM_EST][$t_worktype_code], true ) ?></td>
+				
+				<td><?php echo hours_to_time( $t_work[PLUGIN_PM_DONE][$t_worktype_code], true ) ?></td>
+				
+				<?php 
+				if ( $t_work[PLUGIN_PM_TODO][$t_worktype_code] === null ) {
+					# When todo was not supplied, display calculated remainder instead, in italic
+				?>
+				<td class="italic"><?php echo hours_to_time( $t_work[PLUGIN_PM_REMAINING][$t_worktype_code], true ) ?></td>
+				<?php 
+				}
+				else {
+					# Todo was supplied, so display that
+				?>
+				<td><?php echo hours_to_time( $t_work[PLUGIN_PM_TODO][$t_worktype_code], true ) ?></td>
+				<?php
+				}
+				?>
+				
+				<td <?php echo ( $t_work[PLUGIN_PM_DIFF][$t_worktype_code] < 0 ? 'class="negative"' : 'class="positive"' )  ?>>
+					<?php echo hours_to_time( abs( $t_work[PLUGIN_PM_DIFF][$t_worktype_code] ), true ) ?></td>
+				
+			</tr>
+			<?php 
+		}
 		?>
 		</table>
 		<?php 
@@ -145,8 +192,11 @@ class ProjectManagementPlugin extends MantisPlugin {
 		
 		<table class="width100" cellspacing="1">
 			<tr>
-				<td class="form-title" colspan="2"><?php collapse_icon( 'plugin_pm_time_reg' ); ?>
-					Project Management</td>
+				<td class="form-title" colspan="2">
+				<?php 
+				collapse_icon( 'plugin_pm_time_reg' ); 
+				echo plugin_lang_get( 'time_registration' );
+				?></td>
 			</tr>
 		</table>
 		
