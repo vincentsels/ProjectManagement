@@ -26,7 +26,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 						work_type          I2      NOTNULL DEFAULT 50,
 						minutes_type       I2      NOTNULL DEFAULT 0,
 						minutes            I 	   NOTNULL DEFAULT 0,
-						bookdate           I,
+						book_date          I,
 						timestamp          I
 						" ) ),
 				array( 'CreateIndexSQL', array( 'idx_plugin_pm_work_bug_id',
@@ -37,7 +37,11 @@ class ProjectManagementPlugin extends MantisPlugin {
 
 	function config() {
 		return array(
-				'worktypes'   => '20:analysis,50:development,80:testing'
+				'worktypes'   => '20:analysis,50:development,80:testing',
+				'edit_estimates_threshold' => MANAGER,
+				'include_bookdate_threshold' => DEVELOPER,
+				'view_details_threshold' => UPDATER,
+				'change_bookdate_threshold' => MANAGER
 		);
 	}
 
@@ -49,6 +53,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 
 	function init() {
 		require_once( 'ProjectManagementAPI.php' );
+		require_once( 'date_api.php' );
 	}
 
 	/**
@@ -139,7 +144,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 		}
 
 		?>
-		<br /><a name="time_registration" id="time_registration" />
+		<br /><a name="time_registration" id="time_registration"></a>
 		<?php
 		collapse_open( 'plugin_pm_time_reg' );
 		?>
@@ -154,16 +159,17 @@ class ProjectManagementPlugin extends MantisPlugin {
 				<?php
 				collapse_icon( 'plugin_pm_time_reg' );
 				echo plugin_lang_get( 'time_registration' );
-				?></td>
+				?>
+				</td>
 			</tr>
 			<tr class="row-category">
-				<td><div align="center"><?php echo plugin_lang_get( 'worktype' ) ?></div>
+				<td width="20%"><div align="center"><?php echo plugin_lang_get( 'worktype' ) ?></div>
 				</td>
-				<td colspan="2"><div align="center"><?php echo plugin_lang_get( 'est' ) ?></div>
+				<td><div align="center"><?php echo plugin_lang_get( 'est' ) ?></div>
 				</td>
-				<td colspan="2"><div align="center"><?php echo plugin_lang_get( 'done' ) ?></div>
+				<td width="20%"><div align="center"><?php echo plugin_lang_get( 'done' ) ?></div>
 				</td>
-				<td colspan="2"><div align="center"><?php echo plugin_lang_get( 'todo' ) ?></div>
+				<td width="25%"><div align="center"><?php echo plugin_lang_get( 'todo' ) ?></div>
 				</td>
 				<td><div align="center"><?php echo plugin_lang_get( 'diff' ) ?></div>
 				</td>
@@ -176,42 +182,55 @@ class ProjectManagementPlugin extends MantisPlugin {
 					
 				<td class="category"><?php echo $t_worktype_label ?></td> 
 				
-				<td><?php echo minutes_to_time( $t_work[PLUGIN_PM_EST][$t_worktype_code] ) ?></td>
-				<?php if ( $t_worktype_code != PLUGIN_PM_WORKTYPE_TOTAL ) { ?>
-				<td>= <input type="text" size="4" maxlength="7" name= <?php echo '"change_' . PLUGIN_PM_EST . '_' . $t_worktype_code . '"' ?>></td>
+				<td>
 				<?php 
-				} else {
-					echo '<td />';
-				}?>
+				echo minutes_to_time( $t_work[PLUGIN_PM_EST][$t_worktype_code], true );
+				if ( $t_worktype_code != PLUGIN_PM_WORKTYPE_TOTAL && 
+						( empty( $t_work[PLUGIN_PM_EST][$t_worktype_code] ) || 
+								access_has_bug_level( plugin_config_get( 'edit_estimates_threshold' ), $p_bug_id )  ) ) { 
+					# Check whether est was already supplied, or user has rights to alter it regardless
+					?>
+					-> <input type="text" size="4" maxlength="7" autocomplete="off" name= <?php echo '"change_' . PLUGIN_PM_EST . '_' . $t_worktype_code . '"' ?>>
+					<?php 
+				}
+				?>
+				</td>
 				
-				<td><?php echo minutes_to_time( $t_work[PLUGIN_PM_DONE][$t_worktype_code] ) ?></td>
-				<?php if ( $t_worktype_code != PLUGIN_PM_WORKTYPE_TOTAL ) { ?>
-				<td>+ <input type="text" size="4" maxlength="7" name= <?php echo '"add_' . PLUGIN_PM_DONE . '_' . $t_worktype_code . '"' ?>></td>
+				<td>
 				<?php 
-				} else {
-					echo '<td />';
-				}?>
+				echo minutes_to_time( $t_work[PLUGIN_PM_DONE][$t_worktype_code], false );
+				if ( $t_worktype_code != PLUGIN_PM_WORKTYPE_TOTAL ) { 
+					?>
+					+ <input type="text" size="4" maxlength="7" autocomplete="off" name= <?php echo '"add_' . PLUGIN_PM_DONE . '_' . $t_worktype_code . '"' ?>>
+					<?php 
+				}
+				?>
+				</td>
 				
 				<?php 
 				if ( empty ( $t_work[PLUGIN_PM_TODO][$t_worktype_code] ) ) {
 					# When todo was not supplied, display calculated remainder instead, in italic
-				?>
-				<td class="italic"><?php echo minutes_to_time( $t_work[PLUGIN_PM_REMAINING][$t_worktype_code] ) ?></td>
-				<?php 
+					?>
+					<td class="italic"><?php echo minutes_to_time( $t_work[PLUGIN_PM_REMAINING][$t_worktype_code], false ) ?>
+					<?php 
 				} else {
 					# Todo was supplied, so display that
-				?>
-				<td><?php echo minutes_to_time( $t_work[PLUGIN_PM_TODO][$t_worktype_code] ) ?></td>
-				<?php
+					?>
+					<td><?php echo minutes_to_time( $t_work[PLUGIN_PM_TODO][$t_worktype_code], false ) ?>
+					<?php
+				}
+				if ( $t_worktype_code != PLUGIN_PM_WORKTYPE_TOTAL ) { 
+					?>
+					-> <input type="text" size="4" maxlength="7" autocomplete="off" name= <?php echo '"change_' . PLUGIN_PM_TODO . '_' . $t_worktype_code . '"' ?>> 
+					<?php 
+					if ( !empty ( $t_work[PLUGIN_PM_TODO][$t_worktype_code] ) ) {
+						?>
+						<input type="checkbox" name= <?php echo '"clear_' . PLUGIN_PM_TODO . '_' . $t_worktype_code . '"' ?>> <?php echo plugin_lang_get( 'clear' ) ?>
+					<?php 
+					}
 				}
 				?>
-				<?php if ( $t_worktype_code != PLUGIN_PM_WORKTYPE_TOTAL ) { ?>
-				<td>= <input type="text" size="4" maxlength="7" name= <?php echo '"change_' . PLUGIN_PM_TODO . '_' . $t_worktype_code . '"' ?>> 
-				<input type="checkbox" name= <?php echo '"clear_' . PLUGIN_PM_TODO . '_' . $t_worktype_code . '"' ?>> <?php echo plugin_lang_get( 'clear' ) ?></td>
-				<?php 
-				} else {
-					echo '<td />';
-				}?>
+				</td>
 				
 				<td <?php echo ( $t_work[PLUGIN_PM_DIFF][$t_worktype_code] < 0 ? 'class="negative"' : 'class="positive"' )  ?>>
 					<?php echo minutes_to_time( abs( $t_work[PLUGIN_PM_DIFF][$t_worktype_code] ) ) ?></td>
@@ -222,7 +241,17 @@ class ProjectManagementPlugin extends MantisPlugin {
 		?>
 		
 		<tr>
-		<td><input name="submit" type="submit" value="<?php echo lang_get( 'update' ) ?>"></td>
+		<td colspan="100%">
+		<input name="submit" type="submit" value="<?php echo lang_get( 'update' ) ?>">
+		<?php
+			if ( access_has_bug_level( plugin_config_get( 'include_bookdate_threshold' ), $p_bug_id ) ) {
+				echo plugin_lang_get( 'book_date' ) . ': ';
+				echo '<input type="text" size="8" maxlength="10" autocomplete="off" id="book_date" name="book_date" size="20" maxlength="16" value="' . date('d/m/Y') . '">';
+				date_print_calendar();
+				date_finish_calendar( 'book_date', 'trigger');
+			}
+		?>
+		</td>
 		</tr>
 		</table>
 		<?php 

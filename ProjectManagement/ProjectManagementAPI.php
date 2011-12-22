@@ -55,7 +55,7 @@ function time_to_minutes( $p_time, $p_throw_error_on_invalid_input = true ) {
 	$t_time_array = explode( ':', $p_time );
 	
 	foreach ( $t_time_array as $t_value ) {
-		if ( !is_numeric( $t_value ) ) {
+		if ( !is_numeric( $t_value ) || $t_value < 0 ) {
 			if ( $p_throw_error_on_invalid_input ) {
 				trigger_error( ERROR_CUSTOM_FIELD_INVALID_VALUE, E_USER_ERROR );
 			} else {
@@ -78,7 +78,7 @@ function time_to_minutes( $p_time, $p_throw_error_on_invalid_input = true ) {
 		# User entered HH
 		$t_minutes += $t_time_array[0] * 60;
 	} else {
-		if ( $p_throw_error_on_invalid_input ) {
+		if ( $p_throw_error_on_invalid_input || $t_value < 0 ) {
 			trigger_error( ERROR_CUSTOM_FIELD_INVALID_VALUE, E_USER_ERROR );
 		} else {
 			return null;
@@ -88,7 +88,7 @@ function time_to_minutes( $p_time, $p_throw_error_on_invalid_input = true ) {
 	return $t_minutes;
 }
 
-function set_work( $p_bug_id, $p_work_type, $p_minutes_type, $p_minutes, $p_action ) {
+function set_work( $p_bug_id, $p_work_type, $p_minutes_type, $p_minutes, $p_book_date, $p_action ) {
 	$t_rows_affected = 0;
 	$t_table = plugin_table('work');
 	$t_user_id = auth_get_current_user_id();
@@ -96,9 +96,9 @@ function set_work( $p_bug_id, $p_work_type, $p_minutes_type, $p_minutes, $p_acti
 	
 	if ( $p_action == ACTION::UPDATE || $p_action == ACTION::INSERT_OR_UPDATE ) {
 		#Update and check for rows affected
-		$t_query = 'UPDATE ' . $t_table . ' SET minutes=' . db_param() . ', timestamp =' . db_param() . ', user_id=' . db_param() .
+		$t_query = 'UPDATE ' . $t_table . ' SET minutes=' . db_param() . ', timestamp =' . db_param() . ', user_id=' . db_param() . ', book_date=' . db_param() .
 				' WHERE bug_id=' . db_param() . ' AND work_type=' . db_param(). ' AND minutes_type=' . db_param();
-		$t_fields = array( $p_minutes, $t_timestamp, $t_user_id, 
+		$t_fields = array( $p_minutes, $t_timestamp, $t_user_id, $p_book_date,
 				$p_bug_id, $p_work_type, $p_minutes_type );
 		db_query_bound( $t_query, $t_fields );
 		$t_rows_affected = db_affected_rows();
@@ -106,14 +106,14 @@ function set_work( $p_bug_id, $p_work_type, $p_minutes_type, $p_minutes, $p_acti
 	if ( $p_action == ACTION::INSERT || ( $p_action == ACTION::INSERT_OR_UPDATE && $t_rows_affected == 0 )) {
 		#Insert and check for rows affected
 		$t_query = "INSERT INTO $t_table ( bug_id, user_id, work_type, minutes_type, 
-					minutes, bookdate, timestamp ) VALUES ( " .
+					minutes, book_date, timestamp ) VALUES ( " .
 					db_param() . ', ' . db_param() . ', ' . db_param() . ', ' . db_param() . ', ' . 
 					db_param() . ', ' . db_param() . ', ' . db_param() . ')';
 		$t_fields = array( $p_bug_id, $t_user_id, $p_work_type, $p_minutes_type,
-				$p_minutes, $t_timestamp, $t_timestamp );
+				$p_minutes, $p_book_date, $t_timestamp );
 		db_query_bound( $t_query, $t_fields );
 		$t_rows_affected = db_affected_rows();
-	}
+	} 
 	else if ( $p_action == ACTION::DELETE ) {
 		#Delete and check for rows affected
 		$t_query = "DELETE FROM $t_table WHERE bug_id=" . db_param() . ' AND work_type=' . db_param() . ' AND minutes_type=' . db_param();
