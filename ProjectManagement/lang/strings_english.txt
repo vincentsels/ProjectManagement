@@ -9,4 +9,6 @@
    $s_plugin_ProjectManagement_total = 'total';
    
    $s_plugin_ProjectManagement_worktype = 'Type of work';
+   
+   $s_plugin_ProjectManagement_clear = 'Clear';
 ?>
