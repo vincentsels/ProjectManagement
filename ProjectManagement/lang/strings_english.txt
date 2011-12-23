@@ -1,19 +1,29 @@
 <?php
-   $s_plugin_ProjectManagement_title = 'Project Management';
-   $s_plugin_ProjectManagement_time_registration = 'Time registration';
+	$s_plugin_ProjectManagement_title = 'Project Management';
+	$s_plugin_ProjectManagement_configuration = 'Configuration';
    
-   $s_plugin_ProjectManagement_work_type = 'Type of work';
-   $s_plugin_ProjectManagement_est = 'Est';
-   $s_plugin_ProjectManagement_done = 'Done';
-   $s_plugin_ProjectManagement_todo = 'Todo';
-   $s_plugin_ProjectManagement_diff = 'Difference';
-   $s_plugin_ProjectManagement_total = 'total';
+	$s_plugin_ProjectManagement_work_type = 'Type of work';
+	$s_plugin_ProjectManagement_est = 'Est';
+	$s_plugin_ProjectManagement_done = 'Done';
+	$s_plugin_ProjectManagement_todo = 'Todo';
+	$s_plugin_ProjectManagement_diff = 'Difference';
+	$s_plugin_ProjectManagement_total = 'total';
    
-   $s_plugin_ProjectManagement_clear = 'Clear';
-   $s_plugin_ProjectManagement_book_date = 'Book date';
-   $s_plugin_ProjectManagement_reports = 'Project management';
-   $s_plugin_ProjectManagement_time_division = 'Time division';
-   $s_plugin_ProjectManagement_resource_allocation = 'Resource allocation';
-   $s_plugin_ProjectManagement_period = 'Period';
-   $s_plugin_ProjectManagement_hours = 'Hours';
+	$s_plugin_ProjectManagement_clear = 'Clear';
+	$s_plugin_ProjectManagement_book_date = 'Book date';
+	$s_plugin_ProjectManagement_reports = 'Project management';
+	$s_plugin_ProjectManagement_time_division = 'Time division';
+	$s_plugin_ProjectManagement_time_registration = 'Time registration';
+	$s_plugin_ProjectManagement_resource_allocation = 'Resource allocation';
+	$s_plugin_ProjectManagement_period = 'Period';
+	$s_plugin_ProjectManagement_hours = 'Hours';
+   
+	$s_plugin_ProjectManagement_work_types = 'Types of work';
+	$s_plugin_ProjectManagement_work_types_info = 'An enumeration containing the differend kinds of work someone can perform on a ticket. Use only one to ignore this feature.';
+	$s_plugin_ProjectManagement_edit_estimates_threshold = 'Edit estimations threshold';
+	$s_plugin_ProjectManagement_edit_estimates_threshold_info = 'Once a starting estimation was supplied for a certain ticket and type of work, it can no longer by modified unless with this permission.';
+	$s_plugin_ProjectManagement_include_bookdate_threshold = 'Include bookdate threshold';
+	$s_plugin_ProjectManagement_include_bookdate_threshold_info = 'Allows users with this security profile or higher to include a different book date when registring hours worked.';
+	$s_plugin_ProjectManagement_view_reports_threshold = 'View reports threshold';
+	$s_plugin_ProjectManagement_view_reports_threshold_info = 'Allows access to various project management reports';
 ?>

@@ -40,7 +40,8 @@ class ProjectManagementPlugin extends MantisPlugin {
 				'work_types'   => '20:analysis,50:development,80:testing',
 				'edit_estimates_threshold' => MANAGER,
 				'include_bookdate_threshold' => REPORTER,
-				'view_reports_threshold' => DEVELOPER
+				'view_reports_threshold' => DEVELOPER,
+          		'admin_threshold'  => ADMINISTRATOR
 		);
 	}
 
