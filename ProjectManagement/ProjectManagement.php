@@ -60,7 +60,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 	function main_menu( $p_event, $p_bug_id ) {
 		$t_reports_page = plugin_page( 'report_registration_page', false );
 		$t_pagename = plugin_lang_get( 'reports' );
-		if ( access_has_project_level( plugin_config_get( 'view_reports_threshold' ) ) ) {
+		if ( access_has_global_level( plugin_config_get( 'view_reports_threshold' ) ) ) {
 			return '<a href="' . $t_reports_page . '">' . $t_pagename . '</a>';
 		}
 	}

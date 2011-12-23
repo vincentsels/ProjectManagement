@@ -1,16 +1,18 @@
 <?php
 
+access_ensure_global_level( plugin_config_get( 'view_reports_threshold' ) );
+
 html_page_top1( plugin_lang_get( 'title' ) );
 html_page_top2();
 
-print_pm_reports_menu( 'report_registration_page.php' );
+print_pm_reports_menu( 'report_registration_page' );
 
 $f_period_start = gpc_get_string( 'period_start', first_day_of_month( 0 ) );
 $f_period_end = gpc_get_string( 'period_end', last_day_of_month( 0 ) );
 $f_user_id = gpc_get_int( 'user_id', ALL_USERS );
 $f_project_id = gpc_get_int( 'project_id', helper_get_current_project() );
-
-access_ensure_project_level( plugin_config_get( 'view_reports_threshold' ), $f_project_id );
+$f_work_type = gpc_get_int( 'work_type', null );
+$f_category_id = gpc_get_int( 'category_id', null );
 
 $t_work_table = plugin_table('work');
 $t_user_table = db_get_table( 'mantis_user_table' );
@@ -19,8 +21,8 @@ $t_project_table = db_get_table( 'mantis_project_table' );
 $t_category_table = db_get_table( 'mantis_category_table' );
 $t_work_types = MantisEnum::getAssocArrayIndexedByValues( plugin_config_get( 'work_types' ) );
 
-$t_query = "SELECT w.user_id, u.username, w.book_date, b.project_id, p.name as project_name, c.name as category_name, 
-				 b.id as bug_id, b.summary as bug_summary, 
+$t_query = "SELECT w.user_id, u.username, w.book_date, b.project_id, p.name as project_name, 
+				 c.id as category_id, c.name as category_name, b.id as bug_id, b.summary as bug_summary, 
 				 w.work_type, w.minutes
             FROM $t_work_table w
        LEFT JOIN $t_bug_table b ON w.bug_id = b.id
@@ -39,10 +41,19 @@ if ( $f_project_id != ALL_PROJECTS ) {
 	$t_params[] = $f_project_id;
 }
 
-
 if ( $f_user_id != ALL_USERS ) {
 	$t_query .= " AND w.user_id = " . db_param();
 	$t_params[] = $f_user_id;
+}
+
+if ( !empty( $f_work_type ) ) {
+	$t_query .= " AND w.work_type = " . db_param();
+	$t_params[] = $f_work_type;
+}
+
+if ( !empty( $f_category_id ) ) {
+	$t_query .= " AND b.category_id = " . db_param();
+	$t_params[] = $f_category_id;
 }
 
 $t_query .= " ORDER BY user_id, book_date, project_name, category_name, bug_id";
@@ -97,26 +108,29 @@ date_finish_calendar( 'period_end', 'trigger');
 	for ( $i=0; $i < $t_num_result; $i++ ) {
 		$row = db_fetch_array( $t_result );
 		
+		$t_plugin_page = plugin_page( 'report_registration_page.php' );
 		$t_username = $row["username"];
-		$t_user_link = plugin_page( 'report_registration_page.php' ) . '&user_id=' . $row["user_id"];
+		$t_user_link = $t_plugin_page . '&user_id=' . $row["user_id"];
 		$t_project_name = $row["project_name"];
-		$t_project_link = plugin_page( 'report_registration_page.php' ) . '&project_id=' . $row["project_id"];
+		$t_project_link = $t_plugin_page . '&project_id=' . $row["project_id"];
 		$t_category_name = $row["category_name"];
+		$t_category_link = $t_plugin_page . '&category_id=' . $row["category_id"];
 		$t_bug_summary = $row["bug_summary"];
 		$t_book_date = date( 'd/m/Y', $row["book_date"] );
 		$t_work_type = MantisEnum::getLabel( plugin_config_get( "work_types" ), $row["work_type"] );
+		$t_work_type_link = $t_plugin_page . '&work_type=' . $row["work_type"];
 		$t_hours = round( $row["minutes"] / 60, 1 );
 		
 		echo "<tr " . helper_alternate_class() . ">";
 		echo "<td><a href=" . $t_user_link . ">$t_username</a></td>";
 		echo "<td>$t_book_date</td>";
 		echo "<td><a href=" . $t_project_link . ">$t_project_name</a></td>";
-		echo "<td>$t_category_name</td>";
+		echo "<td><a href=" . $t_category_link . ">$t_category_name</a></td>";
 		echo "<td>";
 		print_bug_link( $row["bug_id"] );
 		echo "</td>";
 		echo "<td>$t_bug_summary</td>";
-		echo "<td>$t_work_type</td>";
+		echo "<td><a href=" . $t_work_type_link . ">$t_work_type</a></td>";
 		echo "<td>$t_hours</td></tr>";
 		
 		$t_per_work_type[$row["user_id"]][$row["work_type"]] += $t_hours;

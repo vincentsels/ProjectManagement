@@ -20,6 +20,24 @@ foreach ( $t_work_types as $t_work_type_code => $t_work_type_label ) {
 # Handle estimations: insert or update
 foreach ( $f_data[PLUGIN_PM_EST] as $t_work_type => $t_minutes ) {
 	if ( !empty( $t_minutes ) ) {
+		# Security repeated: check whether estimations may be modified!
+		if ( !access_has_bug_level( plugin_config_get( 'edit_estimates_threshold' ), $f_bug_id ) ) {
+			# There may not yet be an estimate for this bug!
+			$t_table = plugin_table('work');
+			$t_est = PLUGIN_PM_EST;
+			$t_query = "SELECT 1 FROM $t_table 
+						WHERE bug_id = " . db_param() . "
+						AND work_type = $t_work_type
+						AND minutes_type = $t_est
+						AND minutes > 0";
+			$t_params = array( $f_bug_id );
+			$t_result = db_query_bound( $t_query, $t_params );
+			$t_num_results = db_num_rows( $t_result );
+			if ( $t_num_result > 0 ) {
+				continue;
+			}
+		}
+		
 		set_work( $f_bug_id, $t_work_type, PLUGIN_PM_EST, $t_minutes, $f_book_date, Action::INSERT_OR_UPDATE );
 	}
 }
