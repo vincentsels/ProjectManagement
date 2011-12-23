@@ -37,7 +37,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 
 	function config() {
 		return array(
-				'worktypes'   => '20:analysis,50:development,80:testing',
+				'work_types'   => '20:analysis,50:development,80:testing',
 				'edit_estimates_threshold' => MANAGER,
 				'include_bookdate_threshold' => REPORTER,
 				'view_reports_threshold' => DEVELOPER
@@ -102,9 +102,9 @@ class ProjectManagementPlugin extends MantisPlugin {
 		$num_fetch_todo = db_num_rows( $result_fetch_todo );
 		
 		# Get the different worktypes as an array
-		$t_worktypes = MantisEnum::getAssocArrayIndexedByValues( plugin_config_get( 'worktypes' ) );
-		if ( sizeof( $t_worktypes ) > 1 ) {
-			$t_worktypes[PLUGIN_PM_WORKTYPE_TOTAL] = plugin_lang_get( 'total' );
+		$t_work_types = MantisEnum::getAssocArrayIndexedByValues( plugin_config_get( 'work_types' ) );
+		if ( sizeof( $t_work_types ) > 1 ) {
+			$t_work_types[PLUGIN_PM_WORKTYPE_TOTAL] = plugin_lang_get( 'total' );
 		}
 		
 		# Build a two-dimentional array with the data
@@ -125,29 +125,29 @@ class ProjectManagementPlugin extends MantisPlugin {
 			$t_work[PLUGIN_PM_TODO][PLUGIN_PM_WORKTYPE_TOTAL] += $row["todo"];
 		}
 		
-		foreach ( $t_worktypes as $t_worktype_code => $t_worktype_label ) {
+		foreach ( $t_work_types as $t_work_type_code => $t_work_type_label ) {
 			# Calculate remaining
-			if ( !empty( $t_work[PLUGIN_PM_EST][$t_worktype_code] ) ) {
-				$t_work[PLUGIN_PM_REMAINING][$t_worktype_code] = 
-					$t_work[PLUGIN_PM_EST][$t_worktype_code] 
-						- $t_work[PLUGIN_PM_DONE][$t_worktype_code];
+			if ( !empty( $t_work[PLUGIN_PM_EST][$t_work_type_code] ) ) {
+				$t_work[PLUGIN_PM_REMAINING][$t_work_type_code] = 
+					$t_work[PLUGIN_PM_EST][$t_work_type_code] 
+						- $t_work[PLUGIN_PM_DONE][$t_work_type_code];
 				
 				# Calculate difference between remaining and todo
-				if ( !empty( $t_work[PLUGIN_PM_TODO][$t_worktype_code] ) ) {
-					$t_work[PLUGIN_PM_DIFF][$t_worktype_code] =
-					$t_work[PLUGIN_PM_EST][$t_worktype_code] 
-						- $t_work[PLUGIN_PM_DONE][$t_worktype_code] 
-						- $t_work[PLUGIN_PM_TODO][$t_worktype_code];
+				if ( !empty( $t_work[PLUGIN_PM_TODO][$t_work_type_code] ) ) {
+					$t_work[PLUGIN_PM_DIFF][$t_work_type_code] =
+					$t_work[PLUGIN_PM_EST][$t_work_type_code] 
+						- $t_work[PLUGIN_PM_DONE][$t_work_type_code] 
+						- $t_work[PLUGIN_PM_TODO][$t_work_type_code];
 				} else {
 					# If remaining is negative, this is the difference
-					if ( $t_work[PLUGIN_PM_REMAINING][$t_worktype_code] <= 0 ) {
-						$t_work[PLUGIN_PM_DIFF][$t_worktype_code] = $t_work[PLUGIN_PM_REMAINING][$t_worktype_code];
-						$t_work[PLUGIN_PM_REMAINING][$t_worktype_code] = 0;
+					if ( $t_work[PLUGIN_PM_REMAINING][$t_work_type_code] <= 0 ) {
+						$t_work[PLUGIN_PM_DIFF][$t_work_type_code] = $t_work[PLUGIN_PM_REMAINING][$t_work_type_code];
+						$t_work[PLUGIN_PM_REMAINING][$t_work_type_code] = 0;
 					}
 					
 					# If remaining was calculated but no todo was specified,
 					# add this to the calculated remaining to the total column
-					$t_work[PLUGIN_PM_TODO][PLUGIN_PM_WORKTYPE_TOTAL] += $t_work[PLUGIN_PM_REMAINING][$t_worktype_code];
+					$t_work[PLUGIN_PM_TODO][PLUGIN_PM_WORKTYPE_TOTAL] += $t_work[PLUGIN_PM_REMAINING][$t_work_type_code];
 				}
 			}
 		}
@@ -179,22 +179,22 @@ class ProjectManagementPlugin extends MantisPlugin {
 				<td><div align="center"><?php echo plugin_lang_get( 'diff' ) ?></div></td>
 			</tr>
 		<?php 
-		foreach ( $t_worktypes as $t_worktype_code => $t_worktype_label ) {
+		foreach ( $t_work_types as $t_work_type_code => $t_work_type_label ) {
 			?>
-			<tr <?php echo ( $t_worktype_code == PLUGIN_PM_WORKTYPE_TOTAL ? 
+			<tr <?php echo ( $t_work_type_code == PLUGIN_PM_WORKTYPE_TOTAL ? 
 					'class="row-category-history"' : helper_alternate_class() ) ?>>
 					
-				<td class="category"><?php echo $t_worktype_label ?></td> 
+				<td class="category"><?php echo $t_work_type_label ?></td> 
 				
 				<td>
 				<?php 
-				echo minutes_to_time( $t_work[PLUGIN_PM_EST][$t_worktype_code], true );
-				if ( $t_worktype_code != PLUGIN_PM_WORKTYPE_TOTAL && 
-						( empty( $t_work[PLUGIN_PM_EST][$t_worktype_code] ) || 
+				echo minutes_to_time( $t_work[PLUGIN_PM_EST][$t_work_type_code], true );
+				if ( $t_work_type_code != PLUGIN_PM_WORKTYPE_TOTAL && 
+						( empty( $t_work[PLUGIN_PM_EST][$t_work_type_code] ) || 
 								access_has_bug_level( plugin_config_get( 'edit_estimates_threshold' ), $p_bug_id )  ) ) { 
 					# Check whether est was already supplied, or user has rights to alter it regardless
 					?>
-					-> <input type="text" size="4" maxlength="7" autocomplete="off" name= <?php echo '"change_' . PLUGIN_PM_EST . '_' . $t_worktype_code . '"' ?>>
+					-> <input type="text" size="4" maxlength="7" autocomplete="off" name= <?php echo '"change_' . PLUGIN_PM_EST . '_' . $t_work_type_code . '"' ?>>
 					<?php 
 				}
 				?>
@@ -202,42 +202,42 @@ class ProjectManagementPlugin extends MantisPlugin {
 				
 				<td>
 				<?php 
-				echo minutes_to_time( $t_work[PLUGIN_PM_DONE][$t_worktype_code], false );
-				if ( $t_worktype_code != PLUGIN_PM_WORKTYPE_TOTAL ) { 
+				echo minutes_to_time( $t_work[PLUGIN_PM_DONE][$t_work_type_code], false );
+				if ( $t_work_type_code != PLUGIN_PM_WORKTYPE_TOTAL ) { 
 					?>
-					+ <input type="text" size="4" maxlength="7" autocomplete="off" name= <?php echo '"add_' . PLUGIN_PM_DONE . '_' . $t_worktype_code . '"' ?>>
+					+ <input type="text" size="4" maxlength="7" autocomplete="off" name= <?php echo '"add_' . PLUGIN_PM_DONE . '_' . $t_work_type_code . '"' ?>>
 					<?php 
 				}
 				?>
 				</td>
 				
 				<?php 
-				if ( empty ( $t_work[PLUGIN_PM_TODO][$t_worktype_code] ) ) {
+				if ( empty ( $t_work[PLUGIN_PM_TODO][$t_work_type_code] ) ) {
 					# When todo was not supplied, display calculated remainder instead, in italic
 					?>
-					<td class="italic"><?php echo minutes_to_time( $t_work[PLUGIN_PM_REMAINING][$t_worktype_code], false ) ?>
+					<td class="italic"><?php echo minutes_to_time( $t_work[PLUGIN_PM_REMAINING][$t_work_type_code], false ) ?>
 					<?php 
 				} else {
 					# Todo was supplied, so display that
 					?>
-					<td><?php echo minutes_to_time( $t_work[PLUGIN_PM_TODO][$t_worktype_code], false ) ?>
+					<td><?php echo minutes_to_time( $t_work[PLUGIN_PM_TODO][$t_work_type_code], false ) ?>
 					<?php
 				}
-				if ( $t_worktype_code != PLUGIN_PM_WORKTYPE_TOTAL ) { 
+				if ( $t_work_type_code != PLUGIN_PM_WORKTYPE_TOTAL ) { 
 					?>
-					-> <input type="text" size="4" maxlength="7" autocomplete="off" name= <?php echo '"change_' . PLUGIN_PM_TODO . '_' . $t_worktype_code . '"' ?>> 
+					-> <input type="text" size="4" maxlength="7" autocomplete="off" name= <?php echo '"change_' . PLUGIN_PM_TODO . '_' . $t_work_type_code . '"' ?>> 
 					<?php 
-					if ( !empty ( $t_work[PLUGIN_PM_TODO][$t_worktype_code] ) ) {
+					if ( !empty ( $t_work[PLUGIN_PM_TODO][$t_work_type_code] ) ) {
 						?>
-						<input type="checkbox" name= <?php echo '"clear_' . PLUGIN_PM_TODO . '_' . $t_worktype_code . '"' ?>> <?php echo plugin_lang_get( 'clear' ) ?>
+						<input type="checkbox" name= <?php echo '"clear_' . PLUGIN_PM_TODO . '_' . $t_work_type_code . '"' ?>> <?php echo plugin_lang_get( 'clear' ) ?>
 					<?php 
 					}
 				}
 				?>
 				</td>
 				
-				<td <?php echo ( $t_work[PLUGIN_PM_DIFF][$t_worktype_code] < 0 ? 'class="negative"' : 'class="positive"' )  ?>>
-					<?php echo minutes_to_time( abs( $t_work[PLUGIN_PM_DIFF][$t_worktype_code] ) ) ?></td>
+				<td <?php echo ( $t_work[PLUGIN_PM_DIFF][$t_work_type_code] < 0 ? 'class="negative"' : 'class="positive"' )  ?>>
+					<?php echo minutes_to_time( abs( $t_work[PLUGIN_PM_DIFF][$t_work_type_code] ) ) ?></td>
 				
 			</tr>
 			<?php 
