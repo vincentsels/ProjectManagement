@@ -88,6 +88,10 @@ function time_to_minutes( $p_time, $p_throw_error_on_invalid_input = true ) {
 	return $t_minutes;
 }
 
+/**
+ * Update the work of the specified $p_bug_id.
+ * @return number number of affected rows.
+ */
 function set_work( $p_bug_id, $p_work_type, $p_minutes_type, $p_minutes, $p_book_date, $p_action ) {
 	$t_rows_affected = 0;
 	$t_table = plugin_table('work');
@@ -123,6 +127,28 @@ function set_work( $p_bug_id, $p_work_type, $p_minutes_type, $p_minutes, $p_book
 	}
 	
 	return $t_rows_affected;
+}
+
+/**
+ * Returns the first day of the current month, or when specified,
+ * the current month added (or substracted) with $p_add_months months.
+ * @param int $p_add_months Optional. The amount of months to add or substract from the current month.
+ * @param string $p_format Optional. The format of the date to return. Default is 'd/m/Y'.
+ * @return string the first day of the month, formated as $p_format.
+ */
+function first_day_of_month( $p_add_months = 0, $p_format = 'd/m/Y' ) {
+	return date( $p_format, mktime( 0, 0, 0, date('m') + $p_add_months, 1 ) );
+}
+
+/**
+ * Returns the last day of the current month, or when specified,
+ * the current month added (or substracted) with $p_add_months months.
+ * @param int $p_add_months Optional. The amount of months to add or substract from the current month.
+ * @param string $p_format Optional. The format of the date to return. Default is 'd/m/Y'.
+ * @return string the last day of the month, formated as $p_format.
+ */
+function last_day_of_month( $p_add_months = 0, $p_format = 'd/m/Y' ) {
+	return date( $p_format, mktime( 0, 0, 0, date('m') + $p_add_months + 1, 0 ) );
 }
 
 ?>

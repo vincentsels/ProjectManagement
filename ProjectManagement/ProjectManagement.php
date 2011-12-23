@@ -39,21 +39,30 @@ class ProjectManagementPlugin extends MantisPlugin {
 		return array(
 				'worktypes'   => '20:analysis,50:development,80:testing',
 				'edit_estimates_threshold' => MANAGER,
-				'include_bookdate_threshold' => DEVELOPER,
-				'view_details_threshold' => UPDATER,
-				'change_bookdate_threshold' => MANAGER
+				'include_bookdate_threshold' => REPORTER,
+				'view_reports_threshold' => DEVELOPER
 		);
 	}
 
 	function hooks() {
 		return array(
-				'EVENT_VIEW_BUG_EXTRA' => 'view_bug_time_registration'
+				'EVENT_VIEW_BUG_EXTRA' => 'view_bug_time_registration',
+				'EVENT_MENU_MAIN' => 'main_menu'
 		);
 	}
 
 	function init() {
 		require_once( 'ProjectManagementAPI.php' );
 		require_once( 'date_api.php' );
+		require_once( 'pages/html_api.php' );
+	}
+	
+	function main_menu( $p_event, $p_bug_id ) {
+		$t_reports_page = plugin_page( 'report_registration_page', false );
+		$t_pagename = plugin_lang_get( 'reports' );
+		if ( access_has_project_level( plugin_config_get( 'view_reports_threshold' ) ) ) {
+			return '<a href="' . $t_reports_page . '">' . $t_pagename . '</a>';
+		}
 	}
 
 	/**
@@ -155,7 +164,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 		
 		<table class="width50" cellspacing="1">
 			<tr>
-				<td colspan="6" class="form-title">
+				<td colspan="100%" class="form-title">
 				<?php
 				collapse_icon( 'plugin_pm_time_reg' );
 				echo plugin_lang_get( 'time_registration' );
@@ -163,16 +172,11 @@ class ProjectManagementPlugin extends MantisPlugin {
 				</td>
 			</tr>
 			<tr class="row-category">
-				<td width="20%"><div align="center"><?php echo plugin_lang_get( 'worktype' ) ?></div>
-				</td>
-				<td><div align="center"><?php echo plugin_lang_get( 'est' ) ?></div>
-				</td>
-				<td width="20%"><div align="center"><?php echo plugin_lang_get( 'done' ) ?></div>
-				</td>
-				<td width="25%"><div align="center"><?php echo plugin_lang_get( 'todo' ) ?></div>
-				</td>
-				<td><div align="center"><?php echo plugin_lang_get( 'diff' ) ?></div>
-				</td>
+				<td width="20%"><div align="center"><?php echo plugin_lang_get( 'work_type' ) ?></div></td>
+				<td><div align="center"><?php echo plugin_lang_get( 'est' ) ?></div></td>
+				<td width="20%"><div align="center"><?php echo plugin_lang_get( 'done' ) ?></div></td>
+				<td width="25%"><div align="center"><?php echo plugin_lang_get( 'todo' ) ?></div></td>
+				<td><div align="center"><?php echo plugin_lang_get( 'diff' ) ?></div></td>
 			</tr>
 		<?php 
 		foreach ( $t_worktypes as $t_worktype_code => $t_worktype_label ) {
@@ -246,7 +250,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 		<?php
 			if ( access_has_bug_level( plugin_config_get( 'include_bookdate_threshold' ), $p_bug_id ) ) {
 				echo plugin_lang_get( 'book_date' ) . ': ';
-				echo '<input type="text" size="8" maxlength="10" autocomplete="off" id="book_date" name="book_date" size="20" maxlength="16" value="' . date('d/m/Y') . '">';
+				echo '<input type="text" size="8" maxlength="10" autocomplete="off" id="book_date" name="book_date" value="' . date('d/m/Y') . '">';
 				date_print_calendar();
 				date_finish_calendar( 'book_date', 'trigger');
 			}
