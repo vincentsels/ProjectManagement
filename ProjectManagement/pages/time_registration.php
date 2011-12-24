@@ -8,6 +8,8 @@ $f_bug_id		= gpc_get_int( 'bug_id' );
 $f_book_date	= strtotime( str_replace('/', '-', gpc_get_string( 'book_date', date('d/m/Y') ) ) );
 $f_data			= array(PLUGIN_PM_EST => array(), PLUGIN_PM_DONE => array(), PLUGIN_PM_TODO => array());
 
+$t_table = plugin_table('work');
+
 # Populate an array with the supplied data
 foreach ( $t_work_types as $t_work_type_code => $t_work_type_label ) {
 	error_parameters( $t_work_type_label );
@@ -20,46 +22,93 @@ foreach ( $t_work_types as $t_work_type_code => $t_work_type_label ) {
 # Handle estimations: insert or update
 foreach ( $f_data[PLUGIN_PM_EST] as $t_work_type => $t_minutes ) {
 	if ( !empty( $t_minutes ) ) {
+		
+		# Get the old value
+		$t_minutes_type = PLUGIN_PM_EST;
+		$t_query = "SELECT minutes FROM $t_table
+		WHERE bug_id = $f_bug_id AND work_type = $t_work_type AND minutes_type = $t_minutes_type AND minutes > 0";
+		$t_result = db_query_bound( $t_query );
+		$t_num_results = db_num_rows( $t_result );
+		$t_row = db_fetch_array( $t_result );
+		$t_old_value = ( $t_row == false ? null : round( $t_row["minutes"] / 60, 2 ) );
+		$t_new_value = round( $t_minutes / 60, 2 );
+		
 		# Security repeated: check whether estimations may be modified!
 		if ( !access_has_bug_level( plugin_config_get( 'edit_estimates_threshold' ), $f_bug_id ) ) {
 			# There may not yet be an estimate for this bug!
-			$t_table = plugin_table('work');
-			$t_est = PLUGIN_PM_EST;
-			$t_query = "SELECT 1 FROM $t_table 
-						WHERE bug_id = " . db_param() . "
-						AND work_type = $t_work_type
-						AND minutes_type = $t_est
-						AND minutes > 0";
-			$t_params = array( $f_bug_id );
-			$t_result = db_query_bound( $t_query, $t_params );
-			$t_num_results = db_num_rows( $t_result );
 			if ( $t_num_result > 0 ) {
 				continue;
 			}
 		}
 		
 		set_work( $f_bug_id, $t_work_type, PLUGIN_PM_EST, $t_minutes, $f_book_date, Action::INSERT_OR_UPDATE );
+		
+		history_log_event_direct( $f_bug_id, plugin_lang_get( 'est' ) . " ($t_work_types[$t_work_type])", 
+				$t_old_value, $t_new_value );
 	}
 }
 
 # Handle done: insert
 foreach ( $f_data[PLUGIN_PM_DONE] as $t_work_type => $t_minutes ) {
 	if ( !empty( $t_minutes ) ) {
+		
+		# Get the old value
+		$t_minutes_type = PLUGIN_PM_DONE;
+		$t_query = "SELECT sum(minutes) as minutes FROM $t_table
+		WHERE bug_id = $f_bug_id AND work_type = $t_work_type AND minutes_type = $t_minutes_type AND minutes > 0";
+		$t_result = db_query_bound( $t_query );
+		$t_num_results = db_num_rows( $t_result );
+		$t_row = db_fetch_array( $t_result );
+		$t_old_value = ( $t_num_results == 0 ? null : round( $t_row["minutes"] / 60, 2 ) );
+		$t_hours = round( $t_minutes / 60, 2 );
+		$t_new_value = $t_old_value + $t_hours;
+		
 		set_work( $f_bug_id, $t_work_type, PLUGIN_PM_DONE, $t_minutes, $f_book_date, Action::INSERT );
+		
+		history_log_event_direct( $f_bug_id, plugin_lang_get( 'done' ) . " ($t_work_types[$t_work_type])", 
+				$t_old_value . " + $t_hours", $t_new_value );
 	}
 }
 
 # Handle todo: insert or update
 foreach ( $f_data[PLUGIN_PM_TODO] as $t_work_type => $t_minutes ) {
 	if ( !empty( $t_minutes ) ) {
+		
+		# Get the old value
+		$t_minutes_type = PLUGIN_PM_TODO;
+		$t_query = "SELECT minutes FROM $t_table
+		WHERE bug_id = $f_bug_id AND work_type = $t_work_type AND minutes_type = $t_minutes_type AND minutes > 0";
+		$t_result = db_query_bound( $t_query );
+		$t_num_results = db_num_rows( $t_result );
+		$t_row = db_fetch_array( $t_result );
+		$t_old_value = ( $t_row == false ? null : round( $t_row["minutes"] / 60, 2 ) );
+		$t_new_value = round( $t_minutes / 60, 2 );
+		
 		set_work( $f_bug_id, $t_work_type, PLUGIN_PM_TODO, $t_minutes, $f_book_date, Action::INSERT_OR_UPDATE );
+		
+		history_log_event_direct( $f_bug_id, plugin_lang_get( 'est' ) . " ($t_work_types[$t_work_type])", 
+				$t_old_value, $t_new_value );
 	}
 }
 
 # Handle clearing of todo: delete
-foreach ( $f_data['clear_todo'] as $t_work_type => $t_minutes ) {
-	if ( !empty( $t_minutes ) ) {
+foreach ( $f_data['clear_todo'] as $t_work_type => $t_delete ) {
+	if ( !empty( $t_delete ) && $t_delete ) {
+		
+		# Get the old value
+		$t_minutes_type = PLUGIN_PM_TODO;
+		$t_query = "SELECT minutes FROM $t_table
+		WHERE bug_id = $f_bug_id AND work_type = $t_work_type AND minutes_type = $t_minutes_type AND minutes > 0";
+		$t_result = db_query_bound( $t_query );
+		$t_num_results = db_num_rows( $t_result );
+		$t_row = db_fetch_array( $t_result );
+		$t_old_value = ( $t_row == false ? null : round( $t_row["minutes"] / 60, 2 ) );
+		$t_new_value = plugin_lang_get( 'clear' );
+		
 		set_work( $f_bug_id, $t_work_type, PLUGIN_PM_TODO, $t_minutes, $f_book_date, Action::DELETE );
+		
+		history_log_event_direct( $f_bug_id, plugin_lang_get( 'est' ) . " ($t_work_types[$t_work_type])", 
+				$t_old_value, $t_new_value );
 	}
 }
 

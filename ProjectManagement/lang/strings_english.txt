@@ -13,8 +13,10 @@
 	$s_plugin_ProjectManagement_book_date = 'Book date';
 	$s_plugin_ProjectManagement_reports = 'Project management';
 	$s_plugin_ProjectManagement_time_division = 'Time division';
+	$s_plugin_ProjectManagement_per = 'Per';
 	$s_plugin_ProjectManagement_time_registration = 'Time registration';
 	$s_plugin_ProjectManagement_resource_allocation = 'Resource allocation';
+	$s_plugin_ProjectManagement_resource_management = 'Resource management';
 	$s_plugin_ProjectManagement_period = 'Period';
 	$s_plugin_ProjectManagement_hours = 'Hours';
    
