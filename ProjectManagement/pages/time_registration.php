@@ -28,7 +28,6 @@ foreach ( $f_data[PLUGIN_PM_EST] as $t_work_type => $t_minutes ) {
 		$t_query = "SELECT minutes FROM $t_table
 		WHERE bug_id = $f_bug_id AND work_type = $t_work_type AND minutes_type = $t_minutes_type AND minutes > 0";
 		$t_result = db_query_bound( $t_query );
-		$t_num_results = db_num_rows( $t_result );
 		$t_row = db_fetch_array( $t_result );
 		$t_old_value = ( $t_row == false ? null : round( $t_row["minutes"] / 60, 2 ) );
 		$t_new_value = round( $t_minutes / 60, 2 );
@@ -57,9 +56,8 @@ foreach ( $f_data[PLUGIN_PM_DONE] as $t_work_type => $t_minutes ) {
 		$t_query = "SELECT sum(minutes) as minutes FROM $t_table
 		WHERE bug_id = $f_bug_id AND work_type = $t_work_type AND minutes_type = $t_minutes_type AND minutes > 0";
 		$t_result = db_query_bound( $t_query );
-		$t_num_results = db_num_rows( $t_result );
 		$t_row = db_fetch_array( $t_result );
-		$t_old_value = ( $t_num_results == 0 ? null : round( $t_row["minutes"] / 60, 2 ) );
+		$t_old_value = ( $t_row == false ? null : round( $t_row["minutes"] / 60, 2 ) );
 		$t_hours = round( $t_minutes / 60, 2 );
 		$t_new_value = $t_old_value + $t_hours;
 		
@@ -79,14 +77,13 @@ foreach ( $f_data[PLUGIN_PM_TODO] as $t_work_type => $t_minutes ) {
 		$t_query = "SELECT minutes FROM $t_table
 		WHERE bug_id = $f_bug_id AND work_type = $t_work_type AND minutes_type = $t_minutes_type AND minutes > 0";
 		$t_result = db_query_bound( $t_query );
-		$t_num_results = db_num_rows( $t_result );
 		$t_row = db_fetch_array( $t_result );
 		$t_old_value = ( $t_row == false ? null : round( $t_row["minutes"] / 60, 2 ) );
 		$t_new_value = round( $t_minutes / 60, 2 );
 		
 		set_work( $f_bug_id, $t_work_type, PLUGIN_PM_TODO, $t_minutes, $f_book_date, Action::INSERT_OR_UPDATE );
 		
-		history_log_event_direct( $f_bug_id, plugin_lang_get( 'est' ) . " ($t_work_types[$t_work_type])", 
+		history_log_event_direct( $f_bug_id, plugin_lang_get( 'todo' ) . " ($t_work_types[$t_work_type])", 
 				$t_old_value, $t_new_value );
 	}
 }
@@ -100,14 +97,13 @@ foreach ( $f_data['clear_todo'] as $t_work_type => $t_delete ) {
 		$t_query = "SELECT minutes FROM $t_table
 		WHERE bug_id = $f_bug_id AND work_type = $t_work_type AND minutes_type = $t_minutes_type AND minutes > 0";
 		$t_result = db_query_bound( $t_query );
-		$t_num_results = db_num_rows( $t_result );
 		$t_row = db_fetch_array( $t_result );
 		$t_old_value = ( $t_row == false ? null : round( $t_row["minutes"] / 60, 2 ) );
 		$t_new_value = plugin_lang_get( 'clear' );
 		
 		set_work( $f_bug_id, $t_work_type, PLUGIN_PM_TODO, $t_minutes, $f_book_date, Action::DELETE );
 		
-		history_log_event_direct( $f_bug_id, plugin_lang_get( 'est' ) . " ($t_work_types[$t_work_type])", 
+		history_log_event_direct( $f_bug_id, plugin_lang_get( 'todo' ) . " ($t_work_types[$t_work_type])", 
 				$t_old_value, $t_new_value );
 	}
 }

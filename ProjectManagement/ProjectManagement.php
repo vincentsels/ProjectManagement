@@ -25,13 +25,18 @@ class ProjectManagementPlugin extends MantisPlugin {
 						user_id            I       NOTNULL UNSIGNED,
 						work_type          I2      NOTNULL DEFAULT 50,
 						minutes_type       I2      NOTNULL DEFAULT 0,
-						minutes            I 	   NOTNULL DEFAULT 0,
+						minutes            I 	   NOTNULL UNSIGNED DEFAULT 0,
 						book_date          I,
 						timestamp          I
 						" ) ),
 				array( 'CreateIndexSQL', array( 'idx_plugin_pm_work_bug_id',
 						plugin_table( 'work' ),
-						'bug_id' ) )
+						'bug_id' ) ),
+				array( 'CreateTableSQL', array( plugin_table( 'resource' ), "
+						user_id            I       NOTNULL UNSIGNED PRIMARY,
+						hours_per_week	   I	   UNSIGNED,
+						hourly_rate        F(3,2)
+						" ) )
 		);
 	}
 

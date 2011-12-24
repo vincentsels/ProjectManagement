@@ -19,17 +19,17 @@
       <tr <?php echo helper_alternate_class() ?>>
          <td class="category"><?php echo plugin_lang_get( 'edit_estimates_threshold' ) ?><br />
          <span class="small"><?php echo plugin_lang_get( 'edit_estimates_threshold_info' ) ?></span></td>
-         <td><select name="edit_estimates_threshold"><?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'add_threshold' ) ) ?></select></td>
+         <td><select name="edit_estimates_threshold"><?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'edit_estimates_threshold' ) ) ?></select></td>
       </tr>
       <tr <?php echo helper_alternate_class() ?>>
          <td class="category"><?php echo plugin_lang_get( 'include_bookdate_threshold' ) ?><br />
          <span class="small"><?php echo plugin_lang_get( 'include_bookdate_threshold_info' ) ?></span></td>
-         <td><select name="include_bookdate_threshold"><?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'delete_threshold' ) ) ?></select></td>
+         <td><select name="include_bookdate_threshold"><?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'include_bookdate_threshold' ) ) ?></select></td>
       </tr>
       <tr <?php echo helper_alternate_class() ?>>
          <td class="category"><?php echo plugin_lang_get( 'view_reports_threshold' ) ?><br />
          <span class="small"><?php echo plugin_lang_get( 'view_reports_threshold_info' ) ?></span></td>
-         <td><select name="view_reports_threshold"><?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'admin_threshold' ) ) ?></select></td>
+         <td><select name="view_reports_threshold"><?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'view_reports_threshold' ) ) ?></select></td>
       </tr>
       <tr>
          <td class="center" colspan="2"><input type="submit" value="<?php echo lang_get( 'update' ) ?>"/></td>
