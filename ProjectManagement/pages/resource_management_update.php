@@ -4,7 +4,7 @@
 	$t_user_array = explode( ',', gpc_get_string( 'users', null ) );
 	
 	foreach ( $t_user_array as $t_user_id )	{
-		$f_hourly_rate = gpc_get_string( 'hourly_rate_' . $t_user_id, null );
+		$f_hourly_rate = parse_float( gpc_get_string( 'hourly_rate_' . $t_user_id, null ) );
 		$f_hours_per_week = gpc_get_int( 'hours_per_week_' . $t_user_id, null );
 		
 		if ( !empty( $f_hourly_rate ) || !empty( $f_hours_per_week ) ) {

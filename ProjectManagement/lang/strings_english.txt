@@ -19,6 +19,8 @@
 	$s_plugin_ProjectManagement_resource_management = 'Resource management';
 	$s_plugin_ProjectManagement_period = 'Period';
 	$s_plugin_ProjectManagement_hours = 'Hours';
+	$s_plugin_ProjectManagement_cost = 'Cost';
+	$s_plugin_ProjectManagement_total_cost = 'Total cost';
 	
 	$s_plugin_ProjectManagement_hourly_rate = 'Hourly rate';
 	$s_plugin_ProjectManagement_hours_per_week = 'Hours per week';

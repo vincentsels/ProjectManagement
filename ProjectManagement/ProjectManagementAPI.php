@@ -165,4 +165,26 @@ function get_translated_assoc_array_for_enum( $p_enum_string ) {
 	return $t_translated;
 }
 
+/**
+ * Locale-aware floatval
+ * @link http://www.php.net/manual/en/function.floatval.php#92563
+ * @param string $floatString
+ * @return number
+ */
+function parse_float( $p_floatstring ){
+	$t_locale_info = localeconv();
+	$p_floatstring = str_replace( $t_locale_info["mon_thousands_sep"] , "", $p_floatstring );
+	$p_floatstring = str_replace( $t_locale_info["mon_decimal_point"] , ".", $p_floatstring );
+	return floatval( $p_floatstring );
+}
+
+/**
+ * Formats the specified $p_decimal as '100 000,00'
+ * @param float $p_decimal
+ * @return string
+ */
+function format( $p_decimal ) {
+	return number_format( round( $p_decimal, 2 ), 2, ',', ' ' );
+}
+
 ?>

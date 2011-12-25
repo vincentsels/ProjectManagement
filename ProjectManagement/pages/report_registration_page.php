@@ -15,6 +15,7 @@ $f_work_type = gpc_get_int( 'work_type', null );
 $f_category_id = gpc_get_int( 'category_id', null );
 
 $t_work_table = plugin_table('work');
+$t_resource_table = plugin_table('resource');
 $t_user_table = db_get_table( 'mantis_user_table' );
 $t_bug_table = db_get_table( 'mantis_bug_table' );
 $t_project_table = db_get_table( 'mantis_project_table' );
@@ -23,12 +24,13 @@ $t_work_types = MantisEnum::getAssocArrayIndexedByValues( plugin_config_get( 'wo
 
 $t_query = "SELECT w.user_id, u.username, w.book_date, b.project_id, p.name as project_name, 
 				 c.id as category_id, c.name as category_name, b.id as bug_id, b.summary as bug_summary, 
-				 w.work_type, w.minutes
+				 w.work_type, w.minutes, r.hourly_rate
             FROM $t_work_table w
        LEFT JOIN $t_bug_table b ON w.bug_id = b.id
        LEFT JOIN $t_user_table u ON w.user_id = u.id
        LEFT JOIN $t_project_table p ON b.project_id = p.id
        LEFT JOIN $t_category_table c ON b.category_id = c.id
+       LEFT OUTER JOIN $t_resource_table r ON w.user_id = r.user_id
            WHERE w.minutes_type = " . db_param() . "
              AND w.book_date BETWEEN " . db_param() .
                            " AND " . db_param();
@@ -102,10 +104,13 @@ date_finish_calendar( 'period_end', 'trigger');
 		<td><div align="center"><?php echo lang_get( 'summary' ) ?></div></td>
 		<td><div align="center"><?php echo plugin_lang_get( 'work_type' ) ?></div></td>
 		<td><div align="center"><?php echo plugin_lang_get( 'hours' ) ?></div></td>
+		<td><div align="center"><?php echo plugin_lang_get( 'hourly_rate' ) ?></div></td>
+		<td><div align="center"><?php echo plugin_lang_get( 'cost' ) ?></div></td>
 	</tr>
 	
 	<?php 
 	
+	$t_total_cost = 0;
 	for ( $i=0; $i < $t_num_result; $i++ ) {
 		$row = db_fetch_array( $t_result );
 		
@@ -120,19 +125,24 @@ date_finish_calendar( 'period_end', 'trigger');
 		$t_book_date = date( 'd/m/Y', $row["book_date"] );
 		$t_work_type = MantisEnum::getLabel( plugin_config_get( "work_types" ), $row["work_type"] );
 		$t_work_type_link = $t_plugin_page . '&work_type=' . $row["work_type"];
-		$t_hours = round( $row["minutes"] / 60, 1 );
+		$t_hours = format( $row["minutes"] / 60 );
+		$t_hourly_rate = format( $row["hourly_rate"] );
+		$t_cost = format( $row["minutes"] * $row["hourly_rate"] / 60 );
 		
 		echo "<tr " . helper_alternate_class() . ">";
-		echo "<td><a href=" . $t_user_link . ">$t_username</a></td>";
+		echo "<td><a href=\"" . $t_user_link . "\">$t_username</a></td>";
 		echo "<td>$t_book_date</td>";
-		echo "<td><a href=" . $t_project_link . ">$t_project_name</a></td>";
-		echo "<td><a href=" . $t_category_link . ">$t_category_name</a></td>";
+		echo "<td><a href=\"" . $t_project_link . "\">$t_project_name</a></td>";
+		echo "<td><a href=\"" . $t_category_link . "\">$t_category_name</a></td>";
 		echo "<td>";
 		print_bug_link( $row["bug_id"] );
 		echo "</td>";
 		echo "<td>$t_bug_summary</td>";
-		echo "<td><a href=" . $t_work_type_link . ">$t_work_type</a></td>";
-		echo "<td>$t_hours</td></tr>";
+		echo "<td><a href=\"" . $t_work_type_link . "\">$t_work_type</a></td>";
+		echo "<td class=\"right\">$t_hours</td>";
+		echo "<td class=\"right\">$t_hourly_rate</td>";
+		echo "<td class=\"right\">$t_cost</td>";
+		echo "</tr>";
 		
 		$t_per_work_type[$row["user_id"]][$row["work_type"]] += $t_hours;
 		$t_per_work_type[$row["user_id"]][plugin_lang_get( 'total' )] += $t_hours;
@@ -142,7 +152,14 @@ date_finish_calendar( 'period_end', 'trigger');
 		
 		$t_per_category[$row["user_id"]][$row["category_id"]] += $t_hours;
 		$t_per_category[$row["user_id"]][plugin_lang_get( 'total' )] += $t_hours;
+		
+		$t_total_cost += $t_cost;
 	}
+	
+	# Display a total cost line
+	echo '<tr class="spacer">';
+	echo '<tr class="row-category2"><td colspan="9" class="right bold">' . plugin_lang_get( 'total_cost' ) . '</td>';
+	echo '<td class="right bold">' . format( $t_total_cost )  . '</td></td>';
 	?>
 	
 	</table>
