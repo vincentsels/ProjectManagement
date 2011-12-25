@@ -163,8 +163,8 @@ class ProjectManagementPlugin extends MantisPlugin {
 		<?php
 		collapse_open( 'plugin_pm_time_reg' );
 		?>
-		<form name="time_registration" method="post" action="<?php echo plugin_page('time_registration') ?>" >
-      	<?php echo form_security_field( 'plugin_ProjectManagement_time_registration' ) ?>
+		<form name="time_registration" method="post" action="<?php echo plugin_page('time_registration_update') ?>" >
+      	<?php echo form_security_field( 'plugin_ProjectManagement_time_registration_update' ) ?>
       	
 		<input type="hidden" name="bug_id" value="<?php echo $p_bug_id; ?>">
 		

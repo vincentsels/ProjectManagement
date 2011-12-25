@@ -151,4 +151,18 @@ function last_day_of_month( $p_add_months = 0, $p_format = 'd/m/Y' ) {
 	return date( $p_format, mktime( 0, 0, 0, date('m') + $p_add_months + 1, 0 ) );
 }
 
+/**
+ * Returns an array of key value pairs containing the key of the specified $p_enum_string
+ * and the translated label as its value.
+ * @param string $p_enum_string the enum string (without trailing 'enum_string'
+ */
+function get_translated_assoc_array_for_enum( $p_enum_string ) {
+	$t_untranslated = MantisEnum::getAssocArrayIndexedByValues( config_get( $p_enum_string . '_enum_string' ) );
+	$t_translated = array();
+	foreach ( $t_untranslated as $t_key => $t_value ) {
+		$t_translated[$t_key] = get_enum_element( $p_enum_string, $t_key );
+	}
+	return $t_translated;
+}
+
 ?>
