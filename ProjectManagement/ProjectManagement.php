@@ -46,7 +46,8 @@ class ProjectManagementPlugin extends MantisPlugin {
 				'edit_estimates_threshold' => MANAGER,
 				'include_bookdate_threshold' => REPORTER,
 				'view_reports_threshold' => DEVELOPER,
-          		'admin_threshold'  => ADMINISTRATOR
+          		'admin_threshold'  => ADMINISTRATOR,
+				'work_type_thresholds' => array( 50 => DEVELOPER )
 		);
 	}
 
@@ -109,6 +110,16 @@ class ProjectManagementPlugin extends MantisPlugin {
 		
 		# Get the different worktypes as an array
 		$t_work_types = MantisEnum::getAssocArrayIndexedByValues( plugin_config_get( 'work_types' ) );
+		
+		# Remove worktypes which are off limits for this account
+		$t_limited_work_types = plugin_config_get( 'work_type_thresholds' );
+		foreach ( $t_limited_work_types as $t_work_type => $t_min_access_level ) {
+			if ( access_get_global_level() < $t_min_access_level ) {
+				unset( $t_work_types[$t_work_type] );
+			}
+		}
+		
+		# Include total
 		if ( sizeof( $t_work_types ) > 1 ) {
 			$t_work_types[PLUGIN_PM_WORKTYPE_TOTAL] = plugin_lang_get( 'total' );
 		}

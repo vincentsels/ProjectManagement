@@ -12,7 +12,7 @@
 		}
 	}
 	
-	function insert_or_update_record ( $p_user_id, $p_hourly_rate, $p_hours_per_week ) {
+	function insert_or_update_record( $p_user_id, $p_hourly_rate, $p_hours_per_week ) {
 		$t_resource_table = plugin_table( 'resource' );
 		
 		$t_query_old_row = "SELECT user_id, hourly_rate, hours_per_week FROM $t_resource_table WHERE user_id = $p_user_id";
@@ -34,10 +34,10 @@
 			$t_query_update_set_clause = array();
 			$t_query_update_where_clause = " WHERE user_id = $p_user_id";
 			
-			if ( !empty( $p_hourly_rate ) ) {
+			if ( !empty( $p_hourly_rate ) && $p_hourly_rate != $t_query_old_row['hourly_rate'] ) {
 				$t_query_update_set_clause[] = "hourly_rate = $p_hourly_rate";
 			}
-			if ( !empty( $p_hours_per_week ) ) {
+			if ( !empty( $p_hours_per_week ) && $p_hours_per_week != $t_query_old_row['hours_per_week'] ) {
 				$t_query_update_set_clause[] = "hours_per_week = $p_hours_per_week";
 			}
 			

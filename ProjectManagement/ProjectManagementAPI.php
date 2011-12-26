@@ -187,4 +187,49 @@ function format( $p_decimal ) {
 	return number_format( round( $p_decimal, 2 ), 2, ',', ' ' );
 }
 
+/**
+ * Convert a string array in the form of array( 'key' => 'val', key1 => val2,... ) to a php array.
+ * Only works with this format of arrays!
+ * @todo duplicated here from adm_config_report.php, should be moved to helper class or something imo.
+ * @param complex $p_value
+ * @return the array
+ */
+function string_to_array( $p_value ) {
+	$t_value = array();
+	$t_full_string = trim( $p_value );
+	if ( preg_match('/array[\s]*\((.*)\)/s', $t_full_string, $t_match ) === 1 ) {
+		// we have an array here
+		$t_values = explode( ',', trim( $t_match[1] ) );
+		foreach ( $t_values as $key => $value ) {
+			if ( !trim( $value ) ) {
+				continue;
+			}
+			$t_split = explode( '=>', $value, 2 );
+			if ( count( $t_split ) == 2 ) {
+				// associative array
+				$t_new_key = constant_replace( trim( $t_split[0], " \t\n\r\0\x0B\"'" ) );
+				$t_new_value = constant_replace( trim( $t_split[1], " \t\n\r\0\x0B\"'" ) );
+				$t_value[ $t_new_key ] = $t_new_value;
+			} else {
+				// regular array
+				$t_value[ $key ] = constant_replace( trim( $value, " \t\n\r\0\x0B\"'" ) );
+			}
+		}
+	}
+	return $t_value;
+}
+
+/**
+ * Check if the passed string is a constant and return its value
+ * @todo duplicated here from adm_config_report.php, should be moved to helper class or something imo.
+ */
+function constant_replace( $p_name ) {
+	$t_result = $p_name;
+	if ( is_string( $p_name ) && defined( $p_name ) ) {
+		// we have a constant
+		$t_result = constant( $p_name );
+	}
+	return $t_result;
+}
+
 ?>
