@@ -25,7 +25,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 						user_id            I       NOTNULL UNSIGNED,
 						work_type          I2      NOTNULL DEFAULT 50,
 						minutes_type       I2      NOTNULL DEFAULT 0,
-						minutes            I 	   NOTNULL UNSIGNED DEFAULT 0,
+						minutes            I 	   NOTNULL DEFAULT 0,
 						book_date          I,
 						timestamp          I
 						" ) ),
