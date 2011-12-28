@@ -53,7 +53,9 @@ function minutes_to_time( $p_minutes, $p_allow_blanks = true ) {
  * @return the amount of minutes represented by the specified $p_time string.
  */
 function time_to_minutes( $p_time, $p_allow_negative = true, $p_throw_error_on_invalid_input = true ) {
-	if ( empty ( $p_time ) ) {
+	if ( $p_time == '0') {
+		return 0;
+	} else if ( empty ( $p_time ) ) {
 		return null;
 	}
 	
@@ -109,29 +111,24 @@ function set_work( $p_bug_id, $p_work_type, $p_minutes_type, $p_minutes, $p_book
 	
 	if ( $p_action == ACTION::UPDATE || $p_action == ACTION::INSERT_OR_UPDATE ) {
 		#Update and check for rows affected
-		$t_query = 'UPDATE ' . $t_table . ' SET minutes=' . db_param() . ', timestamp =' . db_param() . ', user_id=' . db_param() . ', book_date=' . db_param() .
-				' WHERE bug_id=' . db_param() . ' AND work_type=' . db_param(). ' AND minutes_type=' . db_param();
-		$t_fields = array( $p_minutes, $t_timestamp, $t_user_id, $p_book_date,
-				$p_bug_id, $p_work_type, $p_minutes_type );
-		db_query_bound( $t_query, $t_fields );
+		$t_query = "UPDATE $t_table SET minutes = $p_minutes, timestamp = $t_timestamp, user_id = $t_user_id, book_date= $p_book_date
+				WHERE bug_id = $p_bug_id AND work_type = $p_work_type AND minutes_type = $p_minutes_type";
+		db_query_bound( $t_query );
 		$t_rows_affected = db_affected_rows();
 	}
 	if ( $p_action == ACTION::INSERT || ( $p_action == ACTION::INSERT_OR_UPDATE && $t_rows_affected == 0 )) {
 		#Insert and check for rows affected
 		$t_query = "INSERT INTO $t_table ( bug_id, user_id, work_type, minutes_type, 
-					minutes, book_date, timestamp ) VALUES ( " .
-					db_param() . ', ' . db_param() . ', ' . db_param() . ', ' . db_param() . ', ' . 
-					db_param() . ', ' . db_param() . ', ' . db_param() . ')';
-		$t_fields = array( $p_bug_id, $t_user_id, $p_work_type, $p_minutes_type,
-				$p_minutes, $p_book_date, $t_timestamp );
-		db_query_bound( $t_query, $t_fields );
+					minutes, book_date, timestamp ) 
+					VALUES ( $p_bug_id, $t_user_id, $p_work_type, $p_minutes_type,
+					$p_minutes, $p_book_date, $t_timestamp )";
+		db_query_bound( $t_query );
 		$t_rows_affected = db_affected_rows();
 	} 
 	else if ( $p_action == ACTION::DELETE ) {
 		#Delete and check for rows affected
-		$t_query = "DELETE FROM $t_table WHERE bug_id=" . db_param() . ' AND work_type=' . db_param() . ' AND minutes_type=' . db_param();
-		$t_fields = array( $p_bug_id, $p_work_type, $p_minutes_type );
-		db_query_bound( $t_query, $t_fields );
+		$t_query = "DELETE FROM $t_table WHERE bug_id = $p_bug_id AND work_type= $p_work_type AND minutes_type= $p_minutes_type";
+		db_query_bound( $t_query );
 		$t_rows_affected = db_affected_rows();
 	}
 	

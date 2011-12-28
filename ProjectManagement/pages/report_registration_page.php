@@ -31,31 +31,28 @@ $t_query = "SELECT w.user_id, u.username, w.book_date, b.project_id, p.name as p
        LEFT JOIN $t_project_table p ON b.project_id = p.id
        LEFT JOIN $t_category_table c ON b.category_id = c.id
        LEFT OUTER JOIN $t_resource_table r ON w.user_id = r.user_id
-           WHERE w.minutes_type = " . db_param() . "
-             AND w.book_date BETWEEN " . db_param() .
-                           " AND " . db_param();
-
-$t_params = array( PLUGIN_PM_DONE, strtotime( str_replace( '/', '-', $f_period_start ) ),
-		strtotime( str_replace( '/', '-', $f_period_end ) ));
+           WHERE w.minutes_type = " . PLUGIN_PM_DONE . "
+             AND w.book_date BETWEEN " . strtotime( str_replace( '/', '-', $f_period_start ) ) .
+                           " AND " . strtotime( str_replace( '/', '-', $f_period_end ) );
 
 if ( $f_project_id != ALL_PROJECTS ) {
-	$t_query .= " AND b.project_id = " . db_param();
-	$t_params[] = $f_project_id;
+	$t_subprojects[] = $f_project_id;
+	foreach ( user_get_all_accessible_subprojects( auth_get_current_user_id(), $f_project_id ) as $t_subproject ) {
+		$t_subprojects[] = $t_subproject;
+	}
+	$t_query .= " AND b.project_id IN ( " . implode(',', array_unique( $t_subprojects ) ) . " )";
 }
 
 if ( $f_user_id != ALL_USERS ) {
-	$t_query .= " AND w.user_id = " . db_param();
-	$t_params[] = $f_user_id;
+	$t_query .= " AND w.user_id = $f_user_id";
 }
 
 if ( !empty( $f_work_type ) ) {
-	$t_query .= " AND w.work_type = " . db_param();
-	$t_params[] = $f_work_type;
+	$t_query .= " AND w.work_type = $f_work_type";
 }
 
 if ( !empty( $f_category_id ) ) {
-	$t_query .= " AND b.category_id = " . db_param();
-	$t_params[] = $f_category_id;
+	$t_query .= " AND b.category_id = $f_category_id";
 }
 
 $t_query .= " ORDER BY user_id, book_date, project_name, category_name, bug_id";
@@ -197,9 +194,9 @@ date_finish_calendar( 'period_end', 'trigger');
 				print_user( $t_user );
 				echo "</td>";
 				foreach ( $t_work_types as $t_work_type_value => $t_work_type_label ) {
-					echo "<td>". format( $t_categories[$t_work_type_value] ) . "</td>";
+					echo "<td class=\"right\">". format( $t_categories[$t_work_type_value] ) . "</td>";
 				}
-				echo "<td>" . format( $t_categories[plugin_lang_get( 'total' )] ) . "</td></tr>";
+				echo "<td class=\"right\">" . format( $t_categories[plugin_lang_get( 'total' )] ) . "</td></tr>";
 			}
 			?>
 			
@@ -239,9 +236,9 @@ date_finish_calendar( 'period_end', 'trigger');
 				print_user( $t_user );
 				echo "</td>";
 				foreach ( category_get_all_rows( $f_project_id  ) as $row ) {
-					echo "<td>" . format( $t_categories[$row["id"]] ) . "</td>";
+					echo "<td class=\"right\">" . format( $t_categories[$row["id"]] ) . "</td>";
 				}
-				echo "<td>" . format( $t_categories[plugin_lang_get( 'total' )] ) . "</td></tr>";
+				echo "<td class=\"right\">" . format( $t_categories[plugin_lang_get( 'total' )] ) . "</td></tr>";
 			}
 			?>
 			

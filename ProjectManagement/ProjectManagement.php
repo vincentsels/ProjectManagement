@@ -144,13 +144,13 @@ class ProjectManagementPlugin extends MantisPlugin {
 		
 		foreach ( $t_work_types as $t_work_type_code => $t_work_type_label ) {
 			# Calculate remaining
-			if ( !empty( $t_work[PLUGIN_PM_EST][$t_work_type_code] ) ) {
+			if ( isset( $t_work[PLUGIN_PM_EST][$t_work_type_code] ) ) {
 				$t_work[PLUGIN_PM_REMAINING][$t_work_type_code] = 
 					$t_work[PLUGIN_PM_EST][$t_work_type_code] 
 						- $t_work[PLUGIN_PM_DONE][$t_work_type_code];
 				
 				# Calculate difference between remaining and todo
-				if ( !empty( $t_work[PLUGIN_PM_TODO][$t_work_type_code] ) ) {
+				if ( isset( $t_work[PLUGIN_PM_TODO][$t_work_type_code] ) ) {
 					$t_work[PLUGIN_PM_DIFF][$t_work_type_code] =
 					$t_work[PLUGIN_PM_EST][$t_work_type_code] 
 						- $t_work[PLUGIN_PM_DONE][$t_work_type_code] 
@@ -192,7 +192,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 				<td width="20%"><div align="center"><?php echo plugin_lang_get( 'work_type' ) ?></div></td>
 				<td><div align="center"><?php echo plugin_lang_get( 'est' ) ?></div></td>
 				<td width="20%"><div align="center"><?php echo plugin_lang_get( 'done' ) ?></div></td>
-				<td width="25%"><div align="center"><?php echo plugin_lang_get( 'todo' ) ?></div></td>
+				<td width="30%"><div align="center"><?php echo plugin_lang_get( 'todo' ) ?></div></td>
 				<td><div align="center"><?php echo plugin_lang_get( 'diff' ) ?></div></td>
 			</tr>
 		<?php 
@@ -207,7 +207,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 				<?php 
 				echo minutes_to_time( $t_work[PLUGIN_PM_EST][$t_work_type_code], true );
 				if ( $t_work_type_code != PLUGIN_PM_WORKTYPE_TOTAL && 
-						( empty( $t_work[PLUGIN_PM_EST][$t_work_type_code] ) || 
+						( !isset( $t_work[PLUGIN_PM_EST][$t_work_type_code] ) || 
 								access_has_bug_level( plugin_config_get( 'edit_estimates_threshold' ), $p_bug_id )  ) ) { 
 					# Check whether est was already supplied, or user has rights to alter it regardless
 					?>
@@ -229,7 +229,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 				</td>
 				
 				<?php 
-				if ( empty ( $t_work[PLUGIN_PM_TODO][$t_work_type_code] ) ) {
+				if ( !isset( $t_work[PLUGIN_PM_TODO][$t_work_type_code] ) ) {
 					# When todo was not supplied, display calculated remainder instead, in italic
 					?>
 					<td class="italic"><?php echo minutes_to_time( $t_work[PLUGIN_PM_REMAINING][$t_work_type_code], false ) ?>
@@ -244,7 +244,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 					?>
 					-> <input type="text" size="4" maxlength="7" autocomplete="off" name= <?php echo '"change_' . PLUGIN_PM_TODO . '_' . $t_work_type_code . '"' ?>> 
 					<?php 
-					if ( !empty ( $t_work[PLUGIN_PM_TODO][$t_work_type_code] ) ) {
+					if ( isset( $t_work[PLUGIN_PM_TODO][$t_work_type_code] ) ) {
 						?>
 						<input type="checkbox" name= <?php echo '"clear_' . PLUGIN_PM_TODO . '_' . $t_work_type_code . '"' ?>> <?php echo plugin_lang_get( 'clear' ) ?>
 					<?php 
