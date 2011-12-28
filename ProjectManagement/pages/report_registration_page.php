@@ -1,6 +1,6 @@
 <?php
 
-access_ensure_global_level( plugin_config_get( 'view_reports_threshold' ) );
+access_ensure_global_level( plugin_config_get( 'view_report_registration_threshold' ) );
 
 html_page_top1( plugin_lang_get( 'title' ) );
 html_page_top2();
@@ -74,10 +74,10 @@ $t_per_category;
 echo plugin_lang_get( 'period' ) . ': ';
 echo '<input type="text" size="8" maxlength="10" autocomplete="off" id="period_start" name="period_start" value="' . $f_period_start . '">';
 date_print_calendar();
-date_finish_calendar( 'period_start', 'trigger');
+date_finish_calendar( 'period_start', 'period_start');
 echo ' - <input type="text" size="8" maxlength="10" autocomplete="off" id="period_end" name="period_end" value="' . $f_period_end . '">';
 date_print_calendar();
-date_finish_calendar( 'period_end', 'trigger');
+date_finish_calendar( 'period_end', 'period_end');
 ?>
 <input name="submit" type="submit" value="<?php echo lang_get( 'update' ) ?>">
 </form>

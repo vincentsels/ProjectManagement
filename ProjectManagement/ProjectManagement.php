@@ -42,12 +42,16 @@ class ProjectManagementPlugin extends MantisPlugin {
 
 	function config() {
 		return array(
-				'work_types'   => '20:analysis,50:development,80:testing',
+				'work_types' => '20:analysis,50:development,80:testing',
 				'edit_estimates_threshold' => MANAGER,
 				'include_bookdate_threshold' => REPORTER,
-				'view_reports_threshold' => DEVELOPER,
-          		'admin_threshold'  => ADMINISTRATOR,
-				'work_type_thresholds' => array( 50 => DEVELOPER )
+				'view_time_registration_worksheet' => DEVELOPER,
+				'view_report_registration_threshold' => DEVELOPER,
+				'view_resource_management_threshold' => MANAGER,
+				'view_resource_allocation_threshold' => DEVELOPER,
+          		'admin_threshold' => ADMINISTRATOR,
+				'work_type_thresholds' => array( 50 => DEVELOPER ),
+				'default_worktype' => 50
 		);
 	}
 
@@ -65,9 +69,14 @@ class ProjectManagementPlugin extends MantisPlugin {
 	}
 	
 	function main_menu( $p_event, $p_bug_id ) {
-		$t_reports_page = plugin_page( 'report_registration_page', false );
+		$t_reports_page = plugin_page( 'time_registration_page', false );
 		$t_pagename = plugin_lang_get( 'reports' );
-		if ( access_has_global_level( plugin_config_get( 'view_reports_threshold' ) ) ) {
+		# Only display main menu if at least one of the submenus is accessible
+		if ( access_has_global_level( plugin_config_get( 'view_time_registration_worksheet' ) ) ||
+				access_has_global_level( plugin_config_get( 'view_report_registration_threshold' ) ) ||
+				access_has_global_level( plugin_config_get( 'view_resource_management_threshold' ) ) ||
+				access_has_global_level( plugin_config_get( 'view_resource_allocation_threshold' ) )
+				 ) {
 			return '<a href="' . $t_reports_page . '">' . $t_pagename . '</a>';
 		}
 	}

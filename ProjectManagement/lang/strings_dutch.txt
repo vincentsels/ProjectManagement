@@ -9,11 +9,12 @@
 	$s_plugin_ProjectManagement_diff = 'Verschil';
 	$s_plugin_ProjectManagement_total = 'totaal';
    
-	$s_plugin_ProjectManagement_clear = 'Leeg';
+	$s_plugin_ProjectManagement_clear = 'Legen';
 	$s_plugin_ProjectManagement_book_date = 'Boekingsdatum';
 	$s_plugin_ProjectManagement_reports = 'Project management';
 	$s_plugin_ProjectManagement_time_division = 'Tijdsverdeling';
 	$s_plugin_ProjectManagement_per = 'Per';
+	$s_plugin_ProjectManagement_time_registration_worksheet = 'Tijdsregistratie werkblad';
 	$s_plugin_ProjectManagement_time_registration = 'Tijdsregistratie';
 	$s_plugin_ProjectManagement_resource_allocation = 'Verdeling resources';
 	$s_plugin_ProjectManagement_resource_management = 'Beheer resources';
@@ -27,12 +28,19 @@
    
 	$s_plugin_ProjectManagement_work_types = 'Soorten werk';
 	$s_plugin_ProjectManagement_work_types_info = 'Een enumeratie die de verschillende soorten van werk bevat die gepresteerd kunnen worden op een ticket.';
+	
 	$s_plugin_ProjectManagement_edit_estimates_threshold = 'Drempel voor aanpassen Est';
 	$s_plugin_ProjectManagement_edit_estimates_threshold_info = 'Eenmaal een estimation ingevuld, kan hier niet langer van afgeweken worden, tenzij met gebruikers met dit profiel of hoger.';
+	
 	$s_plugin_ProjectManagement_include_bookdate_threshold = 'Drempel voor tonen boekingsdatum';
 	$s_plugin_ProjectManagement_include_bookdate_threshold_info = 'Laat gebruikers met dit profiel of hoger toe om een boekingsdatum mee te geven aan hun ingevulde uren.';
-	$s_plugin_ProjectManagement_view_reports_threshold = 'Drempel voor tonen rapporten';
-	$s_plugin_ProjectManagement_view_reports_threshold_info = 'Verschaft toegang tot verschillende project management rapporten.';
+	
 	$s_plugin_ProjectManagement_work_type_thresholds = 'Drempels voor soorten werk';
 	$s_plugin_ProjectManagement_work_type_thresholds_info = 'Gebruikers met een profiel lager dan het opgegeven kunnen de soorten werk niet zien of wijzigen.<br><b>Syntax</b>: array ( val => ACCLEVEL[, val2 => ACCLEVEL2,...] )<br><b>Voorbeeld</b>: array ( 20 => REPORTER, 50 => DEVELOPER )';
+
+	$s_plugin_ProjectManagement_view_time_registration_worksheet = 'View time registration worksheet threshold';
+	$s_plugin_ProjectManagement_view_report_registration_threshold = 'View time registration report threshold';
+	$s_plugin_ProjectManagement_view_resource_management_threshold = 'View resource management threshold';
+	$s_plugin_ProjectManagement_view_resource_allocation_threshold = 'View resource allocation threshold';
+	$s_plugin_ProjectManagement_admin_threshold = 'Plugin administrator threshold';
 ?>

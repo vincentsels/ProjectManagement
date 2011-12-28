@@ -27,14 +27,29 @@
          <td><select name="include_bookdate_threshold"><?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'include_bookdate_threshold' ) ) ?></select></td>
       </tr>
       <tr <?php echo helper_alternate_class() ?>>
-         <td class="category"><?php echo plugin_lang_get( 'view_reports_threshold' ) ?><br />
-         <span class="small"><?php echo plugin_lang_get( 'view_reports_threshold_info' ) ?></span></td>
-         <td><select name="view_reports_threshold"><?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'view_reports_threshold' ) ) ?></select></td>
-      </tr>
-      <tr <?php echo helper_alternate_class() ?>>
          <td class="category"><?php echo plugin_lang_get( 'work_type_thresholds' ) ?><br />
          <span class="small"><?php echo plugin_lang_get( 'work_type_thresholds_info' ) ?></span></td>
          <td><input type="text" size="100" maxlength="200" name="work_type_thresholds" id="work_type_thresholds" value="<?php var_export( plugin_config_get( 'work_type_thresholds' ) ) ?>"></td>
+      </tr>
+      <tr <?php echo helper_alternate_class() ?>>
+         <td class="category"><?php echo plugin_lang_get( 'view_time_registration_worksheet' ) ?></td>
+         <td><select name="view_time_registration_worksheet"><?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'view_time_registration_worksheet' ) ) ?></select></td>
+      </tr>
+      <tr <?php echo helper_alternate_class() ?>>
+         <td class="category"><?php echo plugin_lang_get( 'view_report_registration_threshold' ) ?></td>
+         <td><select name="view_report_registration_threshold"><?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'view_report_registration_threshold' ) ) ?></select></td>
+      </tr>
+      <tr <?php echo helper_alternate_class() ?>>
+         <td class="category"><?php echo plugin_lang_get( 'view_resource_management_threshold' ) ?></td>
+         <td><select name="view_resource_management_threshold"><?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'view_resource_management_threshold' ) ) ?></select></td>
+      </tr>
+      <tr <?php echo helper_alternate_class() ?>>
+         <td class="category"><?php echo plugin_lang_get( 'view_resource_allocation_threshold' ) ?></td>
+         <td><select name="view_resource_allocation_threshold"><?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'view_resource_allocation_threshold' ) ) ?></select></td>
+      </tr>
+      <tr <?php echo helper_alternate_class() ?>>
+         <td class="category"><?php echo plugin_lang_get( 'admin_threshold' ) ?></td>
+         <td><select name="admin_threshold"><?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'admin_threshold' ) ) ?></select></td>
       </tr>
       <tr>
          <td class="center" colspan="2"><input type="submit" value="<?php echo lang_get( 'update' ) ?>"/></td>

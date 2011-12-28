@@ -1,5 +1,7 @@
 <?php
 
+access_ensure_global_level( plugin_config_get( 'view_resource_allocation_threshold' ) );
+
 html_page_top1( plugin_lang_get( 'title' ) );
 html_page_top2();
 

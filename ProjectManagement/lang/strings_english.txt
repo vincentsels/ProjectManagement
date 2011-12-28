@@ -14,6 +14,7 @@
 	$s_plugin_ProjectManagement_reports = 'Project management';
 	$s_plugin_ProjectManagement_time_division = 'Time division';
 	$s_plugin_ProjectManagement_per = 'Per';
+	$s_plugin_ProjectManagement_time_registration_worksheet = 'Time registration worksheet';
 	$s_plugin_ProjectManagement_time_registration = 'Time registration';
 	$s_plugin_ProjectManagement_resource_allocation = 'Resource allocation';
 	$s_plugin_ProjectManagement_resource_management = 'Resource management';
@@ -27,12 +28,19 @@
    
 	$s_plugin_ProjectManagement_work_types = 'Types of work';
 	$s_plugin_ProjectManagement_work_types_info = 'An enumeration containing the differend kinds of work someone can perform on a ticket. Use only one to ignore this feature.';
+	
 	$s_plugin_ProjectManagement_edit_estimates_threshold = 'Edit estimations threshold';
 	$s_plugin_ProjectManagement_edit_estimates_threshold_info = 'Once a starting estimation was supplied for a certain ticket and type of work, it can no longer by modified unless with this permission.';
+	
 	$s_plugin_ProjectManagement_include_bookdate_threshold = 'Include bookdate threshold';
 	$s_plugin_ProjectManagement_include_bookdate_threshold_info = 'Allows users with this security profile or higher to include a different book date when registring hours worked.';
-	$s_plugin_ProjectManagement_view_reports_threshold = 'View reports threshold';
-	$s_plugin_ProjectManagement_view_reports_threshold_info = 'Allows access to various project management reports.';
+		
 	$s_plugin_ProjectManagement_work_type_thresholds = 'Thresholds for types of work';
 	$s_plugin_ProjectManagement_work_type_thresholds_info = 'Users with an access level lower than the one specified can\'t see or modify the specified type of work.<br><b>Syntax</b>: array ( val => ACCLEVEL[, val2 => ACCLEVEL2,...] )<br><b>Example</b>: array ( 20 => REPORTER, 50 => DEVELOPER )';
+
+	$s_plugin_ProjectManagement_view_time_registration_worksheet = 'View time registration worksheet threshold';
+	$s_plugin_ProjectManagement_view_report_registration_threshold = 'View time registration report threshold';
+	$s_plugin_ProjectManagement_view_resource_management_threshold = 'View resource management threshold';
+	$s_plugin_ProjectManagement_view_resource_allocation_threshold = 'View resource allocation threshold';
+	$s_plugin_ProjectManagement_admin_threshold = 'Plugin administrator threshold';
 ?>
