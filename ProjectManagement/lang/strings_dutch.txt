@@ -14,14 +14,18 @@
 	$s_plugin_ProjectManagement_reports = 'Project management';
 	$s_plugin_ProjectManagement_time_division = 'Tijdsverdeling';
 	$s_plugin_ProjectManagement_per = 'Per';
-	$s_plugin_ProjectManagement_time_registration_worksheet = 'Tijdsregistratie werkblad';
 	$s_plugin_ProjectManagement_time_registration = 'Tijdsregistratie';
+	$s_plugin_ProjectManagement_time_registration_worksheet = 'Tijdsregistratie werkblad';
+	$s_plugin_ProjectManagement_time_registration_overview = 'Tijdsregistratie overzicht';
 	$s_plugin_ProjectManagement_resource_allocation = 'Verdeling resources';
 	$s_plugin_ProjectManagement_resource_management = 'Beheer resources';
 	$s_plugin_ProjectManagement_period = 'Periode';
 	$s_plugin_ProjectManagement_hours = 'Uren';
 	$s_plugin_ProjectManagement_cost = 'Prijs';
 	$s_plugin_ProjectManagement_total_cost = 'Totale prijs';
+	$s_plugin_ProjectManagement_turn_on_recently_visited = 'Schakel de configuratie optie \'recently visited\' in om van deze feature gebruik te kunnen maken.';
+	$s_plugin_ProjectManagement_recently_visited = 'Recent bezocht';
+	$s_plugin_ProjectManagement_recently_registered = 'Recent geregistreerd';
 	
 	$s_plugin_ProjectManagement_hourly_rate = 'Uurprijs';
 	$s_plugin_ProjectManagement_hours_per_week = 'Werkuur per week';
@@ -38,9 +42,11 @@
 	$s_plugin_ProjectManagement_work_type_thresholds = 'Drempels voor soorten werk';
 	$s_plugin_ProjectManagement_work_type_thresholds_info = 'Gebruikers met een profiel lager dan het opgegeven kunnen de soorten werk niet zien of wijzigen.<br><b>Syntax</b>: array ( val => ACCLEVEL[, val2 => ACCLEVEL2,...] )<br><b>Voorbeeld</b>: array ( 20 => REPORTER, 50 => DEVELOPER )';
 
-	$s_plugin_ProjectManagement_view_time_registration_worksheet = 'View time registration worksheet threshold';
-	$s_plugin_ProjectManagement_view_report_registration_threshold = 'View time registration report threshold';
-	$s_plugin_ProjectManagement_view_resource_management_threshold = 'View resource management threshold';
-	$s_plugin_ProjectManagement_view_resource_allocation_threshold = 'View resource allocation threshold';
-	$s_plugin_ProjectManagement_admin_threshold = 'Plugin administrator threshold';
+	$s_plugin_ProjectManagement_enable_time_registration_threshold = 'Drempel voor tijdsregistratie';
+	$s_plugin_ProjectManagement_view_time_registration_summary_threshold = 'Drempel voor bekijken samenvatting tijdsregistratie';
+	$s_plugin_ProjectManagement_view_time_registration_worksheet_threshold = 'Drempel voor tijdsregistratie via worksheet';
+	$s_plugin_ProjectManagement_view_report_registration_threshold = 'Drempel voor tijdsregistratie rapportering';
+	$s_plugin_ProjectManagement_view_resource_management_threshold = 'Drempel voor beheer resources';
+	$s_plugin_ProjectManagement_view_resource_allocation_threshold = 'Drempel voor bekijken resource verdeling';
+	$s_plugin_ProjectManagement_admin_threshold = 'Drempel voor plugin admin';
 ?>

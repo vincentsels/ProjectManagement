@@ -14,14 +14,18 @@
 	$s_plugin_ProjectManagement_reports = 'Project management';
 	$s_plugin_ProjectManagement_time_division = 'Time division';
 	$s_plugin_ProjectManagement_per = 'Per';
-	$s_plugin_ProjectManagement_time_registration_worksheet = 'Time registration worksheet';
 	$s_plugin_ProjectManagement_time_registration = 'Time registration';
+	$s_plugin_ProjectManagement_time_registration_worksheet = 'Time registration worksheet';
+	$s_plugin_ProjectManagement_time_registration_overview = 'Time registration overview';
 	$s_plugin_ProjectManagement_resource_allocation = 'Resource allocation';
 	$s_plugin_ProjectManagement_resource_management = 'Resource management';
 	$s_plugin_ProjectManagement_period = 'Period';
 	$s_plugin_ProjectManagement_hours = 'Hours';
 	$s_plugin_ProjectManagement_cost = 'Cost';
 	$s_plugin_ProjectManagement_total_cost = 'Total cost';
+	$s_plugin_ProjectManagement_turn_on_recently_visited = 'Turn on the \'recently visited\' configuration option to enable this feature.';
+	$s_plugin_ProjectManagement_recently_visited = 'Recently visited';
+	$s_plugin_ProjectManagement_recently_registered = 'Recently registered';
 	
 	$s_plugin_ProjectManagement_hourly_rate = 'Hourly rate';
 	$s_plugin_ProjectManagement_hours_per_week = 'Hours per week';
@@ -38,7 +42,9 @@
 	$s_plugin_ProjectManagement_work_type_thresholds = 'Thresholds for types of work';
 	$s_plugin_ProjectManagement_work_type_thresholds_info = 'Users with an access level lower than the one specified can\'t see or modify the specified type of work.<br><b>Syntax</b>: array ( val => ACCLEVEL[, val2 => ACCLEVEL2,...] )<br><b>Example</b>: array ( 20 => REPORTER, 50 => DEVELOPER )';
 
-	$s_plugin_ProjectManagement_view_time_registration_worksheet = 'View time registration worksheet threshold';
+	$s_plugin_ProjectManagement_enable_time_registration_threshold = 'Enable time registration threshold';
+	$s_plugin_ProjectManagement_view_time_registration_summary_threshold = 'View summary of time registration threshold';
+	$s_plugin_ProjectManagement_view_time_registration_worksheet_threshold = 'View time registration worksheet threshold';
 	$s_plugin_ProjectManagement_view_report_registration_threshold = 'View time registration report threshold';
 	$s_plugin_ProjectManagement_view_resource_management_threshold = 'View resource management threshold';
 	$s_plugin_ProjectManagement_view_resource_allocation_threshold = 'View resource allocation threshold';

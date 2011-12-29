@@ -12,9 +12,11 @@
 
    maybe_set_option( 'work_types', gpc_get_string( 'work_types' ) );
    maybe_set_option( 'edit_estimates_threshold', gpc_get_int( 'edit_estimates_threshold' ) );
+   maybe_set_option( 'view_time_registration_summary_threshold', gpc_get_int( 'view_time_registration_summary_threshold' ) );
    maybe_set_option( 'include_bookdate_threshold', gpc_get_int( 'include_bookdate_threshold' ) );
    maybe_set_option( 'work_type_thresholds', string_to_array( gpc_get_string( 'work_type_thresholds', null ) ) );
-   maybe_set_option( 'view_time_registration_worksheet', gpc_get_int( 'view_time_registration_worksheet' ) );
+   maybe_set_option( 'enable_time_registration_threshold', gpc_get_int( 'enable_time_registration_threshold' ) );
+   maybe_set_option( 'view_time_registration_worksheet_threshold', gpc_get_int( 'view_time_registration_worksheet_threshold' ) );
    maybe_set_option( 'view_report_registration_threshold', gpc_get_int( 'view_report_registration_threshold' ) );
    maybe_set_option( 'view_resource_management_threshold', gpc_get_int( 'view_resource_management_threshold' ) );
    maybe_set_option( 'view_resource_allocation_threshold', gpc_get_int( 'view_resource_allocation_threshold' ) );

@@ -17,6 +17,14 @@
          <td width="75%" ><input type="text" size="100" maxlength="200" name="work_types" id="work_types" value="<?php echo plugin_config_get( 'work_types' ) ?>"></td>
       </tr>
       <tr <?php echo helper_alternate_class() ?>>
+         <td class="category"><?php echo plugin_lang_get( 'enable_time_registration_threshold' ) ?><br />
+         <td><select name="enable_time_registration_threshold"><?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'enable_time_registration_threshold' ) ) ?></select></td>
+      </tr>
+      <tr <?php echo helper_alternate_class() ?>>
+         <td class="category"><?php echo plugin_lang_get( 'view_time_registration_summary_threshold' ) ?><br />
+         <td><select name="view_time_registration_summary_threshold"><?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'view_time_registration_summary_threshold' ) ) ?></select></td>
+      </tr>
+      <tr <?php echo helper_alternate_class() ?>>
          <td class="category"><?php echo plugin_lang_get( 'edit_estimates_threshold' ) ?><br />
          <span class="small"><?php echo plugin_lang_get( 'edit_estimates_threshold_info' ) ?></span></td>
          <td><select name="edit_estimates_threshold"><?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'edit_estimates_threshold' ) ) ?></select></td>
@@ -32,8 +40,8 @@
          <td><input type="text" size="100" maxlength="200" name="work_type_thresholds" id="work_type_thresholds" value="<?php var_export( plugin_config_get( 'work_type_thresholds' ) ) ?>"></td>
       </tr>
       <tr <?php echo helper_alternate_class() ?>>
-         <td class="category"><?php echo plugin_lang_get( 'view_time_registration_worksheet' ) ?></td>
-         <td><select name="view_time_registration_worksheet"><?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'view_time_registration_worksheet' ) ) ?></select></td>
+         <td class="category"><?php echo plugin_lang_get( 'view_time_registration_worksheet_threshold' ) ?></td>
+         <td><select name="view_time_registration_worksheet_threshold"><?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'view_time_registration_worksheet_threshold' ) ) ?></select></td>
       </tr>
       <tr <?php echo helper_alternate_class() ?>>
          <td class="category"><?php echo plugin_lang_get( 'view_report_registration_threshold' ) ?></td>

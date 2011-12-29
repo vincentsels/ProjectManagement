@@ -8,6 +8,7 @@ define( 'PLUGIN_PM_REMAINING',	3 );
 define( 'PLUGIN_PM_DIFF',		4 );
 
 define( 'PLUGIN_PM_WORKTYPE_TOTAL',	100 );
+define( 'PLUGIN_PM_RECENTLY_VISITED_COUNT',	50 );
 
 # Enums
 

@@ -43,9 +43,11 @@ class ProjectManagementPlugin extends MantisPlugin {
 	function config() {
 		return array(
 				'work_types' => '20:analysis,50:development,80:testing',
+				'enable_time_registration_threshold' => REPORTER,
+				'view_time_registration_summary_threshold' => REPORTER,
 				'edit_estimates_threshold' => MANAGER,
 				'include_bookdate_threshold' => REPORTER,
-				'view_time_registration_worksheet' => DEVELOPER,
+				'view_time_registration_worksheet_threshold' => DEVELOPER,
 				'view_report_registration_threshold' => DEVELOPER,
 				'view_resource_management_threshold' => MANAGER,
 				'view_resource_allocation_threshold' => DEVELOPER,
@@ -57,6 +59,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 
 	function hooks() {
 		return array(
+				'EVENT_VIEW_BUG_DETAILS' => 'view_bug_time_registration_summary',
 				'EVENT_VIEW_BUG_EXTRA' => 'view_bug_time_registration',
 				'EVENT_MENU_MAIN' => 'main_menu'
 		);
@@ -72,7 +75,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 		$t_reports_page = plugin_page( 'time_registration_page', false );
 		$t_pagename = plugin_lang_get( 'reports' );
 		# Only display main menu if at least one of the submenus is accessible
-		if ( access_has_global_level( plugin_config_get( 'view_time_registration_worksheet' ) ) ||
+		if ( access_has_global_level( plugin_config_get( 'view_time_registration_worksheet_threshold' ) ) ||
 				access_has_global_level( plugin_config_get( 'view_report_registration_threshold' ) ) ||
 				access_has_global_level( plugin_config_get( 'view_resource_management_threshold' ) ) ||
 				access_has_global_level( plugin_config_get( 'view_resource_allocation_threshold' ) )
@@ -82,11 +85,42 @@ class ProjectManagementPlugin extends MantisPlugin {
 	}
 
 	/**
-	 * Show TimeTracking information when viewing bugs.
-	 * @param string Event name
-	 * @param int Bug ID
+	 * @todo fix hours todo (add 'calculated' hours)
 	 */
+	function view_bug_time_registration_summary( $p_event, $p_bug_id ) {
+		if ( !access_has_project_level( plugin_config_get( 'view_time_registration_summary_threshold' ) ) ) {
+			return;
+		}
+		
+		# Fetch time registration summary
+		$t_table = plugin_table('work');
+		$query = "SELECT minutes_type, sum(minutes) as minutes
+			FROM $t_table 
+			WHERE bug_id = $p_bug_id
+			GROUP BY minutes_type";
+		$result = db_query_bound( $query );
+		$num = db_num_rows( $result );
+		
+		$t_summary_info = array();
+		for ( $i = 0; $i < $num; $i++ ) {
+			$row = db_fetch_array( $result );
+			$t_summary_info[$row['minutes_type']] = $row['minutes'];
+		}
+		$t_est_total = minutes_to_time( $t_summary_info[0], true );
+		$t_done_total = minutes_to_time( $t_summary_info[1], false );
+		$t_todo_total = minutes_to_time( $t_summary_info[2], true );
+		
+		echo '<tr ' . helper_alternate_class() . '>';
+		echo '<td class="category">Est</td><td>' . $t_est_total . '</td>
+		<td class="category">Done</td><td>' . $t_done_total . '</td>
+		<td class="category">Todo</td><td>' . $t_todo_total . '</td></tr>';
+	}
+
 	function view_bug_time_registration( $p_event, $p_bug_id ) {
+		if ( !access_has_project_level( plugin_config_get( 'enable_time_registration_threshold' ) ) ) {
+			return;
+		}
+		
 		$t_table = plugin_table('work');
 		$t_est = PLUGIN_PM_EST;
 		$t_done = PLUGIN_PM_DONE;
@@ -97,7 +131,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 			FROM $t_table 
 			WHERE bug_id = $p_bug_id 
 			AND minutes_type = $t_est";
-		$result_fetch_est = db_query_bound($query_fetch_est);
+		$result_fetch_est = db_query_bound( $query_fetch_est );
 		$num_fetch_est = db_num_rows( $result_fetch_est );
 
 		# Fetch totals total of done of all work types
@@ -186,7 +220,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 		<form name="time_registration" method="post" action="<?php echo plugin_page('time_registration_update') ?>" >
       	<?php echo form_security_field( 'plugin_ProjectManagement_time_registration_update' ) ?>
       	
-		<input type="hidden" name="bug_id" value="<?php echo $p_bug_id; ?>">
+      	<?php printf( "<input type=\"hidden\" name=\"bug_ids[]\" value=\"%d\" />", $p_bug_id ); ?>
 		
 		<table class="width50" cellspacing="1">
 			<tr>
@@ -198,11 +232,11 @@ class ProjectManagementPlugin extends MantisPlugin {
 				</td>
 			</tr>
 			<tr class="row-category">
-				<td width="20%"><div align="center"><?php echo plugin_lang_get( 'work_type' ) ?></div></td>
-				<td><div align="center"><?php echo plugin_lang_get( 'est' ) ?></div></td>
-				<td width="20%"><div align="center"><?php echo plugin_lang_get( 'done' ) ?></div></td>
-				<td width="30%"><div align="center"><?php echo plugin_lang_get( 'todo' ) ?></div></td>
-				<td><div align="center"><?php echo plugin_lang_get( 'diff' ) ?></div></td>
+				<td width="20%" style="min-width:130px"><div align="center"><?php echo plugin_lang_get( 'work_type' ) ?></div></td>
+				<td style="min-width:130px"><div align="center"><?php echo plugin_lang_get( 'est' ) ?></div></td>
+				<td width="20%" style="min-width:130px"><div align="center"><?php echo plugin_lang_get( 'done' ) ?></div></td>
+				<td width="30%" style="min-width:200px"><div align="center"><?php echo plugin_lang_get( 'todo' ) ?></div></td>
+				<td style="min-width:100px"><div align="center"><?php echo plugin_lang_get( 'diff' ) ?></div></td>
 			</tr>
 		<?php 
 		foreach ( $t_work_types as $t_work_type_code => $t_work_type_label ) {
@@ -220,7 +254,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 								access_has_bug_level( plugin_config_get( 'edit_estimates_threshold' ), $p_bug_id )  ) ) { 
 					# Check whether est was already supplied, or user has rights to alter it regardless
 					?>
-					-> <input type="text" size="4" maxlength="7" autocomplete="off" name= <?php echo '"change_' . PLUGIN_PM_EST . '_' . $t_work_type_code . '"' ?>>
+					-> <input type="text" size="4" maxlength="7" autocomplete="off" name= <?php echo '"change_' . $p_bug_id . '_' . PLUGIN_PM_EST . '_' . $t_work_type_code . '"' ?>>
 					<?php 
 				}
 				?>
@@ -231,7 +265,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 				echo minutes_to_time( $t_work[PLUGIN_PM_DONE][$t_work_type_code], false );
 				if ( $t_work_type_code != PLUGIN_PM_WORKTYPE_TOTAL ) { 
 					?>
-					+ <input type="text" size="4" maxlength="7" autocomplete="off" name= <?php echo '"add_' . PLUGIN_PM_DONE . '_' . $t_work_type_code . '"' ?>>
+					+ <input type="text" size="4" maxlength="7" autocomplete="off" name= <?php echo '"add_' . $p_bug_id . '_' . PLUGIN_PM_DONE . '_' . $t_work_type_code . '"' ?>>
 					<?php 
 				}
 				?>
@@ -251,11 +285,11 @@ class ProjectManagementPlugin extends MantisPlugin {
 				}
 				if ( $t_work_type_code != PLUGIN_PM_WORKTYPE_TOTAL ) { 
 					?>
-					-> <input type="text" size="4" maxlength="7" autocomplete="off" name= <?php echo '"change_' . PLUGIN_PM_TODO . '_' . $t_work_type_code . '"' ?>> 
+					-> <input type="text" size="4" maxlength="7" autocomplete="off" name= <?php echo '"change_' . $p_bug_id . '_' . PLUGIN_PM_TODO . '_' . $t_work_type_code . '"' ?>> 
 					<?php 
 					if ( isset( $t_work[PLUGIN_PM_TODO][$t_work_type_code] ) ) {
 						?>
-						<input type="checkbox" name= <?php echo '"clear_' . PLUGIN_PM_TODO . '_' . $t_work_type_code . '"' ?>> <?php echo plugin_lang_get( 'clear' ) ?>
+						<input type="checkbox" name= <?php echo '"clear_' . $p_bug_id . '_' . PLUGIN_PM_TODO . '_' . $t_work_type_code . '"' ?>> <?php echo plugin_lang_get( 'clear' ) ?>
 					<?php 
 					}
 				}
