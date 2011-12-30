@@ -278,4 +278,32 @@ function recently_visited_bugs_get( $p_user_id = null ) {
 	return $t_ids;
 }
 
+/**
+ * Returns the specified language string with only the initial letter capitalized.
+ * @param string $p_lang_strings can either be one string to translate or an array of strings
+ * @param bool $p_plugin Specify whether or not to use a translation from the plugin, defaults to false
+ * @return string
+ */
+function init_cap( $p_lang_strings, $p_plugin = false ) {
+	if ( is_array( $p_lang_strings ) ) {
+		foreach ( $p_lang_strings as $p_lang_string ) {
+			$p_lang_strings_arr[] = $p_lang_string;
+		}
+	} else {
+		$p_lang_strings_arr[] = $p_lang_strings;
+	}
+	
+	if ( $p_plugin ) {
+		foreach ( $p_lang_strings_arr as $t_str ) {
+			$t_val .= plugin_lang_get( $t_str ) . ' ';
+		}
+	} else {
+		foreach ( $p_lang_strings_arr as $t_str ) {
+			$t_val .= lang_get( $t_str ) . ' ';;
+		}
+	}
+	
+	return ucfirst( strtolower( trim( $t_val ) ) );
+}
+
 ?>

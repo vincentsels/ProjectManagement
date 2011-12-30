@@ -73,11 +73,11 @@ $t_per_category;
 <?php
 echo plugin_lang_get( 'period' ) . ': ';
 echo '<input type="text" size="8" maxlength="10" autocomplete="off" id="period_start" name="period_start" value="' . $f_period_start . '">';
-date_print_calendar();
-date_finish_calendar( 'period_start', 'period_start');
+date_print_calendar( 'period_start_cal' );
+date_finish_calendar( 'period_start', 'period_start_cal');
 echo ' - <input type="text" size="8" maxlength="10" autocomplete="off" id="period_end" name="period_end" value="' . $f_period_end . '">';
-date_print_calendar();
-date_finish_calendar( 'period_end', 'period_end');
+date_print_calendar( 'period_end_cal' );
+date_finish_calendar( 'period_end', 'period_end_cal');
 ?>
 <input name="submit" type="submit" value="<?php echo lang_get( 'update' ) ?>">
 </form>

@@ -8,7 +8,7 @@ html_page_top2();
 print_pm_reports_menu( 'resource_allocation_page' );
 
 ?>
-<br />Coming soon...<br />
+<div class="center"><br /><i>Coming soon...</i><br /></div>
 <?php 
 
 html_page_bottom1( __FILE__ );

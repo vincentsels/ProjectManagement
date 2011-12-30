@@ -29,14 +29,15 @@ class ProjectManagementPlugin extends MantisPlugin {
 						book_date          I,
 						timestamp          I
 						" ) ),
-				array( 'CreateIndexSQL', array( 'idx_plugin_pm_work_bug_id',
-						plugin_table( 'work' ),
-						'bug_id' ) ),
+				array( 'CreateIndexSQL', array( 'idx_plugin_pm_work_bug_id', # used operationally
+						plugin_table( 'work' ), 'bug_id' ) ),
 				array( 'CreateTableSQL', array( plugin_table( 'resource' ), "
 						user_id            I       NOTNULL UNSIGNED PRIMARY,
 						hours_per_week	   I	   UNSIGNED,
 						hourly_rate        F(3,2)
-						" ) )
+						" ) ),
+				array( 'CreateIndexSQL', array( 'idx_plugin_pm_work_user_id_book_date',  # used for reporting
+						plugin_table( 'work' ), 'user_id, book_date' ) )
 		);
 	}
 
@@ -325,8 +326,8 @@ class ProjectManagementPlugin extends MantisPlugin {
 			if ( access_has_bug_level( plugin_config_get( 'include_bookdate_threshold' ), $p_bug_id ) ) {
 				echo plugin_lang_get( 'book_date' ) . ': ';
 				echo '<input type="text" size="8" maxlength="10" autocomplete="off" id="book_date" name="book_date" value="' . date('d/m/Y') . '">';
-				date_print_calendar();
-				date_finish_calendar( 'book_date', 'trigger');
+				date_print_calendar( 'book_date_cal' );
+				date_finish_calendar( 'book_date', 'book_date_cal');
 			}
 		?>
 		</td>
