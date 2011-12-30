@@ -41,11 +41,11 @@
       </tr>
       <tr <?php echo helper_alternate_class() ?>>
          <td class="category"><?php echo plugin_lang_get( 'view_time_registration_worksheet_threshold' ) ?></td>
-         <td><select name="view_time_registration_worksheet_threshold"><?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'view_time_registration_worksheet_threshold' ) ) ?></select></td>
+         <td><select name="view_registration_worksheet_threshold"><?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'view_registration_worksheet_threshold' ) ) ?></select></td>
       </tr>
       <tr <?php echo helper_alternate_class() ?>>
          <td class="category"><?php echo plugin_lang_get( 'view_report_registration_threshold' ) ?></td>
-         <td><select name="view_report_registration_threshold"><?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'view_report_registration_threshold' ) ) ?></select></td>
+         <td><select name="view_registration_report_threshold"><?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'view_registration_report_threshold' ) ) ?></select></td>
       </tr>
       <tr <?php echo helper_alternate_class() ?>>
          <td class="category"><?php echo plugin_lang_get( 'view_resource_management_threshold' ) ?></td>

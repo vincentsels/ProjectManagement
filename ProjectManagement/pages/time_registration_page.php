@@ -1,6 +1,6 @@
 <?php
 
-access_ensure_global_level( plugin_config_get( 'view_time_registration_worksheet_threshold' ) );
+access_ensure_global_level( plugin_config_get( 'view_registration_worksheet_threshold' ) );
 
 html_page_top1( plugin_lang_get( 'title' ) );
 html_page_top2();
@@ -8,7 +8,8 @@ html_page_top2();
 print_pm_reports_menu( 'time_registration_page' );
 
 $t_recently_visited_enabled = last_visited_enabled();
-$t_recently_visited = implode(', ', last_visited_get_array());
+$t_recently_visited_array = last_visited_get_array( null, PLUGIN_PM_RECENTLY_VISITED_COUNT );
+$t_recently_visited = implode(', ', $t_recently_visited_array );
 
 $t_work_table = plugin_table('work');
 $t_bug_table = db_get_table( 'mantis_bug_table' );
@@ -41,7 +42,7 @@ $t_num_result_recent = db_num_rows( $t_result_recent );
 <?php 
 echo form_security_field( 'plugin_ProjectManagement_time_registration_update' );
 
-foreach ( last_visited_get_array() as $t_bug_id ) {
+foreach ( $t_recently_visited_array as $t_bug_id ) {
 	printf( "<input type=\"hidden\" name=\"bug_ids[]\" value=\"%d\" />", $t_bug_id ); 
 }
 ?>

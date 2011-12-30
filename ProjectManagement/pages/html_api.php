@@ -22,10 +22,10 @@ function print_pm_reports_menu( $p_page = '' ) {
 	}
 
 	echo '<div align="center"><p>';
-	if ( access_has_global_level( plugin_config_get( 'view_time_registration_worksheet_threshold' ) ) ) {
+	if ( access_has_global_level( plugin_config_get( 'view_registration_worksheet_threshold' ) ) ) {
 		print_bracket_link( $t_pm_time_registration_page, plugin_lang_get( 'time_registration_worksheet' ) );
 	}
-	if ( access_has_global_level( plugin_config_get( 'view_report_registration_threshold' ) ) ) {
+	if ( access_has_global_level( plugin_config_get( 'view_registration_report_threshold' ) ) ) {
 		print_bracket_link( $t_pm_report_registration_page, plugin_lang_get( 'time_registration_overview' ) );
 	}
 	if ( access_has_global_level( plugin_config_get( 'view_resource_allocation_threshold' ) ) ) {

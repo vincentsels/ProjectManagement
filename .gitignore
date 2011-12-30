@@ -33,6 +33,10 @@ plugins/*
 # IIS7 
 web.config
 
-#libraries
+# libraries
 library/jpgraph
 library/FirePHPCore
+
+# Shizzle
+*.zip
+*.rar

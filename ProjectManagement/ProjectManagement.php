@@ -43,12 +43,12 @@ class ProjectManagementPlugin extends MantisPlugin {
 	function config() {
 		return array(
 				'work_types' => '20:analysis,50:development,80:testing',
-				'enable_time_registration_threshold' => REPORTER,
+				'enable_time_registration_threshold' => DEVELOPER,
 				'view_time_registration_summary_threshold' => REPORTER,
 				'edit_estimates_threshold' => MANAGER,
-				'include_bookdate_threshold' => REPORTER,
-				'view_time_registration_worksheet_threshold' => DEVELOPER,
-				'view_report_registration_threshold' => DEVELOPER,
+				'include_bookdate_threshold' => DEVELOPER,
+				'view_registration_worksheet_threshold' => DEVELOPER,
+				'view_registration_report_threshold' => DEVELOPER,
 				'view_resource_management_threshold' => MANAGER,
 				'view_resource_allocation_threshold' => DEVELOPER,
           		'admin_threshold' => ADMINISTRATOR,
@@ -61,7 +61,8 @@ class ProjectManagementPlugin extends MantisPlugin {
 		return array(
 				'EVENT_VIEW_BUG_DETAILS' => 'view_bug_time_registration_summary',
 				'EVENT_VIEW_BUG_EXTRA' => 'view_bug_time_registration',
-				'EVENT_MENU_MAIN' => 'main_menu'
+				'EVENT_MENU_MAIN' => 'main_menu',
+				'EVENT_BUG_DELETED' => 'delete_time_registration'
 		);
 	}
 
@@ -75,8 +76,8 @@ class ProjectManagementPlugin extends MantisPlugin {
 		$t_reports_page = plugin_page( 'time_registration_page', false );
 		$t_pagename = plugin_lang_get( 'reports' );
 		# Only display main menu if at least one of the submenus is accessible
-		if ( access_has_global_level( plugin_config_get( 'view_time_registration_worksheet_threshold' ) ) ||
-				access_has_global_level( plugin_config_get( 'view_report_registration_threshold' ) ) ||
+		if ( access_has_global_level( plugin_config_get( 'view_registration_worksheet_threshold' ) ) ||
+				access_has_global_level( plugin_config_get( 'view_registration_report_threshold' ) ) ||
 				access_has_global_level( plugin_config_get( 'view_resource_management_threshold' ) ) ||
 				access_has_global_level( plugin_config_get( 'view_resource_allocation_threshold' ) )
 				 ) {
@@ -114,6 +115,12 @@ class ProjectManagementPlugin extends MantisPlugin {
 		echo '<td class="category">Est</td><td>' . $t_est_total . '</td>
 		<td class="category">Done</td><td>' . $t_done_total . '</td>
 		<td class="category">Todo</td><td>' . $t_todo_total . '</td></tr>';
+	}
+	
+	function delete_time_registration ( $p_event, $p_bug_id ) {
+		$t_table = plugin_table('work');
+		$t_query = "DELETE FROM $t_table WHERE bug_id = $p_bug_id";
+		db_query_bound( $t_query );
 	}
 
 	function view_bug_time_registration( $p_event, $p_bug_id ) {
