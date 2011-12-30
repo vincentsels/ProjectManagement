@@ -7,8 +7,10 @@ define( 'PLUGIN_PM_TODO',		2 );
 define( 'PLUGIN_PM_REMAINING',	3 );
 define( 'PLUGIN_PM_DIFF',		4 );
 
-define( 'PLUGIN_PM_WORKTYPE_TOTAL',	100 );
-define( 'PLUGIN_PM_RECENTLY_VISITED_COUNT',	50 );
+define( 'PLUGIN_PM_WORKTYPE_TOTAL',					100 );
+define( 'PLUGIN_PM_TOKEN_RECENTLY_VISITED',			6876 ); # Has to be unique among plugins !!
+define( 'PLUGIN_PM_TOKEN_RECENTLY_VISITED_COUNT',	50 );
+define( 'PLUGIN_PM_TOKEN_EXPIRY_RECENTLY_VISITED',	60 * 60 * 24 * 3 ); # 3 days ?
 
 # Enums
 
@@ -227,7 +229,7 @@ function string_to_array( $p_value ) {
 }
 
 /**
- * Check if the passed string is a constant and return its value
+ * Check if the passed string is a constant and return its value.
  * @todo duplicated here from adm_config_report.php, should be moved to helper class or something imo.
  */
 function constant_replace( $p_name ) {
@@ -237,6 +239,43 @@ function constant_replace( $p_name ) {
 		$t_result = constant( $p_name );
 	}
 	return $t_result;
+}
+
+/**
+ * Add a recently visited bug.
+ * @param int $p_issue_id
+ * @param int $p_user_id
+ */
+function recently_visited_bug_add( $p_issue_id, $p_user_id = null ) {
+	$t_value = token_get_value( PLUGIN_PM_TOKEN_RECENTLY_VISITED, $p_user_id );
+	if( is_null( $t_value ) ) {
+		$t_value = $p_issue_id;
+	} else {
+		$t_ids = explode( ',', $p_issue_id . ',' . $t_value );
+		$t_ids = array_unique( $t_ids );
+		$t_ids = array_slice( $t_ids, 0, PLUGIN_PM_TOKEN_RECENTLY_VISITED_COUNT );
+		$t_value = implode( ',', $t_ids );
+	}
+
+	token_set( PLUGIN_PM_TOKEN_RECENTLY_VISITED, $t_value, TOKEN_EXPIRY_LAST_VISITED, $p_user_id );
+}
+
+/**
+ * Retrieve an array of all recently visted bugs.
+ * @param int $p_user_id
+ * @return array of recently visited bugs
+ */
+function recently_visited_bugs_get( $p_user_id = null ) {
+	$t_value = token_get_value( PLUGIN_PM_TOKEN_RECENTLY_VISITED, $p_user_id );
+
+	if( is_null( $t_value ) ) {
+		return array();
+	}
+
+	$t_ids = explode( ',', $t_value );
+
+	bug_cache_array_rows( $t_ids );
+	return $t_ids;
 }
 
 ?>

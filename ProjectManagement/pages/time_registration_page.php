@@ -7,8 +7,8 @@ html_page_top2();
 
 print_pm_reports_menu( 'time_registration_page' );
 
-$t_recently_visited_enabled = last_visited_enabled();
-$t_recently_visited_array = last_visited_get_array( null, PLUGIN_PM_RECENTLY_VISITED_COUNT );
+$t_user = auth_get_current_user_id();
+$t_recently_visited_array = recently_visited_bugs_get( $t_user );
 $t_recently_visited = implode(', ', $t_recently_visited_array );
 
 $t_work_table = plugin_table('work');
@@ -24,7 +24,7 @@ $t_query_recent = "SELECT b.last_updated, b.handler_id, b.project_id, p.name as 
        LEFT JOIN $t_category_table c ON b.category_id = c.id
 		   WHERE b.id IN ( $t_recently_visited )
 		   ORDER BY b.last_updated DESC
-		   LIMIT " . PLUGIN_PM_RECENTLY_VISITED_COUNT;
+		   LIMIT " . PLUGIN_PM_TOKEN_RECENTLY_VISITED_COUNT;
 $t_result_recent = db_query_bound( $t_query_recent );
 $t_num_result_recent = db_num_rows( $t_result_recent );
 
@@ -48,14 +48,9 @@ foreach ( $t_recently_visited_array as $t_bug_id ) {
 ?>
 
 <table class="width100" cellspacing="1">
-<tr><td colspan="100%" class="form-title"><?php echo plugin_lang_get( 'recently_visited' ) ?><span class="floatright"><input name="submit" type="submit" value="<?php echo lang_get( 'update' ) ?>"></span></td></tr>
-<?php
-if ( $t_recently_visited_enabled == OFF ) {
-?>
-	<tr><td><i><?php plugin_lang_get( 'turn_on_recently_visited' ) ?></i></td></tr>
-<?php
-} else {
-?>
+
+	<tr><td colspan="100%" class="form-title"><?php echo plugin_lang_get( 'recently_visited' ) ?><span class="floatright"><input name="submit" type="submit" value="<?php echo lang_get( 'update' ) ?>"></span></td></tr>
+
 	<tr class="row-category">
 		<td><div align="center"><?php echo lang_get( 'last_update' ) ?></div></td>
 		<td><div align="center"><?php echo lang_get( 'assigned_to' ) ?></div></td>
@@ -66,8 +61,8 @@ if ( $t_recently_visited_enabled == OFF ) {
 		<td><div align="center"><?php echo plugin_lang_get( 'done' ) ?></div></td>
 	</tr>
 	<tr class="spacer"/>
+	
 <?php
-
 	for ( $i = 0; $i < $t_num_result_recent; $i++ ) {
 		$row = db_fetch_array( $t_result_recent );
 		
@@ -110,11 +105,8 @@ if ( $t_recently_visited_enabled == OFF ) {
 		
 		<?php
 	}
-
-}
 ?>
-</table
->
+</table>
 </form>
 </td>
 

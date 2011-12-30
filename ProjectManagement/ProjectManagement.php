@@ -62,7 +62,8 @@ class ProjectManagementPlugin extends MantisPlugin {
 				'EVENT_VIEW_BUG_DETAILS' => 'view_bug_time_registration_summary',
 				'EVENT_VIEW_BUG_EXTRA' => 'view_bug_time_registration',
 				'EVENT_MENU_MAIN' => 'main_menu',
-				'EVENT_BUG_DELETED' => 'delete_time_registration'
+				'EVENT_BUG_DELETED' => 'delete_time_registration',
+				'EVENT_REPORT_BUG' => 'bug_set_recently_visited'
 		);
 	}
 
@@ -84,6 +85,10 @@ class ProjectManagementPlugin extends MantisPlugin {
 			return '<a href="' . $t_reports_page . '">' . $t_pagename . '</a>';
 		}
 	}
+	
+	function bug_set_recently_visited( $p_event, $p_bug_data, $p_bug_id ) {
+		recently_visited_bug_add( $p_bug_id );
+	}
 
 	/**
 	 * @todo fix hours todo (add 'calculated' hours)
@@ -92,6 +97,8 @@ class ProjectManagementPlugin extends MantisPlugin {
 		if ( !access_has_project_level( plugin_config_get( 'view_time_registration_summary_threshold' ) ) ) {
 			return;
 		}
+		
+		recently_visited_bug_add( $p_bug_id );
 		
 		# Fetch time registration summary
 		$t_table = plugin_table('work');
