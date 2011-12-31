@@ -29,8 +29,8 @@
 	$s_plugin_ProjectManagement_day = 'Today';
 	$s_plugin_ProjectManagement_week = 'This week';
 	$s_plugin_ProjectManagement_last_week = 'Last week';
-	$s_plugin_ProjectManagement_month = 'This month';
-	$s_plugin_ProjectManagement_last_month = 'Last month';
+	$s_plugin_ProjectManagement_last_month = 'Last months';
+	$s_plugin_ProjectManagement_month = 'Month';
 	
 	$s_plugin_ProjectManagement_hourly_rate = 'Hourly rate';
 	$s_plugin_ProjectManagement_hours_per_week = 'Hours per week';

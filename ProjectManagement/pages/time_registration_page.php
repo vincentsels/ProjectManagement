@@ -58,7 +58,24 @@ $t_last_week_start = mktime( 0, 0, 0, date( 'm', $t_last_sunday ), date('d', $t_
 $t_last_week_end = $t_last_sunday - 1;
 $t_params = array( $t_last_week_start, $t_last_week_end );
 $t_result_registered_last_week = db_query_bound( $t_query_registered_week, $t_params );
-$t_num_registered_last_week = db_num_rows( $t_result_registered_last_week );		
+$t_num_registered_last_week = db_num_rows( $t_result_registered_last_week );	
+
+$t_month_start = mktime( 0, 0, 0, date('m'), 1 );
+$t_month_end = mktime( 0, 0, 0, date('m') + 1, 1 ) - 1;
+$t_query_registered_month = "SELECT sum(w.minutes) as minutes
+							 FROM $t_work_table w JOIN $t_bug_table b ON w.bug_id = b.id
+							WHERE w.user_id = $t_user
+							  AND w.book_date BETWEEN " . db_param() . " AND " . db_param() . " 
+							  AND w.minutes_type = 1";
+$t_params = array( $t_month_start, $t_month_end );
+$t_result_registered_month = db_query_bound( $t_query_registered_month, $t_params );
+$t_row_month = db_fetch_array( $t_result_registered_month );
+
+$t_last_month_start = mktime( 0, 0, 0, date('m') - 1, 1 );
+$t_last_month_end = mktime( 0, 0, 0, date('m'), 1 ) - 1;
+$t_params = array( $t_last_month_start, $t_last_month_end );
+$t_result_registered_last_month = db_query_bound( $t_query_registered_month, $t_params );
+$t_row_last_month = db_fetch_array( $t_result_registered_last_month );
 
 ?>
 
@@ -262,6 +279,32 @@ foreach ( $t_recently_visited_array as $t_bug_id ) {
 		<?php
 	}
 ?>
+	
+</table>
+
+<br />
+
+<table class="width100" cellspacing="1">
+	<tr>
+		<td colspan="100%" class="form-title">
+			<?php echo plugin_lang_get( 'recently_registered' ) . ': ' . plugin_lang_get( 'last_months' ) ?>
+		</td>
+	</tr>
+	<tr class="row-category">
+		<td><div align="center"><?php echo plugin_lang_get( 'month' ) ?></div></td>
+		<td><div align="center"><?php echo plugin_lang_get( 'hours' ) ?></div></td>
+	</tr>
+	<tr class="spacer"/>
+	
+	<tr <?php echo helper_alternate_class() ?>>
+		<td><?php echo date( 'F' ) ?></td>
+		<td class="right"><?php echo minutes_to_time( $t_row_month["minutes"], false ) ?></td>
+	</tr>
+	
+	<tr <?php echo helper_alternate_class() ?>>
+		<td><?php echo date( 'F', mktime( 0, 0, 0, date('m') -1, 1 ) ) ?></td>
+		<td class="right"><?php echo minutes_to_time( $t_row_last_month["minutes"], false ) ?></td>
+	</tr>
 	
 </table>
 
