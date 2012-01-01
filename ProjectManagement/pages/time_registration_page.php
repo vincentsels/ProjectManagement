@@ -25,8 +25,10 @@ $t_query_recent = "SELECT b.last_updated, b.handler_id, b.project_id, p.name as 
 		   WHERE b.id IN ( $t_recently_visited )
 		   ORDER BY b.last_updated DESC
 		   LIMIT " . PLUGIN_PM_TOKEN_RECENTLY_VISITED_COUNT;
-$t_result_recent = db_query_bound( $t_query_recent );
-$t_num_recent = db_num_rows( $t_result_recent );
+if ( !empty( $t_recently_visited ) ) {
+	$t_result_recent = db_query_bound( $t_query_recent );
+	$t_num_recent = db_num_rows( $t_result_recent );
+}
 
 $t_today = strtotime( date( 'Y-m-d' ) );
 $t_query_registered_day = "SELECT b.id as bug_id, sum(w.minutes) as minutes, max(w.timestamp) as timestamp

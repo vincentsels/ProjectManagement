@@ -75,14 +75,18 @@ class ProjectManagementPlugin extends MantisPlugin {
 	}
 	
 	function main_menu( $p_event, $p_bug_id ) {
-		$t_reports_page = plugin_page( 'time_registration_page', false );
 		$t_pagename = plugin_lang_get( 'reports' );
 		# Only display main menu if at least one of the submenus is accessible
-		if ( access_has_global_level( plugin_config_get( 'view_registration_worksheet_threshold' ) ) ||
-				access_has_global_level( plugin_config_get( 'view_registration_report_threshold' ) ) ||
-				access_has_global_level( plugin_config_get( 'view_resource_management_threshold' ) ) ||
-				access_has_global_level( plugin_config_get( 'view_resource_allocation_threshold' ) )
-				 ) {
+		if ( access_has_global_level( plugin_config_get( 'view_registration_worksheet_threshold' ) ) ) {
+			$t_reports_page = plugin_page( 'time_registration_page', false );
+		} else if ( access_has_global_level( plugin_config_get( 'view_registration_report_threshold' ) ) ) {
+			$t_reports_page = plugin_page( 'time_registration_page', false );
+		} else if ( access_has_global_level( plugin_config_get( 'view_resource_management_threshold' ) ) ) {
+			$t_reports_page = plugin_page( 'time_registration_page', false );
+		} else if ( access_has_global_level( plugin_config_get( 'view_resource_allocation_threshold' ) ) ) {
+			$t_reports_page = plugin_page( 'time_registration_page', false );
+		}
+		if ( isset( $t_reports_page ) ) {
 			return '<a href="' . $t_reports_page . '">' . $t_pagename . '</a>';
 		}
 	}

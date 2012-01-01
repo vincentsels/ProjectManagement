@@ -248,7 +248,7 @@ function constant_replace( $p_name ) {
  */
 function recently_visited_bug_add( $p_issue_id, $p_user_id = null ) {
 	$t_value = token_get_value( PLUGIN_PM_TOKEN_RECENTLY_VISITED, $p_user_id );
-	if( is_null( $t_value ) ) {
+	if( empty( $t_value ) ) {
 		$t_value = $p_issue_id;
 	} else {
 		$t_ids = explode( ',', $p_issue_id . ',' . $t_value );

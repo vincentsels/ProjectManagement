@@ -156,7 +156,7 @@ foreach ( $f_data as $t_bug_id => $t_bug_data ) {
 
 form_security_purge( 'plugin_ProjectManagement_time_registration_update');
 
-if ( $f_redirect_page == null ) {
+if ( is_null( $f_redirect_page ) ) {
 	$t_url = string_get_bug_view_url( $t_bug_id, auth_get_current_user_id() );
 	print_successful_redirect( $t_url . "#time_registration" );
 } else {
