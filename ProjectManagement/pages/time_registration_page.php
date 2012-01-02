@@ -100,7 +100,19 @@ foreach ( $t_recently_visited_array as $t_bug_id ) {
 
 <table class="width100" cellspacing="1">
 
-	<tr><td colspan="100%" class="form-title"><?php echo plugin_lang_get( 'recently_visited' ) ?><span class="floatright"><input name="submit" type="submit" value="<?php echo lang_get( 'update' ) ?>"></span></td></tr>
+	<tr><td colspan="100%" class="form-title"><?php echo plugin_lang_get( 'recently_visited' ) ?>
+	<span class="floatright">
+		<?php
+		if ( access_has_global_level( plugin_config_get( 'include_bookdate_threshold' ) ) ) {
+			echo plugin_lang_get( 'book_date' ) . ': ';
+			echo '<input type="text" size="8" maxlength="10" autocomplete="off" id="book_date" name="book_date" value="' . date('d/m/Y') . '"> ';
+			date_print_calendar( 'book_date_cal' );
+			date_finish_calendar( 'book_date', 'book_date_cal');
+		}
+		?>
+		<input name="submit" type="submit" value="<?php echo lang_get( 'update' ) ?>">
+	</span>
+	</td></tr>
 
 	<tr class="row-category">
 		<td><div align="center"><?php echo lang_get( 'last_update' ) ?></div></td>
