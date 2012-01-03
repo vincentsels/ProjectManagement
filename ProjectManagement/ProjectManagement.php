@@ -64,7 +64,8 @@ class ProjectManagementPlugin extends MantisPlugin {
 				'EVENT_VIEW_BUG_EXTRA' => 'view_bug_time_registration',
 				'EVENT_MENU_MAIN' => 'main_menu',
 				'EVENT_BUG_DELETED' => 'delete_time_registration',
-				'EVENT_REPORT_BUG' => 'bug_set_recently_visited'
+				'EVENT_REPORT_BUG' => 'bug_set_recently_visited',
+				'EVENT_FILTER_COLUMNS' => 'filter_columns'
 		);
 	}
 
@@ -72,6 +73,18 @@ class ProjectManagementPlugin extends MantisPlugin {
 		require_once( 'ProjectManagementAPI.php' );
 		require_once( 'date_api.php' );
 		require_once( 'pages/html_api.php' );
+	}
+	
+	function filter_columns()
+	{
+		require_once( 'classes/ProjectManagementDoneColumn.class.php' );
+		require_once( 'classes/ProjectManagementEstColumn.class.php' );
+		require_once( 'classes/ProjectManagementTodoColumn.class.php' );
+		return array(
+				'ProjectManagementEstColumn',
+				'ProjectManagementDoneColumn',
+				'ProjectManagementTodoColumn'
+		);
 	}
 	
 	function main_menu( $p_event, $p_bug_id ) {
