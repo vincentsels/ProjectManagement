@@ -65,7 +65,8 @@ class ProjectManagementPlugin extends MantisPlugin {
 				'EVENT_MENU_MAIN' => 'main_menu',
 				'EVENT_BUG_DELETED' => 'delete_time_registration',
 				'EVENT_REPORT_BUG' => 'bug_set_recently_visited',
-				'EVENT_FILTER_COLUMNS' => 'filter_columns'
+				'EVENT_FILTER_COLUMNS' => 'filter_columns',
+				'EVENT_LAYOUT_RESOURCES' => 'link_css'
 		);
 	}
 
@@ -73,6 +74,11 @@ class ProjectManagementPlugin extends MantisPlugin {
 		require_once( 'ProjectManagementAPI.php' );
 		require_once( 'date_api.php' );
 		require_once( 'pages/html_api.php' );
+		require_once( 'classes/MantisProject.php' );
+	}
+
+	function link_css() {
+		return '<link rel="stylesheet" type="text/css" href="' . plugin_file( 'style.css' ) . '"/>';
 	}
 	
 	function filter_columns()
