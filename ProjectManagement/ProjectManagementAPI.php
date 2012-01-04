@@ -38,7 +38,7 @@ function minutes_to_time( $p_minutes, $p_allow_blanks = true ) {
 	}
 	
 	$t_hours = str_pad( floor( abs($p_minutes) / 60 ), 2, '0', STR_PAD_LEFT );
-	$t_minutes = str_pad( abs($p_minutes) % 60, 2, '0', STR_PAD_RIGHT );
+	$t_minutes = str_pad( abs($p_minutes) % 60, 2, '0', STR_PAD_LEFT );
 	
 	if ( $p_minutes < 0 ) {
 		$t_sign = '-';
