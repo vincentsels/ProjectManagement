@@ -11,6 +11,19 @@ div.category {
 div.bug {
 	border:none;
 }
+span.project-title {
+	font-weight:bold;
+}
+span.category-title {
+	font-weight:bold;
+}
 div.content-list {
 	margin-left:20px;
+}
+a.collapsable {
+	color:inherit;
+	text-decoration:none;
+}
+a.collapsable:hover, a.collapsable:active {
+	color:#999999;
 }

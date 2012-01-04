@@ -23,7 +23,7 @@ class MantisProject {
 		echo '<div class="project">';
 		
 		print_expand_icon_start( $this->project_name );
-		echo 'Project: ' . $this->project_name . ' - completed: ' . $this->est();
+		echo '<span class="project-title">Project: ' . $this->project_name . '</span> - completed: ' . $this->est();
 		print_expand_icon_end();
 		
 		print_expandable_div_start( $this->project_name );
@@ -63,7 +63,7 @@ class MantisCategory {
 		echo '<div class="category">';
 		
 		print_expand_icon_start( $this->unique_id );
-		echo 'Category: ' . $this->category_name . ' - completed: ' . $this->est();
+		echo '<span class="category-title">Category: ' . $this->category_name . '</span> - completed: ' . $this->est();
 		print_expand_icon_end();
 		
 		print_expandable_div_start( $this->unique_id );
