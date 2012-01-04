@@ -21,7 +21,6 @@ $t_result = db_query_bound( $t_query );
 $t_rownum = db_num_rows( $t_result );
 
 $t_all_projects = array(); # Array containing all projects
-$t_main_projects = array(); # Array containing only the top projects (who don't have a parent project)
 
 # Start creation of the objects
 for ($i = 0; $i < $t_rownum; $i++) {
@@ -71,12 +70,25 @@ for ($i = 0; $i < $t_rownum; $i++) {
 	}
 }
 
-# Set main and sub projects
+$t_main_projects = array();
+$t_largest_value = 0;
+
+# Set main and sub projects, and keep track of the largest value to be displayed
 foreach ( $t_all_projects as $t_project_name => $t_project ) {
 	if ( !isset( $t_project->parent_project ) ) {
 		$t_main_projects[] = $t_project;
 	} else {
 		$t_all_projects[$t_project->parent_project]->sub_projects[] = $t_project;
+	}
+	
+	$t_total_est = $t_project->est();
+	if ( $t_total_est > $t_largest_value ) {
+		$t_largest_value = $t_total_est;
+	}
+	
+	$t_total_work = $t_project->done() + $t_project->todo();
+	if ( $t_total_work > $t_largest_value ) {
+		$t_largest_value = $t_total_work;
 	}
 }
 
@@ -103,7 +115,7 @@ $t_projects[] = $t_project1;
 */
 
 foreach ( $t_main_projects as $t_main_project ) {
-	$t_main_project->print_project();
+	$t_main_project->print_project( $t_largest_value );
 	echo '<p>';
 }
 

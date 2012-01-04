@@ -11,12 +11,14 @@ div.category {
 div.bug {
 	border:none;
 }
+
 span.project-title {
 	font-weight:bold;
 }
 span.category-title {
 	font-weight:bold;
 }
+
 div.content-list {
 	margin-left:20px;
 }
@@ -26,4 +28,22 @@ a.collapsable {
 }
 a.collapsable:hover, a.collapsable:active {
 	color:#999999;
+}
+
+span.progress { 
+	display: inline-block; 
+	position: relative;
+	border: 1px solid #4D994D; 
+	background: #C8FFC8; 
+	padding: 0px; 
+}
+span.bar { 
+	display: block; 
+	position: relative; 
+	background: #4D994D; 
+	text-align: center; 
+	font-weight: normal; 
+	color: #333; 
+	height: 1.2em; 
+	line-height: 1.2em; 
 }
