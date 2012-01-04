@@ -22,18 +22,19 @@ class MantisProject {
 	public function print_project() {
 		echo '<div class="project">';
 		
-		echo '<b><u>Project name: ' . $this->project_name . '</b></u> - completed: ' . $this->est();
-		echo '<div class="content-list">';
+		print_expand_icon_start( $this->project_name );
+		echo 'Project: ' . $this->project_name . ' - completed: ' . $this->est();
+		print_expand_icon_end();
+		
+		print_expandable_div_start( $this->project_name );
 		foreach ( $this->categories as $category ) {
 			$category->print_category();
 		}
-		echo '</div>';
 		
-		echo '<div class="content-list">';
 		foreach ( $this->subprojects as $subproject ) {
 			$subproject->print_project();
 		}
-		echo '</div>';
+		print_expandable_div_end();
 		
 		echo '</div>';
 	}
@@ -42,11 +43,13 @@ class MantisProject {
 class MantisCategory {
 	public $category_name;
 	public $parent_project;
+	public $unique_id;
 	public $bugs = array();
 	
 	public function __construct( $p_category_name, $p_parent_project_name ) {
 		$this->category_name = $p_category_name;
 		$this->parent_project = $p_parent_project_name;
+		$this->unique_id = $this->parent_project . '_' . $this->category_name;
 	}
 	
 	public function est() {
@@ -59,10 +62,15 @@ class MantisCategory {
 	public function print_category() {
 		echo '<div class="category">';
 		
-		echo '<b>Category name: ' . $this->category_name . '</b> - completed: ' . $this->est();
+		print_expand_icon_start( $this->unique_id );
+		echo 'Category: ' . $this->category_name . ' - completed: ' . $this->est();
+		print_expand_icon_end();
+		
+		print_expandable_div_start( $this->unique_id );
 		foreach ( $this->bugs as $bug ) {
 			$bug->print_bug();
 		}
+		print_expandable_div_end();
 		
 		echo '</div>';
 	}

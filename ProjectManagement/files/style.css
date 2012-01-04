@@ -1,11 +1,15 @@
+div.project, div.category {
+	border-bottom-style:solid;
+	border-width:3px;
+}
 div.project {
-	background-color:#555555;
+	border-color:#888888;
 }
 div.category {
-	background-color:#888888;
+	border-color:#CCCCCC;
 }
 div.bug {
-	background-color:#CCCCCC;
+	border:none;
 }
 div.content-list {
 	margin-left:20px;
