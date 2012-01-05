@@ -52,22 +52,40 @@ class MantisProject {
 		return $t_overdue;
 	}
 	
-	public function print_project( $p_largest_value = -1 ) {
+	public function print_project( $p_total_value = -1 ) {
 		echo '<div class="project">';
 		
+		# Calculate the width of the project
+		$t_real_est = max( $this->est(), $this->done() + $this->todo() );
+		$t_total = $t_real_est / $p_total_value * 100;
+		
+		if ( $this->est() > 0 ) {
+			$t_progress = round( $this->done() / $t_real_est * 100 );
+		} else {
+			$t_progress = 0;
+		}
+		
+		echo '<span class="progress-total-section">';
+		echo '<span class="progress-title-section">';
 		print_expand_icon_start( $this->project_name );
 		echo '<span class="project-title">Project: ', $this->project_name, '</span> - ',
 			minutes_to_time( $this->done(), false ), ' / ', minutes_to_time( $this->est(), false ), 
 			' (',  minutes_to_time( $this->overdue(), false ), ')';
 		print_expand_icon_end();
+		echo '</span>';
+		
+		echo '<span class="progress-bar-section">';
+		echo '<span class="progress" style="width:' . $t_total . '%">';
+		echo '  <span class="bar" style="width:' . $t_progress . '%">' . $t_progress . '%</span>';
+		echo '</span></span></span>';
 		
 		print_expandable_div_start( $this->project_name );
 		foreach ( $this->categories as $category ) {
-			$category->print_category( $p_largest_value );
+			$category->print_category( $p_total_value );
 		}
 		
 		foreach ( $this->sub_projects as $subproject ) {
-			$subproject->print_project( $p_largest_value );
+			$subproject->print_project( $p_total_value );
 		}
 		print_expandable_div_end();
 		
@@ -116,18 +134,36 @@ class MantisCategory {
 		return $t_overdue;
 	}
 	
-	public function print_category( $p_largest_value = -1 ) {
+	public function print_category( $p_total_value = -1 ) {
 		echo '<div class="category">';
 		
+		# Calculate the width of the category
+		$t_real_est = max( $this->est(), $this->done() + $this->todo() );
+		$t_total = $t_real_est / $p_total_value * 100;
+		
+		if ( $this->est() > 0 ) {
+			$t_progress = round( $this->done() / $t_real_est * 100 );
+		} else {
+			$t_progress = 0;
+		}
+		
+		echo '<span class="progress-total-section">';
+		echo '<span class="progress-title-section">';
 		print_expand_icon_start( $this->unique_id );
 		echo '<span class="category-title">Category: ', $this->category_name, '</span> - ',
 			minutes_to_time( $this->done(), false ), ' / ', minutes_to_time( $this->est(), false ), 
 			' (',  minutes_to_time( $this->overdue(), false ), ')';
 		print_expand_icon_end();
+		echo '</span>';
+		
+		echo '<span class="progress-bar-section">';
+		echo '<span class="progress" style="width:' . $t_total . '%">';
+		echo '  <span class="bar" style="width:' . $t_progress . '%">' . $t_progress . '%</span>';
+		echo '</span></span></span>';
 		
 		print_expandable_div_start( $this->unique_id );
 		foreach ( $this->bugs as $bug ) {
-			$bug->print_bug( $p_largest_value );
+			$bug->print_bug( $p_total_value );
 		}
 		print_expandable_div_end();
 		
@@ -183,12 +219,12 @@ class MantisBug {
 		return max( $t_overdue, 0 );
 	}
 	
-	public function print_bug( $p_largest_value = -1 ) {
+	public function print_bug( $p_total_value = -1 ) {
 		echo '<div class="bug">';
 		
 		# Calculate the width of the bug
 		$t_real_est = max( $this->est(), $this->done() + $this->todo() );
-		$t_total = $t_real_est / $p_largest_value * 100;
+		$t_total = $t_real_est / $p_total_value * 100;
 		
 		if ( $this->est() > 0 ) {
 			$t_progress = round( $this->done() / $t_real_est * 100 );
@@ -196,12 +232,14 @@ class MantisBug {
 			$t_progress = 0;
 		}
 		
-		echo 'Bug, id: ' , $this->bug_id , ' - ', 
+		echo '<span class="progress-total-section">';
+		echo '<span class="progress-title-section">Bug, id: ' , $this->bug_id , ' - ', 
 			minutes_to_time( $this->done(), false ), ' / ', minutes_to_time( $this->est(), false ), 
-			' (',  minutes_to_time( $this->overdue(), false ), ')  ';
+			' (',  minutes_to_time( $this->overdue(), false ), ')</span>';
+		echo '<span class="progress-bar-section">';
 		echo '<span class="progress" style="width:' . $t_total . '%">';
 		echo '  <span class="bar" style="width:' . $t_progress . '%">' . $t_progress . '%</span>';
-		echo '</span>';
+		echo '</span></span></span>';
 		
 		echo '</div>';
 	}

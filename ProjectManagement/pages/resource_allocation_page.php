@@ -7,7 +7,7 @@ html_page_top2();
 
 print_pm_reports_menu( 'resource_allocation_page' );
 
-$t_target_version = '5.0.0';
+# $t_target_version = '5.0.0';
 $t_query = "SELECT pp.name as parent_project, pc.name as project_name, c.name as category_name, b.id, b.handler_id, w.work_type, w.minutes_type, sum(w.minutes) as minutes
   FROM mantis_bug_table b
   JOIN mantis_project_table pc ON b.project_id = pc.id
@@ -70,49 +70,27 @@ for ($i = 0; $i < $t_rownum; $i++) {
 	}
 }
 
-$t_main_projects = array();
-$t_largest_value = 0;
 
-# Set main and sub projects, and keep track of the largest value to be displayed
+# Set main and sub projects
+$t_main_projects = array();
+
 foreach ( $t_all_projects as $t_project_name => $t_project ) {
 	if ( !isset( $t_project->parent_project ) ) {
 		$t_main_projects[] = $t_project;
 	} else {
 		$t_all_projects[$t_project->parent_project]->sub_projects[] = $t_project;
 	}
-	
-	$t_total_est = $t_project->est();
-	if ( $t_total_est > $t_largest_value ) {
-		$t_largest_value = $t_total_est;
-	}
-	
-	$t_total_work = $t_project->done() + $t_project->todo();
-	if ( $t_total_work > $t_largest_value ) {
-		$t_largest_value = $t_total_work;
-	}
 }
 
-/*
- * test set
- * 
-$t_projects = array();
-$t_project1 = new MantisProject( 'Project 1' );
-$t_category1 = new MantisCategory( 'Category 1', 'Project 1' );
-$t_category1->bugs[] = new MantisBug( 1 );
-$t_category1->bugs[] = new MantisBug( 2 );
-$t_project1->categories[] = $t_category1;
-$t_category2 = new MantisCategory( 'Category 2', 'Project 1' );
-$t_category2->bugs[] = new MantisBug( 3 );
-$t_category2->bugs[] = new MantisBug( 4 );
-$t_project1->categories[] = $t_category2;
-$t_subproject = new MantisProject( 'SubProject' );
-$t_category3 = new MantisCategory( 'Category 3', 'SubProject' );
-$t_category3->bugs[] = new MantisBug( 5 );
-$t_category3->bugs[] = new MantisBug( 6 );
-$t_subproject->categories[] = $t_category3;
-$t_project1->subprojects[] = $t_subproject;
-$t_projects[] = $t_project1;
-*/
+# keep track of the largest value to be displayed
+$t_largest_value = 0;
+
+foreach ( $t_all_projects as $t_project_name => $t_project ) {
+	$t_real_est = max( $t_project->est(), $t_project->done() + $t_project->todo() );
+	if ( $t_real_est > $t_largest_value ) {
+		$t_largest_value = $t_real_est;
+	}
+}
 
 foreach ( $t_main_projects as $t_main_project ) {
 	$t_main_project->print_project( $t_largest_value );
