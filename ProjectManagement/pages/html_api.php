@@ -48,4 +48,22 @@ function print_plugin_enum_string_option_list( $p_enum_name, $p_val = 0 ) {
 	}
 }
 
+function print_expand_icon_start( $p_div_id ) {
+	echo '<a class="collapsable" href="#" onclick="ShowOrHide( \'' . $p_div_id . '\' ); return false; ">
+	<img id="' . $p_div_id . '_img" border="0" src="images/plus.png" alt="+" />&nbsp;';
+}
+
+function print_expand_icon_end() {
+	echo '</a>';
+}
+
+
+function print_expandable_div_start( $p_div_id ) {
+	echo '<div id="' . $p_div_id . '" class="hidden content-list">';
+}
+
+function print_expandable_div_end() {
+	echo '</div>';
+}
+
 ?>
