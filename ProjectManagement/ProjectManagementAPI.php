@@ -28,7 +28,7 @@ class Action {
  * otherwise, empty $p_minutes return the literal string '0:00'.
  * @return string the amount of minutes formatted as 'HH:MM'.
  */
-function minutes_to_time( $p_minutes, $p_allow_blanks = true ) {
+function minutes_to_time( $p_minutes, $p_allow_blanks = true, $p_show_days = false ) {
 	if ( $p_minutes == 0 ) {
 		if ( $p_allow_blanks ) {
 			return null;
@@ -45,6 +45,15 @@ function minutes_to_time( $p_minutes, $p_allow_blanks = true ) {
 	}
 	
 	return $t_sign . $t_hours . ':' . $t_minutes;
+}
+
+/**
+ * Returns the amount of days, rounded to 1 decimal.
+ * @param int $p_minutes
+ * @return number
+ */
+function minutes_to_days( $p_minutes ) {
+	return number_format( $p_minutes / 60 / 24, 1 );
 }
 
 /**

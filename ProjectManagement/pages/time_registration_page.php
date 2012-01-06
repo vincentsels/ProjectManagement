@@ -45,7 +45,7 @@ $t_week_start = strtotime( date( 'Y-m-d', strtotime( 'last sunday' ) ) );
 $t_week_end = strtotime( date( 'Y-m-d', strtotime( 'next sunday' ) ) );
 # We can safely group by book_date, since this is always rounded to a day
 $t_query_registered_week = "SELECT w.book_date, sum(w.minutes) as minutes
-							 FROM $t_work_table w JOIN $t_bug_table b ON w.bug_id = b.id
+							 FROM $t_work_table w
 							WHERE w.user_id = $t_user
 							  AND w.book_date BETWEEN " . db_param() . " AND " . db_param() . " 
 							  AND w.minutes_type = 1
@@ -65,7 +65,7 @@ $t_num_registered_last_week = db_num_rows( $t_result_registered_last_week );
 $t_month_start = mktime( 0, 0, 0, date('m'), 1 );
 $t_month_end = mktime( 0, 0, 0, date('m') + 1, 1 ) - 1;
 $t_query_registered_month = "SELECT sum(w.minutes) as minutes
-							 FROM $t_work_table w JOIN $t_bug_table b ON w.bug_id = b.id
+							 FROM $t_work_table w
 							WHERE w.user_id = $t_user
 							  AND w.book_date BETWEEN " . db_param() . " AND " . db_param() . " 
 							  AND w.minutes_type = 1";
