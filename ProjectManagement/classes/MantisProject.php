@@ -69,9 +69,9 @@ class MantisProject {
 		$t_progress_text = '<a href="#" class="invisible bold" title="' . $t_progress_info . '">' . number_format( $t_progress, 1 ) . '%</a></span>';
 		
 		echo '<span class="progress-total-section">';
-		echo '<span class="progress-title-section">';
+		echo '<span class="progress-text-section title-section">';
 		print_expand_icon_start( $this->project_name );
-		echo '<span class="project-title">', $this->project_name, '</span>';
+		echo $this->project_name;
 		print_expand_icon_end();
 		echo '</span>';
 		
@@ -152,9 +152,9 @@ class MantisCategory {
 		$t_progress_text = '<a href="#" class="invisible bold" title="' . $t_progress_info . '">' . number_format( $t_progress, 1 ) . '%</a></span>';
 		
 		echo '<span class="progress-total-section">';
-		echo '<span class="progress-title-section">';
+		echo '<span class="progress-text-section title-section">';
 		print_expand_icon_start( $this->unique_id );
-		echo '<span class="category-title">', $this->category_name, '</span>';
+		echo $this->category_name;
 		print_expand_icon_end();
 		echo '</span>';
 		
@@ -238,7 +238,8 @@ class MantisBug {
 		$t_progress_text = '<a href="#" class="invisible" title="' . $t_progress_info . '">' . number_format( $t_progress, 1 ) . '%</a></span>';
 		
 		echo '<span class="progress-total-section">';
-		echo '<span class="progress-title-section">', string_get_bug_view_link( $this->bug_id, null, false ), '</span>';
+		echo '<span ' . helper_alternate_class() . '>';
+		echo '<span class="progress-text-section">', string_get_bug_view_link( $this->bug_id, null, false ), '</span></span>';
 		
 		echo '<span class="progress-bar-section">';
 		echo '<span class="progress" style="width:' . $t_total . '%">';
