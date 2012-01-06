@@ -16,11 +16,11 @@ div.bug {
 div.content-list {
 	margin-left: 20px;
 }
-a.subtle:link, a.subtle:visited {
+a.subtle:link, a.subtle:visited, a.subtle:active {
 	color: #000000;
 	text-decoration: none;
 }
-a.subtle:hover, a.subtle:active {
+a.subtle:hover {
 	color: #999999;
 	text-decoration: none;
 }
