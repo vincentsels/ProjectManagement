@@ -63,6 +63,8 @@ class MantisProject {
 	}
 		
 	public function print_project( $p_total_value = -1 ) {
+		global $g_resource_colors;
+		
 		echo '<div class="project">';
 		
 		echo '<span class="progress-total-section">';
@@ -101,8 +103,12 @@ class MantisProject {
 			echo '<span class="resource-name-section title-section">' . prepare_resource_name( $t_handler_id ) . '</span>';
 			
 			echo '<span class="resource-progress-section">';
-			echo '<span class="progress" style="width:' . $t_total . '%">';
-			echo '  <span class="bar" style="width:' . $t_progress . '%">' . $t_progress_text . '</span>';
+			echo '<span class="progress" ';
+			print_background_color( $g_resource_colors[$t_handler_id], PLUGIN_PM_LIGHT, 'width: ' . $t_total . '%' );
+			echo '>';
+			echo '<span class="bar" '; 
+			print_background_color( $g_resource_colors[$t_handler_id], PLUGIN_PM_DARK, 'width: ' . $t_progress . '%' );
+			echo '>' . $t_progress_text . '</span>';
 			echo '</span>';
 			echo '</span>'; # End of resource progress section
 			
@@ -165,6 +171,8 @@ class MantisCategory {
 	}
 	
 	public function print_category( $p_total_value = -1 ) {
+		global $g_resource_colors;
+		
 		echo '<div class="category">';
 		
 		echo '<span class="progress-total-section">';
@@ -203,8 +211,12 @@ class MantisCategory {
 			echo '<span class="resource-name-section title-section">' . prepare_resource_name( $t_handler_id ) . '</span>';
 			
 			echo '<span class="resource-progress-section">';
-			echo '<span class="progress" style="width:' . $t_total . '%">';
-			echo '  <span class="bar" style="width:' . $t_progress . '%">' . $t_progress_text . '</span>';
+			echo '<span class="progress" ';
+			print_background_color( $g_resource_colors[$t_handler_id], PLUGIN_PM_LIGHT, 'width: ' . $t_total . '%' );
+			echo '>';
+			echo '<span class="bar" '; 
+			print_background_color( $g_resource_colors[$t_handler_id], PLUGIN_PM_DARK, 'width: ' . $t_progress . '%' );
+			echo '>' . $t_progress_text . '</span>';
 			echo '</span>';
 			echo '</span>'; # End of resource progress section
 			
@@ -282,6 +294,8 @@ class MantisBug {
 	}
 		
 	public function print_bug( $p_total_value = -1 ) {
+		global $g_resource_colors;
+		
 		echo '<div class="bug">';
 		$t_alternate_class = helper_alternate_class();
 		
@@ -319,8 +333,12 @@ class MantisBug {
 		echo '</span>';
 		
 		echo '<span class="resource-progress-section">';
-		echo '<span class="progress" style="width:' . $t_total . '%">';
-		echo '  <span class="bar" style="width:' . $t_progress . '%">' . $t_progress_text . '</span>';
+		echo '<span class="progress" ';
+		print_background_color( $g_resource_colors[$this->handler_id], PLUGIN_PM_LIGHT, 'width: ' . $t_total . '%' );
+		echo '>';
+		echo '<span class="bar" '; 
+		print_background_color( $g_resource_colors[$this->handler_id], PLUGIN_PM_DARK, 'width: ' . $t_progress . '%' );
+		echo '>' . $t_progress_text . '</span>';
 		echo '</span>';
 		echo '</span>'; # End of resource progress section
 			

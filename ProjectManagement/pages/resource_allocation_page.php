@@ -17,13 +17,19 @@ if ( is_null ( $t_target_version ) ) {
 	}
 }
 
+$t_bug_table = db_get_table( 'mantis_bug_table' );
+$t_project_table = db_get_table( 'mantis_project_table' );
+$t_category_table = db_get_table( 'mantis_category_table' );
+$t_hierarchy_table = db_get_table( 'mantis_project_hierarchy_table' );
+$t_work_table = plugin_table( 'work' );
+
 $t_query = "SELECT pp.name as parent_project, pc.name as project_name, c.name as category_name, b.id, b.handler_id, w.work_type, w.minutes_type, sum(w.minutes) as minutes
-  FROM mantis_bug_table b
-  JOIN mantis_project_table pc ON b.project_id = pc.id
-  JOIN mantis_category_table c ON b.category_id = c.id
-  LEFT OUTER JOIN mantis_project_hierarchy_table h ON pc.id = h.child_id
-  LEFT OUTER JOIN mantis_project_table pp ON h.parent_id = pp.id
-  LEFT OUTER JOIN mantis_plugin_projectmanagement_work_table w ON b.id = w.bug_id 
+  FROM $t_bug_table b
+  JOIN $t_project_table pc ON b.project_id = pc.id
+  JOIN $t_category_table c ON b.category_id = c.id
+  LEFT OUTER JOIN $t_hierarchy_table h ON pc.id = h.child_id
+  LEFT OUTER JOIN $t_project_table pp ON h.parent_id = pp.id
+  LEFT OUTER JOIN $t_work_table w ON b.id = w.bug_id 
  WHERE b.target_version = '$t_target_version'
  GROUP BY pp.name, pc.name, c.name, b.id, b.handler_id, w.work_type, w.minutes_type";
 $t_result = db_query_bound( $t_query );
@@ -97,13 +103,26 @@ foreach ( $t_all_projects as $t_project_name => $t_project ) {
 	}
 }
 
-# keep track of the largest value to be displayed
+# Keep track of the largest value to be displayed
 $t_largest_value = 0;
 foreach ( $t_all_projects as $t_project_name => $t_project ) {
 	$t_project_max_real_est = $t_project->get_max_real_est();
 	if ( $t_project_max_real_est > $t_largest_value ) {
 		$t_largest_value = $t_project_max_real_est;
 	}
+}
+
+# Cache resource colors so they can be used in the printing
+global $g_resource_colors;
+
+$t_resource_table = plugin_table( 'resource' );
+$t_color_query = "SELECT user_id, color FROM $t_resource_table WHERE color IS NOT NULL";
+$t_color_result = db_query_bound( $t_color_query );
+$t_color_rownum = db_num_rows( $t_color_result );
+
+for ( $i = 0; $i < $t_color_rownum; $i++ ) {
+	$t_row = db_fetch_array( $t_color_result );
+	$g_resource_colors[$t_row['user_id']] = $t_row['color'];
 }
 
 ?>

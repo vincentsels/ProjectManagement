@@ -66,4 +66,31 @@ function print_expandable_div_end() {
 	echo '</div>';
 }
 
+/**
+ * Prints the style section for an element (excluding leading and trailing space) that sets 
+ * the background_color to the specified hue (default green), and in the specified style.
+ * @param int $p_hue Hue value between 0 and 360 (http://msdn.microsoft.com/en-us/library/ms531197(v=vs.85).aspx#rgba)
+ * @param int $p_style should be PLUGIN_PM_DARK (default) or PLUGIN_PM_LIGHT.
+ * @param string $p_additional_style optionally supply additional style to be added after the color.
+ */
+function print_background_color( $p_hue = 120, $p_style = PLUGIN_PM_DARK, $p_additional_style = null ) {
+	$t_h = $p_hue;
+	$t_s = ( $p_style == PLUGIN_PM_DARK ? plugin_config_get( 'dark_saturation' ) : plugin_config_get( 'light_saturation' ) );
+	$t_l = ( $p_style == PLUGIN_PM_DARK ? plugin_config_get( 'dark_lightness' ) : plugin_config_get( 'light_lightness' ) );
+	
+	echo "style=\"background-color:hsl($t_h, $t_s%, $t_l%); $p_additional_style\"";
+}
+
+/**
+ * Prints a color selection option list with 15 available colors.
+ * @param int $p_val the value to select.
+ */
+function print_color_option_list( $p_val = 0 ) {
+	for ( $i = 0; $i < 360; $i += 20 ) {
+		echo '<option ', print_background_color( $i ), ' value="' . $i . '"';
+		check_selected( $i, $p_val );
+		echo '>' . $i . str_repeat( '&nbsp;', 10 ) . '</option>';
+	}
+}
+
 ?>

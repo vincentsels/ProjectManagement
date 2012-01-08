@@ -35,6 +35,7 @@
 	
 	$s_plugin_ProjectManagement_hourly_rate = 'Hourly rate';
 	$s_plugin_ProjectManagement_hours_per_week = 'Hours per week';
+	$s_plugin_ProjectManagement_color = 'Color';
    
 	$s_plugin_ProjectManagement_work_types = 'Types of work';
 	$s_plugin_ProjectManagement_work_types_info = 'An enumeration containing the differend kinds of work someone can perform on a ticket. Use only one to ignore this feature.';

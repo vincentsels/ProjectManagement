@@ -10,7 +10,7 @@ print_pm_reports_menu( 'resource_management_page' );
 $t_user_table = db_get_table( 'mantis_user_table' );
 $t_resource_table = plugin_table( 'resource' );
 
-$t_query = "SELECT u.id, u.username, u.realname, u.access_level, r.hours_per_week, r.hourly_rate
+$t_query = "SELECT u.id, u.username, u.realname, u.access_level, r.hours_per_week, r.hourly_rate, r.color
 FROM $t_user_table u
 LEFT OUTER JOIN $t_resource_table r ON u.id = r.user_id
 ORDER BY access_level, username";
@@ -33,6 +33,7 @@ $t_access_levels = get_translated_assoc_array_for_enum( 'access_levels' );
 			<td><?php echo lang_get( 'username' ) ?></td>
 			<td><?php echo plugin_lang_get( 'hours_per_week' ) ?></td>
 			<td><?php echo plugin_lang_get( 'hourly_rate' )?></td>
+			<td><?php echo plugin_lang_get( 'color' )?></td>
 		</tr>
 
 		<?php
@@ -43,12 +44,19 @@ $t_access_levels = get_translated_assoc_array_for_enum( 'access_levels' );
 		<tr <?php echo helper_alternate_class() ?>>
 			<td><?php echo $t_access_levels[$t_row['access_level']]  ?></td>
 			<td><?php print_user( $t_row['id'] ) ?></td>
-			<td><input type="text" size="2" maxlength="2"
-				name="hours_per_week_<?php echo $t_row['id']?>"
-				value="<?php echo $t_row['hours_per_week'] ?>"></td>
-			<td><input type="text" size="3" maxlength="6"
-				name="hourly_rate_<?php echo $t_row['id']?>"
-				value="<?php echo $t_row['hourly_rate'] ?>"></td>
+			<td>
+				<input type="text" size="2" maxlength="2" name="hours_per_week_<?php echo $t_row['id']?>"
+				value="<?php echo $t_row['hours_per_week'] ?>">
+			</td>
+			<td>
+				<input type="text" size="3" maxlength="6" name="hourly_rate_<?php echo $t_row['id']?>" 
+				value="<?php echo $t_row['hourly_rate'] ?>">
+			</td>
+			<td>
+				<select name="color_<?php echo $t_row['id'] ?>">
+				<?php print_color_option_list( $t_row['color'] ) ?>
+				</select>
+			</td>
 		</tr>
 		<?php 
 		}

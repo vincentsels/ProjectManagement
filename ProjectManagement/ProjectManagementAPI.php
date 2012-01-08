@@ -13,6 +13,9 @@ define( 'PLUGIN_PM_TOKEN_RECENTLY_VISITED',			6876 ); # Has to be unique among p
 define( 'PLUGIN_PM_TOKEN_RECENTLY_VISITED_COUNT',	50 );
 define( 'PLUGIN_PM_TOKEN_EXPIRY_RECENTLY_VISITED',	60 * 60 * 24 * 3 ); # 3 days ?
 
+define( 'PLUGIN_PM_DARK', 0 );
+define( 'PLUGIN_PM_LIGHT', 1 );
+
 # Enums
 
 class Action {

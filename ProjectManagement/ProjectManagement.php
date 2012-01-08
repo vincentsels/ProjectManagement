@@ -7,7 +7,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 		$this->description = 'Project management plugin that adds advanced functionality for timetracking, estimations, reporting,...';
 		$this->page = 'config_page';
 
-		$this->version = '1.0.0';
+		$this->version = '1.1.0';
 		$this->requires = array(
 				'MantisCore' => '1.2.0'
 		);
@@ -37,7 +37,8 @@ class ProjectManagementPlugin extends MantisPlugin {
 						hourly_rate        F(3,2)
 						" ) ),
 				array( 'CreateIndexSQL', array( 'idx_plugin_pm_work_user_id_book_date',  # used for reporting
-						plugin_table( 'work' ), 'user_id, book_date' ) )
+						plugin_table( 'work' ), 'user_id, book_date' ) ),
+				array ( 'AddColumnSQL', array( plugin_table( 'resource'), 'color I UNSIGNED' ) )
 		);
 	}
 
@@ -54,7 +55,11 @@ class ProjectManagementPlugin extends MantisPlugin {
 				'view_resource_allocation_threshold' => DEVELOPER,
           		'admin_threshold' => ADMINISTRATOR,
 				'work_type_thresholds' => array( 50 => DEVELOPER ),
-				'default_worktype' => 50
+				'default_worktype' => 50,
+				'dark_saturation' => 33,
+				'dark_lightness' => 45,
+				'light_saturation' => 100,
+				'light_lightness' => 90
 		);
 	}
 
