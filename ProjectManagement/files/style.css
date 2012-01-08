@@ -57,6 +57,7 @@ div.resource-section {
 span.resource-name-section {
 	display: inline-block; 
 	min-width: 10%;
+	max-width: 19%;
 	border-right: 2px solid #FFFFFF;
 }
 span.resource-progress-section {
