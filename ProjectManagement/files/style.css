@@ -3,7 +3,7 @@ span.row-2			{ background-color: #e8e8e8; color: #000000; }
 
 div.project, div.category {
 	border: 1px solid #000000;
-	margin-top: 4px;
+	margin-bottom: 4px;
 }
 div.project {
 }
@@ -47,9 +47,30 @@ span.progress-bar-section {
 	width: 87%;
 	vertical-align: top;
 }
+div.resource-section {
+	display: block; 
+	width: 100%;
+	vertical-align: top;
+	padding: 0px;
+	margin-bottom: 2px;
+}
+span.resource-name-section {
+	display: inline-block; 
+	min-width: 10%;
+	border-right: 2px solid #FFFFFF;
+}
+span.resource-progress-section {
+	display: inline-block; 
+	width: 80%;
+	vertical-align: top;
+}
 
 span.title-section {
 	font-weight: bold;
+	background: #c8c8e8;
+}
+
+span.category {
 	background: #c8c8e8;
 }
 
