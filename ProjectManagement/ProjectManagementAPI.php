@@ -6,6 +6,7 @@ define( 'PLUGIN_PM_DONE',		1 );
 define( 'PLUGIN_PM_TODO',		2 );
 define( 'PLUGIN_PM_REMAINING',	3 );
 define( 'PLUGIN_PM_DIFF',		4 );
+define( 'PLUGIN_PM_OVERDUE',	5 );
 
 define( 'PLUGIN_PM_WORKTYPE_TOTAL',					100 );
 define( 'PLUGIN_PM_TOKEN_RECENTLY_VISITED',			6876 ); # Has to be unique among plugins !!
@@ -313,6 +314,19 @@ function init_cap( $p_lang_strings, $p_plugin = false ) {
 	}
 	
 	return ucfirst( strtolower( trim( $t_val ) ) );
+}
+
+function prepare_resource_name( $p_handler_id ) {
+	if ( empty( $p_handler_id ) ) {
+		return '<span class="italic">' . plugin_lang_get( 'unassigned' ) . '</span>';
+	} else {
+		return user_get_name( $p_handler_id );
+	}
+}
+
+function sort_array_by_key( &$p_array ) {
+	ksort( $p_array );
+	return $p_array;
 }
 
 ?>

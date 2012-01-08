@@ -100,9 +100,9 @@ foreach ( $t_all_projects as $t_project_name => $t_project ) {
 # keep track of the largest value to be displayed
 $t_largest_value = 0;
 foreach ( $t_all_projects as $t_project_name => $t_project ) {
-	$t_real_est = max( $t_project->est(), $t_project->done() + $t_project->todo() );
-	if ( $t_real_est > $t_largest_value ) {
-		$t_largest_value = $t_real_est;
+	$t_project_max_real_est = $t_project->get_max_real_est();
+	if ( $t_project_max_real_est > $t_largest_value ) {
+		$t_largest_value = $t_project_max_real_est;
 	}
 }
 
