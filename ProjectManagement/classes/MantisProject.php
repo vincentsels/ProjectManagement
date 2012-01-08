@@ -303,7 +303,7 @@ class MantisBug {
 		$t_total = $t_real_est / $p_total_value * 100;
 		
 		if ( $t_real_est > 0 ) {
-			$t_progress = round( $t_done / $t_real_est * 100 );
+			$t_progress = $t_done / $t_real_est * 100;
 		} else {
 			$t_progress = 0;
 		}
