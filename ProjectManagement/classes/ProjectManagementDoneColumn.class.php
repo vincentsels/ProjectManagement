@@ -37,7 +37,13 @@ class ProjectManagementDoneColumn extends MantisColumn {
 	}
 
 	public function display( $p_bug, $p_columns_target ) {
-		echo minutes_to_time( $this->cache[ $p_bug->id ], false );
+		if ( $p_columns_target == COLUMNS_TARGET_VIEW_PAGE ||
+				$p_columns_target == COLUMNS_TARGET_PRINT_PAGE ) {
+			echo minutes_to_time( $this->cache[ $p_bug->id ], false );
+		} else {
+			# In excel and csv, the users probably want this in hours
+			echo number_format( $this->cache[ $p_bug->id ] / 60, 1 );
+		}
 	}
 
 }
