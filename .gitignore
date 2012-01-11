@@ -40,3 +40,4 @@ library/FirePHPCore
 # Shizzle
 *.zip
 *.rar
+*.patch

@@ -42,8 +42,8 @@ foreach ( $f_bug_ids as $t_bug_id ) {
 	}
 }
 
-# Handle estimations: insert or update
 foreach ( $f_data as $t_bug_id => $t_bug_data ) {
+	
 	if ( count( $t_bug_data[PLUGIN_PM_EST] ) > 0 ) {
 		# Handle est: insert or update
 		foreach ( $t_bug_data[PLUGIN_PM_EST] as $t_work_type => $t_minutes ) {

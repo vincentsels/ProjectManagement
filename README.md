@@ -7,7 +7,7 @@
 
 Project Management is a plugin for the open source [MantisBT](http://www.mantisbt.org) tool (also check out its [Github](https://github.com/mantisbt) page). This plugin attempts to add basic project management features such as estimations, timetracking, project follow-up, and resource management to the existing bugtracking functionality.
 
-## Current features
+## Features
 
 ### Advanced time registration
 
@@ -28,21 +28,30 @@ Project Management is a plugin for the open source [MantisBT](http://www.mantisb
   * Easily **navigate** to data for a specific project, category, user, type of work,...
   * Displays summary reports per user.
 
+### Project timeline
+
+* Shows an overview of all projects, sub-projects, categories and tickets for a certain version:
+  * A visual representation of how much work a certain project / category is compared to the rest of the work for that version
+  * A visual representation of how far the developer(s) have progressed, based on their estimations when supplied.
+  * Optionally assign individual colors to developers.
+* See when a certain developer will finish his or her work on a certain project *(work in progress)*.
+* Switch between a per-project view or a per-resource view *(work in progress)*
+
 ### Resource management
 
-* For each user, optionally specify the amount of hours per week and hourly cost, default type of work, *(todo)*...
+* For each user, optionally specify the amount of hours per week and hourly cost, default type of work,...
 
 ## Upcoming features
 
-### Project timeline
+### Prioritizing features
 
-* Show an MS project-like matrix of projects, tickets, versions, resources, work done and todo.
-* Allow for easy redistribution of work among available resources.
+* Give issues a weight, based on configurable parameters.
+* Set dependencies for tickets.
+* Based on these and/or other parameters, view the order in which tickets should be handled.
 
 ### Resource overviews
 
 * Get detailed overviews per resource - tickets solved, most overdue tickets,...
-
 
 ## Credits
 
