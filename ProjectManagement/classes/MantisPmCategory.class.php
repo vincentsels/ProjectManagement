@@ -78,12 +78,14 @@ class MantisPmCategory {
 			echo '<span class="resource-name-section title-section">' . prepare_resource_name( $t_handler_id ) . '</span>';
 
 			echo '<span class="resource-progress-section">';
-			echo '<span class="progress" ';
-			print_background_color( $g_resource_colors[$t_handler_id], PLUGIN_PM_LIGHT, 'width: ' . $t_total . '%' );
-			echo '>';
-			echo '<span class="bar" ';
-			print_background_color( $g_resource_colors[$t_handler_id], PLUGIN_PM_DARK, 'width: ' . $t_progress . '%' );
-			echo '>' . $t_progress_text . '</span>';
+			echo '<span class="progress" style="background-color:';
+			print_background_color( $g_resource_colors[$t_handler_id], PLUGIN_PM_LIGHT );
+			echo ' border-color: ';
+			print_background_color( $g_resource_colors[$t_handler_id], PLUGIN_PM_DARK );
+			echo ' width: ' . $t_total . '%">';
+			echo '<span class="bar" style="background-color:';
+			print_background_color( $g_resource_colors[$t_handler_id], PLUGIN_PM_DARK );
+			echo ' width: ' . $t_progress . '%">' . $t_progress_text . '</span>';
 			echo '</span>';
 			echo '</span>'; # End of resource progress section
 
