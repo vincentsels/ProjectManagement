@@ -9,7 +9,7 @@ print_pm_reports_menu( 'resource_allocation_page' );
 
 $t_target_version = gpc_get_string( 'target_version', null );
 
-if ( is_null ( $t_target_version ) ) {
+if ( is_null( $t_target_version ) ) {
 	# Attempt to get the most logical one - the first non-released
 	$t_non_released = version_get_all_rows_with_subs( null, false, false );
 	if ( count( $t_non_released ) > 0 ) {
@@ -45,7 +45,7 @@ for ($i = 0; $i < $t_rownum; $i++) {
 	if ( array_key_exists( $row['project_name'], $t_all_projects ) ) {
 		$t_project = $t_all_projects[$row['project_name']];
 	} else {
-		$t_project = new MantisProject( $row['project_name'] );
+		$t_project = new MantisPmProject( $row['project_name'] );
 		$t_all_projects[$row['project_name']] = $t_project;
 	}
 	
@@ -53,7 +53,7 @@ for ($i = 0; $i < $t_rownum; $i++) {
 	if ( !is_null( $t_project->categories ) && array_key_exists( $row['category_name'], $t_project->categories ) ) {
 		$t_category = $t_project->categories[$row['category_name']];
 	} else {
-		$t_category = new MantisCategory( $row['category_name'], $row['project_name'] );
+		$t_category = new MantisPmCategory( $row['category_name'], $row['project_name'] );
 		$t_project->categories[$row['category_name']] = $t_category;
 	}
 	
@@ -61,7 +61,7 @@ for ($i = 0; $i < $t_rownum; $i++) {
 	if ( !is_null( $t_category->bugs ) && array_key_exists( $row['id'], $t_category->bugs ) ) {
 		$t_bug = $t_category->bugs[$row['id']];
 	} else {
-		$t_bug = new MantisBug( $row['id'] );
+		$t_bug = new MantisPmBug( $row['id'] );
 		$t_category->bugs[$row['id']] = $t_bug;
 	}
 	
@@ -88,7 +88,7 @@ for ($i = 0; $i < $t_rownum; $i++) {
 # Add empty main projects who don't contain anything themselves
 foreach ( $t_all_projects as $t_project_name => $t_project ) {
 	if ( isset( $t_project->parent_project ) && !array_key_exists( $t_project->parent_project , $t_all_projects ) ) {
-		$t_parent = new MantisProject( $t_project->parent_project );
+		$t_parent = new MantisPmProject( $t_project->parent_project );
 		$t_all_projects[$t_project->parent_project] = $t_parent;
 	}
 }

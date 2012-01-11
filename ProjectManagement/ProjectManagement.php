@@ -79,7 +79,9 @@ class ProjectManagementPlugin extends MantisPlugin {
 		require_once( 'ProjectManagementAPI.php' );
 		require_once( 'date_api.php' );
 		require_once( 'pages/html_api.php' );
-		require_once( 'classes/MantisProject.php' );
+		require_once( 'classes/MantisPmProject.class.php' );
+		require_once( 'classes/MantisPmCategory.class.php' );
+		require_once( 'classes/MantisPmBug.class.php' );
 	}
 
 	function link_files() {
