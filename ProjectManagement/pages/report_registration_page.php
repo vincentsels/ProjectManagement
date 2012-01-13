@@ -78,7 +78,12 @@ date_finish_calendar( 'period_start', 'period_start_cal');
 echo ' - <input type="text" size="8" maxlength="10" autocomplete="off" id="period_end" name="period_end" value="' . $f_period_end . '">';
 date_print_calendar( 'period_end_cal' );
 date_finish_calendar( 'period_end', 'period_end_cal');
+echo ' - ', lang_get( 'username' ), ': ';
 ?>
+<select <?php echo helper_get_tab_index() ?> name="user_id">
+	<option value="0" selected="selected"></option>
+	<?php print_user_option_list( $f_user_id ) ?>
+</select>
 <input name="submit" type="submit" value="<?php echo lang_get( 'update' ) ?>">
 </form>
 </td>

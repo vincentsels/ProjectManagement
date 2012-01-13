@@ -78,7 +78,7 @@ function time_to_minutes( $p_time, $p_allow_negative = true, $p_throw_error_on_i
 	$t_time_array = explode( ':', $p_time );
 	
 	foreach ( $t_time_array as $t_value ) {
-		if ( !is_numeric( $t_value ) || ( $t_value < 0 && !$p_allow_negative ) ) {
+		if ( !empty($t_value) && ( !is_numeric( $t_value ) || ( $t_value < 0 && !$p_allow_negative ) ) ) {
 			if ( $p_throw_error_on_invalid_input ) {
 				trigger_error( ERROR_CUSTOM_FIELD_INVALID_VALUE, E_USER_ERROR );
 			} else {
@@ -90,7 +90,7 @@ function time_to_minutes( $p_time, $p_allow_negative = true, $p_throw_error_on_i
 	$t_minutes;
 	if ( count( $t_time_array ) == 3 ) {
 		# User entered DD:HH:MM
-		$t_minutes += abs($t_time_array[0]) * 24 * 60;
+		$t_minutes += abs($t_time_array[0]) * 8 * 60;
 		$t_minutes += abs($t_time_array[1]) * 60;
 		$t_minutes += abs($t_time_array[2]);
 	} else if ( count( $t_time_array ) == 2 ) {
