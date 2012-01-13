@@ -152,10 +152,10 @@ foreach ( $t_recently_visited_array as $t_bug_id ) {
 			<td>
 			<?php 
 				print_bug_link( $row["bug_id"] );
-				echo ': ' . $row["bug_summary"]; 
+				echo ': ' . string_shorten( $row["bug_summary"], 70 ); 
 			?>
 			</td>
-			<td class="right">
+			<td class="right" style="min-width:270px">
 				<?php echo $t_done_total ?>
 				+ <input type="text" size="4" maxlength="7" autocomplete="off" 
 					name= <?php echo '"add_' . $row["bug_id"] . '_' . PLUGIN_PM_DONE . '"' ?>>
