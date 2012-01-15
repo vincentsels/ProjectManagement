@@ -7,13 +7,14 @@ html_page_top2();
 
 print_pm_reports_menu( 'resource_allocation_page' );
 
-$t_target_version = gpc_get_string( 'target_version', null );
+$f_target_version = gpc_get_string( 'target_version', null );
+$f_user_id = gpc_get_int( 'user_id', ALL_USERS );
 
-if ( is_null( $t_target_version ) ) {
+if ( is_null( $f_target_version ) ) {
 	# Attempt to get the most logical one - the first non-released
 	$t_non_released = version_get_all_rows_with_subs( null, false, false );
 	if ( count( $t_non_released ) > 0 ) {
-		$t_target_version = $t_non_released[count( $t_non_released ) - 1]['version'];
+		$f_target_version = $t_non_released[count( $t_non_released ) - 1]['version'];
 	}
 }
 
@@ -30,8 +31,14 @@ $t_query = "SELECT pp.name as parent_project, pc.name as project_name, c.name as
   LEFT OUTER JOIN $t_hierarchy_table h ON pc.id = h.child_id
   LEFT OUTER JOIN $t_project_table pp ON h.parent_id = pp.id
   LEFT OUTER JOIN $t_work_table w ON b.id = w.bug_id 
- WHERE b.target_version = '$t_target_version'
- GROUP BY pp.name, pc.name, c.name, b.id, b.handler_id, w.work_type, w.minutes_type";
+ WHERE b.target_version = '$f_target_version'";
+
+if ( $f_user_id != ALL_USERS ) {
+	$t_query .= " AND b.handler_id = $f_user_id";
+}
+
+$t_query .= " GROUP BY pp.name, pc.name, c.name, b.id, b.handler_id, w.work_type, w.minutes_type";
+
 $t_result = db_query_bound( $t_query );
 $t_rownum = db_num_rows( $t_result );
 
@@ -132,8 +139,13 @@ for ( $i = 0; $i < $t_color_rownum; $i++ ) {
 <tr>
 <td class="center">
 <form name="resource_allocation" method="post" action="<?php echo plugin_page('resource_allocation_page') ?>" >
-<?php echo lang_get( 'target_version' ) . ': ' ?>
-<select name="target_version"><?php print_version_option_list( $t_target_version, null, false, false, true ) ?></select>
+<?php echo lang_get( 'target_version' ), ': ' ?>
+<select name="target_version"><?php print_version_option_list( $f_target_version, null, false, false, true ) ?></select>
+<?php echo ' - ', lang_get( 'username' ), ': ' ?>
+<select name="user_id">
+	<option value="0" selected="selected"></option>
+	<?php print_user_option_list( $f_user_id ) ?>
+</select>
 <input name="submit" type="submit" value="<?php echo lang_get( 'update' ) ?>">
 </form>
 </td>

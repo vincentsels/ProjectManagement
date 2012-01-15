@@ -97,12 +97,12 @@ class MantisPmBug {
 
 		echo '<span class="resource-progress-section">';
 		echo '<span class="progress" style="background-color:';
-		print_background_color( $g_resource_colors[$t_handler_id], PLUGIN_PM_LIGHT );
+		print_background_color( $g_resource_colors[$this->handler_id], PLUGIN_PM_LIGHT );
 		echo ' border-color: ';
-		print_background_color( $g_resource_colors[$t_handler_id], PLUGIN_PM_DARK );
+		print_background_color( $g_resource_colors[$this->handler_id], PLUGIN_PM_DARK );
 		echo ' width: ' . $t_total . '%">';
 		echo '<span class="bar" style="background-color:';
-		print_background_color( $g_resource_colors[$t_handler_id], PLUGIN_PM_DARK );
+		print_background_color( $g_resource_colors[$this->handler_id], PLUGIN_PM_DARK );
 		echo ' width: ' . $t_progress . '%">' . $t_progress_text . '</span>';
 		echo '</span>';
 		echo '</span>'; # End of resource progress section
