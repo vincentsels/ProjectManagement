@@ -140,7 +140,7 @@ for ( $i = 0; $i < $t_color_rownum; $i++ ) {
 <td class="center">
 <form name="resource_allocation" method="post" action="<?php echo plugin_page('resource_allocation_page') ?>" >
 <?php echo lang_get( 'target_version' ), ': ' ?>
-<select name="target_version"><?php print_version_option_list( $f_target_version, null, false, false, true ) ?></select>
+<select name="target_version"><?php print_version_option_list( $f_target_version, null, VERSION_FUTURE, false, true ) ?></select>
 <?php echo ' - ', lang_get( 'username' ), ': ' ?>
 <select name="user_id">
 	<option value="0" selected="selected"></option>
