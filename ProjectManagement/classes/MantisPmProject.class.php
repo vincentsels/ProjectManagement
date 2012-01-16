@@ -65,6 +65,10 @@ class MantisPmProject {
 	public function print_project( $p_total_value = -1 ) {
 		global $g_resource_colors;
 
+		if( $p_total_value == 0 ) {
+			$p_total_value = -1;
+		}
+
 		echo '<div class="project">';
 
 		echo '<span class="progress-total-section">';
