@@ -59,7 +59,8 @@ class ProjectManagementPlugin extends MantisPlugin {
 				'dark_saturation' => 33,
 				'dark_lightness' => 45,
 				'light_saturation' => 100,
-				'light_lightness' => 90
+				'light_lightness' => 90,
+				'display_detailed_bug_link' => TRUE
 		);
 	}
 

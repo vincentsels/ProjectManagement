@@ -64,7 +64,7 @@ class MantisPmBug {
 		echo '<span class="progress-total-section">';
 
 		echo '<span ' . $t_alternate_class . '>';
-		echo '<span class="progress-text-section">', string_get_bug_view_link( $this->bug_id, null, false ), '</span>';
+		echo '<span class="progress-text-section">', string_get_bug_view_link( $this->bug_id, null, plugin_config_get( 'display_detailed_bug_link' ) ), '</span>';
 		echo '</span>';
 
 		$this->calculate_bug_data();

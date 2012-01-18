@@ -151,7 +151,7 @@ foreach ( $t_recently_visited_array as $t_bug_id ) {
 			<td><?php echo $t_project_name ?></td>
 			<td>
 			<?php 
-				print_bug_link( $row["bug_id"] );
+				print_bug_link( $row["bug_id"], plugin_config_get( 'display_detailed_bug_link' ) );
 				echo ': ' . string_shorten( $row["bug_summary"], 70 ); 
 			?>
 			</td>
@@ -195,7 +195,7 @@ foreach ( $t_recently_visited_array as $t_bug_id ) {
 			?>
 			
 			<tr <?php echo helper_alternate_class() ?>>
-				<td><?php print_bug_link( $row["bug_id"] ); ?></td>
+				<td><?php print_bug_link( $row["bug_id"], plugin_config_get( 'display_detailed_bug_link' ) ); ?></td>
 				<td class="right"><?php echo $t_hours ?></td>
 			</tr>
 			
