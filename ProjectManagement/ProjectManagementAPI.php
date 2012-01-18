@@ -57,7 +57,7 @@ function minutes_to_time( $p_minutes, $p_allow_blanks = true, $p_show_days = fal
  * @return number
  */
 function minutes_to_days( $p_minutes ) {
-	return number_format( $p_minutes / 60 / 24, 1 );
+	return number_format( $p_minutes / 60 / 8, 1 );
 }
 
 /**

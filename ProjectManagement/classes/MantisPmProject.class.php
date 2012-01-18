@@ -91,16 +91,15 @@ class MantisPmProject {
 			$t_overdue = $t_data[PLUGIN_PM_OVERDUE];
 
 			# Calculate the width of the project
-			$t_real_est = max( $t_est, $t_done + $t_todo );
-			$t_total = $t_real_est / $p_total_value * 100;
+			$t_total = $t_est / $p_total_value * 100;
 
-			if ( $t_real_est > 0 ) {
-				$t_progress = $t_done / $t_real_est * 100;
+			if ( $t_est > 0 ) {
+				$t_progress = $t_done / $t_est * 100;
 			} else {
 				$t_progress = 0;
 			}
 
-			$t_progress_info = minutes_to_days( $t_done ) . '&nbsp;/&nbsp;' . minutes_to_days( $t_real_est );
+			$t_progress_info = minutes_to_days( $t_done ) . '&nbsp;/&nbsp;' . minutes_to_days( $t_est );
 			$t_progress_text = '<a href="#" class="invisible bold" title="' . $t_progress_info . '">' . number_format( $t_progress, 1 ) . '%</a>';
 
 			echo '<div class="resource-section">';

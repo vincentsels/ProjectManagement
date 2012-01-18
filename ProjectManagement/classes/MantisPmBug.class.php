@@ -25,22 +25,21 @@ class MantisPmBug {
 
 		$t_worktypes = MantisEnum::getAssocArrayIndexedByValues( plugin_config_get( 'work_types' ) );
 
-		foreach ( $this->est as $t_value ) {
-			$this->bug_data[PLUGIN_PM_EST] += $t_value;
-		}
-
 		foreach ( $this->done as $t_value ) {
 			$this->bug_data[PLUGIN_PM_DONE] += $t_value;
 		}
 
 		foreach ( $t_worktypes as $t_work_type => $t_value ) {
-			if ( !empty( $this->todo[$t_work_type] ) ) {
+			if ( isset( $this->todo[$t_work_type] ) ) {
 				$t_todo += $this->todo[$t_work_type];
-			} else if ( !empty( $this->est[$t_work_type] ) ) {
+			} else if ( isset( $this->est[$t_work_type] ) ) {
 				$t_todo += ( $this->est[$t_work_type] - $this->done[$t_work_type] );
 			}
 		}
 		$this->bug_data[PLUGIN_PM_TODO] = max( $t_todo, 0 );
+		
+		# Calculate the 'real estimate'
+		$this->bug_data[PLUGIN_PM_EST] = $this->bug_data[PLUGIN_PM_DONE] + $this->bug_data[PLUGIN_PM_TODO];
 
 		foreach ( $t_worktypes as $t_work_type => $t_value ) {
 			$t_overdue += $this->done[$t_work_type] + $this->todo[$t_work_type] - $this->est[$t_work_type];
@@ -76,16 +75,15 @@ class MantisPmBug {
 		$t_overdue = $this->bug_data[PLUGIN_PM_OVERDUE];
 
 		# Calculate the width of the bug
-		$t_real_est = max( $t_est, $t_done + $t_todo );
-		$t_total = $t_real_est / $p_total_value * 100;
+		$t_total = $t_est / $p_total_value * 100;
 
-		if ( $t_real_est > 0 ) {
-			$t_progress = $t_done / $t_real_est * 100;
+		if ( $t_est > 0 ) {
+			$t_progress = $t_done / $t_est * 100;
 		} else {
 			$t_progress = 0;
 		}
 
-		$t_progress_info = minutes_to_time( $t_done, false ) . '&nbsp;/&nbsp;' . minutes_to_time( $t_real_est, false );
+		$t_progress_info = minutes_to_time( $t_done, false ) . '&nbsp;/&nbsp;' . minutes_to_time( $t_est, false );
 		$t_progress_text = '<a href="#" class="invisible" title="' . $t_progress_info . '">' . number_format( $t_progress, 1 ) . '%</a>';
 
 		echo '<span class="progress-bar-section">';
