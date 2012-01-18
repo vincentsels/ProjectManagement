@@ -125,6 +125,11 @@ function set_work( $p_bug_id, $p_work_type, $p_minutes_type, $p_minutes, $p_book
 	$t_user_id = auth_get_current_user_id();
 	$t_timestamp = time();
 	
+	if ( empty( $p_book_date ) ) {
+		# When no book_date was set, default to today
+		$p_book_date = mktime( 0, 0, 0, date( 'm' ), date( 'd' ), date( 'Y' ) );
+	}
+	
 	if ( $p_action == ACTION::UPDATE || $p_action == ACTION::INSERT_OR_UPDATE ) {
 		#Update and check for rows affected
 		$t_query = "UPDATE $t_table SET minutes = $p_minutes, timestamp = $t_timestamp, user_id = $t_user_id, book_date= $p_book_date

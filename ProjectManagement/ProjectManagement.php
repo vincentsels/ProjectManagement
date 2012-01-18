@@ -60,7 +60,9 @@ class ProjectManagementPlugin extends MantisPlugin {
 				'dark_lightness' => 45,
 				'light_saturation' => 100,
 				'light_lightness' => 90,
-				'display_detailed_bug_link' => TRUE
+				'display_detailed_bug_link' => TRUE,
+				'finish_upon_resolving' => array( 20, 50 ),
+				'finish_upon_closing' => array ( 80 )
 		);
 	}
 
@@ -71,6 +73,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 				'EVENT_MENU_MAIN' => 'main_menu',
 				'EVENT_BUG_DELETED' => 'delete_time_registration',
 				'EVENT_REPORT_BUG' => 'bug_set_recently_visited',
+				'EVENT_UPDATE_BUG' => 'bug_finish_worktypes',
 				'EVENT_FILTER_COLUMNS' => 'filter_columns',
 				'EVENT_LAYOUT_RESOURCES' => 'link_files'
 		);
@@ -121,6 +124,31 @@ class ProjectManagementPlugin extends MantisPlugin {
 	
 	function bug_set_recently_visited( $p_event, $p_bug_data, $p_bug_id ) {
 		recently_visited_bug_add( $p_bug_id );
+	}
+	
+	/**
+	 * Upon resolving or closing a bug, 'finish' certain work types.
+	 */
+	function bug_finish_worktypes( $p_event, $p_bug_data, $p_bug_id ) {
+		if ( $p_bug_data->status >= config_get( 'bug_resolved_status_threshold' ) ) {
+			# The bug was resolved: if there was any work todo left, clear it
+			$t_work_types_to_finish_upon_resolving = plugin_config_get( 'finish_upon_resolving' );
+			if ( is_array( $t_work_types_to_finish_upon_resolving ) ) {
+				foreach ( $t_work_types_to_finish_upon_resolving as $t_work_type ) {
+					set_work( $p_bug_id, $t_work_type, PLUGIN_PM_TODO, 0, null, ACTION::INSERT_OR_UPDATE);
+				}
+			}
+		}
+		
+		if ( $p_bug_data->status >= config_get( 'bug_closed_status_threshold' ) ) {
+			# The bug was closed: if there was any work todo left, clear it
+			$t_work_types_to_finish_upon_closing = plugin_config_get( 'finish_upon_closing' );
+			if ( is_array( $t_work_types_to_finish_upon_closing ) ) {
+				foreach ( $t_work_types_to_finish_upon_closing as $t_work_type ) {
+					set_work( $p_bug_id, $t_work_type, PLUGIN_PM_TODO, 0, null, ACTION::INSERT_OR_UPDATE);
+				}
+			}
+		}
 	}
 
 	/**

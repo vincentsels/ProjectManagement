@@ -49,6 +49,12 @@
 	$s_plugin_ProjectManagement_work_type_thresholds = 'Drempels voor soorten werk';
 	$s_plugin_ProjectManagement_work_type_thresholds_info = 'Gebruikers met een profiel lager dan het opgegeven kunnen de soorten werk niet zien of wijzigen.<br><b>Syntax</b>: array ( val => ACCLEVEL[, val2 => ACCLEVEL2,...] )<br><b>Voorbeeld</b>: array ( 20 => REPORTER, 50 => DEVELOPER )';
 
+	$s_plugin_ProjectManagement_finish_upon_resolving = 'Types werk te beëindigen bij afhandelen';
+	$s_plugin_ProjectManagement_finish_upon_resolving_info = 'Specifiëer voor welke types van werk de \'todo\' automatisch op 0 gezet moet worden bij het afhandelen van het ticket.<br><b>Voorbeeld</b>: array ( 20, 50 )';
+
+	$s_plugin_ProjectManagement_finish_upon_closing = 'Types werk te beëindigen bij afsluiten';
+	$s_plugin_ProjectManagement_finish_upon_closing_info = 'Specifiëer voor welke types van werk de \'todo\' automatisch op 0 gezet moet worden bij het afsluiten van het ticket.<br><b>Voorbeeld</b>: array ( 80 )';
+
 	$s_plugin_ProjectManagement_enable_time_registration_threshold = 'Drempel voor tijdsregistratie';
 	$s_plugin_ProjectManagement_view_time_registration_summary_threshold = 'Drempel voor bekijken samenvatting tijdsregistratie';
 	$s_plugin_ProjectManagement_view_time_registration_worksheet_threshold = 'Drempel voor tijdsregistratie via worksheet';

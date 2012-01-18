@@ -49,6 +49,12 @@
 	$s_plugin_ProjectManagement_work_type_thresholds = 'Thresholds for types of work';
 	$s_plugin_ProjectManagement_work_type_thresholds_info = 'Users with an access level lower than the one specified can\'t see or modify the specified type of work.<br><b>Syntax</b>: array ( val => ACCLEVEL[, val2 => ACCLEVEL2,...] )<br><b>Example</b>: array ( 20 => REPORTER, 50 => DEVELOPER )';
 
+	$s_plugin_ProjectManagement_finish_upon_resolving = 'Worktypes to finish upon resolving';
+	$s_plugin_ProjectManagement_finish_upon_resolving_info = 'Specify for which types of work the hours \'todo\' should automatically be set to zero upon resolving the bug.<br><b>Example</b>: array ( 20, 50 )';
+
+	$s_plugin_ProjectManagement_finish_upon_closing = 'Worktypes to finish upon closing';
+	$s_plugin_ProjectManagement_finish_upon_closing_info = 'Specify for which types of work the hours \'todo\' should automatically be set to zero upon closing the bug.<br><b>Example</b>: array ( 20, 50 )';
+
 	$s_plugin_ProjectManagement_enable_time_registration_threshold = 'Enable time registration threshold';
 	$s_plugin_ProjectManagement_view_time_registration_summary_threshold = 'View summary of time registration threshold';
 	$s_plugin_ProjectManagement_view_time_registration_worksheet_threshold = 'View time registration worksheet threshold';

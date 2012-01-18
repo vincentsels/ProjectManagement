@@ -15,6 +15,8 @@
    maybe_set_option( 'view_time_registration_summary_threshold', gpc_get_int( 'view_time_registration_summary_threshold' ) );
    maybe_set_option( 'include_bookdate_threshold', gpc_get_int( 'include_bookdate_threshold' ) );
    maybe_set_option( 'work_type_thresholds', string_to_array( gpc_get_string( 'work_type_thresholds', null ) ) );
+   maybe_set_option( 'finish_upon_resolving', string_to_array( gpc_get_string( 'finish_upon_resolving', null ) ) );
+   maybe_set_option( 'finish_upon_closing', string_to_array( gpc_get_string( 'finish_upon_closing', null ) ) );
    maybe_set_option( 'enable_time_registration_threshold', gpc_get_int( 'enable_time_registration_threshold' ) );
    maybe_set_option( 'view_registration_worksheet_threshold', gpc_get_int( 'view_registration_worksheet_threshold' ) );
    maybe_set_option( 'view_registration_report_threshold', gpc_get_int( 'view_registration_report_threshold' ) );
