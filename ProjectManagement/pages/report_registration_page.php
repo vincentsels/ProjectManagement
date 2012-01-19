@@ -22,8 +22,8 @@ $t_project_table = db_get_table( 'mantis_project_table' );
 $t_category_table = db_get_table( 'mantis_category_table' );
 $t_work_types = MantisEnum::getAssocArrayIndexedByValues( plugin_config_get( 'work_types' ) );
 
-$t_query = "SELECT w.user_id, u.username, w.book_date, b.project_id, p.name as project_name, 
-				 c.id as category_id, c.name as category_name, b.id as bug_id, b.summary as bug_summary, 
+$t_query = "SELECT w.user_id, u.username, w.book_date, b.project_id, p.name as project_name,
+				 c.id as category_id, c.name as category_name, b.id as bug_id, b.summary as bug_summary,
 				 w.work_type, w.minutes, r.hourly_rate
             FROM $t_work_table w
        LEFT JOIN $t_bug_table b ON w.bug_id = b.id
@@ -57,11 +57,12 @@ if ( !empty( $f_category_id ) ) {
 
 $t_query .= " ORDER BY user_id, book_date, project_name, category_name, bug_id";
 
-$t_result = db_query_bound( $t_query, $t_params );
+$t_result = db_query_bound( $t_query );
 $t_num_result = db_num_rows( $t_result );
 
-$t_per_work_type;
-$t_per_category;
+$t_per_work_type = array();
+$t_per_project = array();
+$t_per_category = array();
 
 ?>
 
@@ -109,13 +110,13 @@ echo ' - ', lang_get( 'username' ), ': ';
 		<td><div align="center"><?php echo plugin_lang_get( 'hourly_rate' ) ?></div></td>
 		<td><div align="center"><?php echo plugin_lang_get( 'cost' ) ?></div></td>
 	</tr>
-	
-	<?php 
-	
+
+	<?php
+
 	$t_total_cost = 0;
 	for ( $i=0; $i < $t_num_result; $i++ ) {
 		$row = db_fetch_array( $t_result );
-		
+
 		$t_plugin_page = plugin_page( 'report_registration_page.php' );
 		$t_username = $row["username"];
 		$t_user_link = $t_plugin_page . '&user_id=' . $row["user_id"];
@@ -130,7 +131,7 @@ echo ' - ', lang_get( 'username' ), ': ';
 		$t_hours = format( $row["minutes"] / 60 );
 		$t_hourly_rate = format( $row["hourly_rate"] );
 		$t_cost = format( $row["minutes"] * $row["hourly_rate"] / 60 );
-		
+
 		echo "<tr " . helper_alternate_class() . ">";
 		echo "<td><a href=\"" . $t_user_link . "\">$t_username</a></td>";
 		echo "<td>$t_book_date</td>";
@@ -145,54 +146,54 @@ echo ' - ', lang_get( 'username' ), ': ';
 		echo "<td class=\"right\">$t_hourly_rate</td>";
 		echo "<td class=\"right\">$t_cost</td>";
 		echo "</tr>";
-		
+
 		$t_per_work_type[$row["user_id"]][$row["work_type"]] += $row["minutes"] / 60;
 		$t_per_work_type[$row["user_id"]][plugin_lang_get( 'total' )] += $row["minutes"] / 60;
-		
+
 		$t_per_project[$row["user_id"]][$row["project_id"]] += $row["minutes"] / 60;
 		$t_per_project[$row["user_id"]][plugin_lang_get( 'total' )] += $row["minutes"] / 60;
-		
+
 		$t_per_category[$row["user_id"]][$row["category_id"]] += $row["minutes"] / 60;
 		$t_per_category[$row["user_id"]][plugin_lang_get( 'total' )] += $row["minutes"] / 60;
-		
+
 		$t_total_cost += $row["minutes"] * $row["hourly_rate"] / 60;
 	}
-	
+
 	# Display a total cost line
 	echo '<tr class="spacer">';
 	echo '<tr class="row-category2"><td colspan="9" class="right bold">' . plugin_lang_get( 'total_cost' ) . '</td>';
 	echo '<td class="right bold">' . format( $t_total_cost )  . '</td></td>';
 	?>
-	
+
 	</table>
-	
+
 	<table width="100%" cellspacing="1">
 	<tr>
 	<td>
-	<?php 
+	<?php
 	if ( count( $t_per_work_type ) > 0 ) {
 		?>
 		<br />
 		<table class="width100" cellspacing="1">
 			<tr>
 				<td colspan="100%" class="form-title">
-				<?php echo plugin_lang_get( 'time_division' ); ?> - 
+				<?php echo plugin_lang_get( 'time_division' ); ?> -
 				<?php echo plugin_lang_get( 'per' ); ?> <?php echo plugin_lang_get( 'work_type' ); ?>
 				</td>
 			</tr>
 			<tr class="row-category">
 				<td><div align="center"><?php echo lang_get( 'username' ) ?></div></td>
-				<?php 
+				<?php
 				foreach ( $t_work_types as $t_work_type_value => $t_work_type_label ) {
 					?>
 					<td><div align="center"><?php echo $t_work_type_label ?></div></td>
-					<?php 
+					<?php
 				}
 				?>
 				<td><div align="center"><?php echo plugin_lang_get( 'total' ) ?></div></td>
 			</tr>
-			
-			<?php 
+
+			<?php
 			foreach ( $t_per_work_type as $t_user => $t_categories ) {
 				echo "<tr " . helper_alternate_class() . ">";
 				echo '<td class="category">';
@@ -204,37 +205,37 @@ echo ' - ', lang_get( 'username' ), ': ';
 				echo "<td class=\"right\">" . format( $t_categories[plugin_lang_get( 'total' )] ) . "</td></tr>";
 			}
 			?>
-			
+
 		</table>
 		<?php
 	}
 	?>
 	</td>
 	<td>
-	<?php 
+	<?php
 	if ( count( $t_per_category ) > 0 ) {
 		?>
 		<br />
 		<table class="width100" cellspacing="1">
 			<tr>
 				<td colspan="100%" class="form-title">
-				<?php echo plugin_lang_get( 'time_division' ); ?> - 
+				<?php echo plugin_lang_get( 'time_division' ); ?> -
 				<?php echo plugin_lang_get( 'per' ); ?> <?php echo lang_get( 'category' ); ?>
 				</td>
 			</tr>
 			<tr class="row-category">
 				<td><div align="center"><?php echo lang_get( 'username' ) ?></div></td>
-				<?php 
+				<?php
 				foreach ( category_get_all_rows( $f_project_id  ) as $row ) {
 					?>
 					<td><div align="center"><?php echo $row["name"] ?></div></td>
-					<?php 
+					<?php
 				}
 				?>
 				<td><div align="center"><?php echo plugin_lang_get( 'total' ) ?></div></td>
 			</tr>
-			
-			<?php 
+
+			<?php
 			foreach ( $t_per_category as $t_user => $t_categories ) {
 				echo "<tr " . helper_alternate_class() . ">";
 				echo '<td class="category">';
@@ -246,7 +247,7 @@ echo ' - ', lang_get( 'username' ), ': ';
 				echo "<td class=\"right\">" . format( $t_categories[plugin_lang_get( 'total' )] ) . "</td></tr>";
 			}
 			?>
-			
+
 		</table>
 		<?php
 	}

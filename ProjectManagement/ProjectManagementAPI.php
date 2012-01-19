@@ -309,6 +309,7 @@ function init_cap( $p_lang_strings, $p_plugin = false ) {
 		$p_lang_strings_arr[] = $p_lang_strings;
 	}
 
+	$t_val = '';
 	if ( $p_plugin ) {
 		foreach ( $p_lang_strings_arr as $t_str ) {
 			$t_val .= plugin_lang_get( $t_str ) . ' ';
