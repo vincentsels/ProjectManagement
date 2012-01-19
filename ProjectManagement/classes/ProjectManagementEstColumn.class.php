@@ -25,8 +25,8 @@ class ProjectManagementEstColumn extends MantisColumn {
 
 		$t_bug_ids = implode( ',', $t_bug_ids );
 
-		$t_query = "SELECT bug_id, minutes 
-			FROM $t_work_table 
+		$t_query = "SELECT bug_id, minutes
+			FROM $t_work_table
 			WHERE bug_id IN ( $t_bug_ids ) AND minutes_type = 0";
 		$t_result = db_query_bound( $t_query );
 
@@ -36,12 +36,14 @@ class ProjectManagementEstColumn extends MantisColumn {
 	}
 
 	public function display( $p_bug, $p_columns_target ) {
-		if ( $p_columns_target == COLUMNS_TARGET_VIEW_PAGE ||
-				$p_columns_target == COLUMNS_TARGET_PRINT_PAGE ) {
-			echo minutes_to_time( $this->cache[ $p_bug->id ], true );
-		} else {
-			# In excel and csv, the users probably want this in hours
-			echo number_format( $this->cache[ $p_bug->id ] / 60, 1 );
+		if( isset( $this->cache[ $p_bug->id ] ) ) {
+			if ( $p_columns_target == COLUMNS_TARGET_VIEW_PAGE ||
+					$p_columns_target == COLUMNS_TARGET_PRINT_PAGE ) {
+				echo minutes_to_time( $this->cache[ $p_bug->id ], true );
+			} else {
+				# In excel and csv, the users probably want this in hours
+				echo number_format( $this->cache[ $p_bug->id ] / 60, 1 );
+			}
 		}
 	}
 
