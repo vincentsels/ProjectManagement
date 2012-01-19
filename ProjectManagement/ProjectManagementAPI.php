@@ -40,14 +40,12 @@ function minutes_to_time( $p_minutes, $p_allow_blanks = true, $p_show_days = fal
 			return '00:00';
 		}
 	}
-	
+
 	$t_hours = str_pad( floor( abs($p_minutes) / 60 ), 2, '0', STR_PAD_LEFT );
 	$t_minutes = str_pad( abs($p_minutes) % 60, 2, '0', STR_PAD_LEFT );
-	
-	if ( $p_minutes < 0 ) {
-		$t_sign = '-';
-	}
-	
+
+	$t_sign = ( $p_minutes < 0 ) ? '-' : '';
+
 	return $t_sign . $t_hours . ':' . $t_minutes;
 }
 
@@ -74,9 +72,9 @@ function time_to_minutes( $p_time, $p_allow_negative = true, $p_throw_error_on_i
 	} else if ( empty ( $p_time ) ) {
 		return null;
 	}
-	
+
 	$t_time_array = explode( ':', $p_time );
-	
+
 	foreach ( $t_time_array as $t_value ) {
 		if ( !empty($t_value) && ( !is_numeric( $t_value ) || ( $t_value < 0 && !$p_allow_negative ) ) ) {
 			if ( $p_throw_error_on_invalid_input ) {
@@ -86,7 +84,7 @@ function time_to_minutes( $p_time, $p_allow_negative = true, $p_throw_error_on_i
 			}
 		}
 	}
-	
+
 	$t_minutes;
 	if ( count( $t_time_array ) == 3 ) {
 		# User entered DD:HH:MM
@@ -107,11 +105,11 @@ function time_to_minutes( $p_time, $p_allow_negative = true, $p_throw_error_on_i
 			return null;
 		}
 	}
-	
+
 	if ( $p_allow_negative && strstr( $p_time, '-' ) ) {
 		$t_minutes *= -1;
 	}
-	
+
 	return $t_minutes;
 }
 
@@ -124,12 +122,12 @@ function set_work( $p_bug_id, $p_work_type, $p_minutes_type, $p_minutes, $p_book
 	$t_table = plugin_table('work');
 	$t_user_id = auth_get_current_user_id();
 	$t_timestamp = time();
-	
+
 	if ( empty( $p_book_date ) ) {
 		# When no book_date was set, default to today
 		$p_book_date = mktime( 0, 0, 0, date( 'm' ), date( 'd' ), date( 'Y' ) );
 	}
-	
+
 	if ( $p_action == ACTION::UPDATE || $p_action == ACTION::INSERT_OR_UPDATE ) {
 		#Update and check for rows affected
 		$t_query = "UPDATE $t_table SET minutes = $p_minutes, timestamp = $t_timestamp, user_id = $t_user_id, book_date= $p_book_date
@@ -139,20 +137,20 @@ function set_work( $p_bug_id, $p_work_type, $p_minutes_type, $p_minutes, $p_book
 	}
 	if ( $p_action == ACTION::INSERT || ( $p_action == ACTION::INSERT_OR_UPDATE && $t_rows_affected == 0 )) {
 		#Insert and check for rows affected
-		$t_query = "INSERT INTO $t_table ( bug_id, user_id, work_type, minutes_type, 
-					minutes, book_date, timestamp ) 
+		$t_query = "INSERT INTO $t_table ( bug_id, user_id, work_type, minutes_type,
+					minutes, book_date, timestamp )
 					VALUES ( $p_bug_id, $t_user_id, $p_work_type, $p_minutes_type,
 					$p_minutes, $p_book_date, $t_timestamp )";
 		db_query_bound( $t_query );
 		$t_rows_affected = db_affected_rows();
-	} 
+	}
 	else if ( $p_action == ACTION::DELETE ) {
 		#Delete and check for rows affected
 		$t_query = "DELETE FROM $t_table WHERE bug_id = $p_bug_id AND work_type= $p_work_type AND minutes_type= $p_minutes_type";
 		db_query_bound( $t_query );
 		$t_rows_affected = db_affected_rows();
 	}
-	
+
 	return $t_rows_affected;
 }
 
@@ -310,7 +308,7 @@ function init_cap( $p_lang_strings, $p_plugin = false ) {
 	} else {
 		$p_lang_strings_arr[] = $p_lang_strings;
 	}
-	
+
 	if ( $p_plugin ) {
 		foreach ( $p_lang_strings_arr as $t_str ) {
 			$t_val .= plugin_lang_get( $t_str ) . ' ';
@@ -320,7 +318,7 @@ function init_cap( $p_lang_strings, $p_plugin = false ) {
 			$t_val .= lang_get( $t_str ) . ' ';;
 		}
 	}
-	
+
 	return ucfirst( strtolower( trim( $t_val ) ) );
 }
 
