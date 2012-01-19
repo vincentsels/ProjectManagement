@@ -29,6 +29,7 @@ class MantisPmBug {
 			$this->bug_data[PLUGIN_PM_DONE] += $t_value;
 		}
 
+		$t_todo = 0;
 		foreach ( $t_worktypes as $t_work_type => $t_value ) {
 			if ( isset( $this->todo[$t_work_type] ) ) {
 				$t_todo += $this->todo[$t_work_type];
@@ -37,10 +38,11 @@ class MantisPmBug {
 			}
 		}
 		$this->bug_data[PLUGIN_PM_TODO] = max( $t_todo, 0 );
-		
+
 		# Calculate the 'real estimate'
 		$this->bug_data[PLUGIN_PM_EST] = $this->bug_data[PLUGIN_PM_DONE] + $this->bug_data[PLUGIN_PM_TODO];
 
+		$t_overdue = 0;
 		foreach ( $t_worktypes as $t_work_type => $t_value ) {
 			$t_overdue += $this->done[$t_work_type] + $this->todo[$t_work_type] - $this->est[$t_work_type];
 		}
