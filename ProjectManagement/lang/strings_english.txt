@@ -29,7 +29,7 @@
 	$s_plugin_ProjectManagement_day = 'Today';
 	$s_plugin_ProjectManagement_week = 'This week';
 	$s_plugin_ProjectManagement_last_week = 'Last week';
-	$s_plugin_ProjectManagement_last_month = 'Last months';
+	$s_plugin_ProjectManagement_last_months = 'Last months';
 	$s_plugin_ProjectManagement_month = 'Month';
 	$s_plugin_ProjectManagement_unassigned = 'Unassigned';
 	
