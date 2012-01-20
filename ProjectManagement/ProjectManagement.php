@@ -323,7 +323,9 @@ class ProjectManagementPlugin extends MantisPlugin {
 
 				<td>
 				<?php
-				echo minutes_to_time( $t_work[PLUGIN_PM_EST][$t_work_type_code], true );
+				if ( isset( $t_work[PLUGIN_PM_EST][$t_work_type_code] ) ) {
+					echo minutes_to_time( $t_work[PLUGIN_PM_EST][$t_work_type_code], true );
+				}
 				if ( $t_work_type_code != PLUGIN_PM_WORKTYPE_TOTAL &&
 						( !isset( $t_work[PLUGIN_PM_EST][$t_work_type_code] ) ||
 								access_has_bug_level( plugin_config_get( 'edit_estimates_threshold' ), $p_bug_id )  ) ) {
@@ -337,7 +339,11 @@ class ProjectManagementPlugin extends MantisPlugin {
 
 				<td>
 				<?php
-				echo minutes_to_time( $t_work[PLUGIN_PM_DONE][$t_work_type_code], false );
+				if ( isset( $t_work[PLUGIN_PM_DONE][$t_work_type_code] ) ) {
+					echo minutes_to_time( $t_work[PLUGIN_PM_DONE][$t_work_type_code], false );
+				} else {
+					echo minutes_to_time( 0, false );
+				}
 				if ( $t_work_type_code != PLUGIN_PM_WORKTYPE_TOTAL ) {
 					?>
 					+ <input type="text" size="4" maxlength="7" autocomplete="off" name= <?php echo '"add_' . $p_bug_id . '_' . PLUGIN_PM_DONE . '_' . $t_work_type_code . '"' ?>>
@@ -347,16 +353,19 @@ class ProjectManagementPlugin extends MantisPlugin {
 				</td>
 
 				<?php
-				if ( !isset( $t_work[PLUGIN_PM_TODO][$t_work_type_code] ) ) {
+				if ( !isset( $t_work[PLUGIN_PM_TODO][$t_work_type_code] ) &&
+						isset( $t_work[PLUGIN_PM_REMAINING][$t_work_type_code] ) ) {
 					# When todo was not supplied, display calculated remainder instead, in italic
 					?>
 					<td class="italic"><?php echo minutes_to_time( $t_work[PLUGIN_PM_REMAINING][$t_work_type_code], false ) ?>
 					<?php
-				} else {
+				} else if ( isset( $t_work[PLUGIN_PM_TODO][$t_work_type_code] ) ) {
 					# Todo was supplied, so display that
 					?>
 					<td><?php echo minutes_to_time( $t_work[PLUGIN_PM_TODO][$t_work_type_code], false ) ?>
 					<?php
+				} else {
+					echo '<td>';
 				}
 				if ( $t_work_type_code != PLUGIN_PM_WORKTYPE_TOTAL ) {
 					?>
@@ -368,12 +377,13 @@ class ProjectManagementPlugin extends MantisPlugin {
 					<?php
 					}
 				}
-				?>
-				</td>
-
-				<td <?php echo ( $t_work[PLUGIN_PM_DIFF][$t_work_type_code] < 0 ? 'class="negative"' : 'class="positive"' )  ?>>
-					<?php echo minutes_to_time( abs( $t_work[PLUGIN_PM_DIFF][$t_work_type_code] ) ) ?></td>
-
+				echo '</td>';
+				if ( isset( $t_work[PLUGIN_PM_DIFF][$t_work_type_code] ) ) { ?>
+					<td <?php echo ( $t_work[PLUGIN_PM_DIFF][$t_work_type_code] < 0 ? 'class="negative"' : 'class="positive"' )  ?>>
+						<?php echo minutes_to_time( abs( $t_work[PLUGIN_PM_DIFF][$t_work_type_code] ) ) ?></td>
+				<?php } else {
+					echo '<td />';
+				} ?>
 			</tr>
 			<?php
 		}
