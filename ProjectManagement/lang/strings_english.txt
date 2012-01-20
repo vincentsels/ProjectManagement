@@ -56,7 +56,7 @@
 	$s_plugin_ProjectManagement_finish_upon_closing_info = 'Specify for which types of work the hours \'todo\' should automatically be set to zero upon closing the bug.<br><b>Example</b>: array ( 20, 50 )';
 
 	$s_plugin_ProjectManagement_enable_time_registration_threshold = 'Enable time registration threshold';
-	$s_plugin_ProjectManagement_view_time_registration_summary_threshold = 'View summary of time registration threshold';
+	$s_plugin_ProjectManagement_view_time_reg_summary_threshold = 'View summary of time registration threshold';
 	$s_plugin_ProjectManagement_view_time_registration_worksheet_threshold = 'View time registration worksheet threshold';
 	$s_plugin_ProjectManagement_view_report_registration_threshold = 'View time registration report threshold';
 	$s_plugin_ProjectManagement_view_resource_management_threshold = 'View resource management threshold';

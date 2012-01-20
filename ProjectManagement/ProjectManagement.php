@@ -46,7 +46,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 		return array(
 				'work_types' => '20:analysis,50:development,80:testing',
 				'enable_time_registration_threshold' => DEVELOPER,
-				'view_time_registration_summary_threshold' => REPORTER,
+				'view_time_reg_summary_threshold' => REPORTER,
 				'edit_estimates_threshold' => MANAGER,
 				'include_bookdate_threshold' => DEVELOPER,
 				'view_registration_worksheet_threshold' => DEVELOPER,
@@ -155,7 +155,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 	 * @todo fix hours todo (add 'calculated' hours)
 	 */
 	function view_bug_time_registration_summary( $p_event, $p_bug_id ) {
-		if ( !access_has_project_level( plugin_config_get( 'view_time_registration_summary_threshold' ) ) ) {
+		if ( !access_has_project_level( plugin_config_get( 'view_time_reg_summary_threshold' ) ) ) {
 			return;
 		}
 

@@ -21,8 +21,8 @@
          <td><select name="enable_time_registration_threshold"><?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'enable_time_registration_threshold' ) ) ?></select></td>
       </tr>
       <tr <?php echo helper_alternate_class() ?>>
-         <td class="category"><?php echo plugin_lang_get( 'view_time_registration_summary_threshold' ) ?><br />
-         <td><select name="view_time_registration_summary_threshold"><?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'view_time_registration_summary_threshold' ) ) ?></select></td>
+         <td class="category"><?php echo plugin_lang_get( 'view_time_reg_summary_threshold' ) ?><br />
+         <td><select name="view_time_reg_summary_threshold"><?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'view_time_reg_summary_threshold' ) ) ?></select></td>
       </tr>
       <tr <?php echo helper_alternate_class() ?>>
          <td class="category"><?php echo plugin_lang_get( 'edit_estimates_threshold' ) ?><br />

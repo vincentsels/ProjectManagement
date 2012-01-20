@@ -56,7 +56,7 @@
 	$s_plugin_ProjectManagement_finish_upon_closing_info = 'Specifiëer voor welke types van werk de \'todo\' automatisch op 0 gezet moet worden bij het afsluiten van het ticket.<br><b>Voorbeeld</b>: array ( 80 )';
 
 	$s_plugin_ProjectManagement_enable_time_registration_threshold = 'Drempel voor tijdsregistratie';
-	$s_plugin_ProjectManagement_view_time_registration_summary_threshold = 'Drempel voor bekijken samenvatting tijdsregistratie';
+	$s_plugin_ProjectManagement_view_time_reg_summary_threshold = 'Drempel voor bekijken samenvatting tijdsregistratie';
 	$s_plugin_ProjectManagement_view_time_registration_worksheet_threshold = 'Drempel voor tijdsregistratie via worksheet';
 	$s_plugin_ProjectManagement_view_report_registration_threshold = 'Drempel voor tijdsregistratie rapportering';
 	$s_plugin_ProjectManagement_view_resource_management_threshold = 'Drempel voor beheer resources';
