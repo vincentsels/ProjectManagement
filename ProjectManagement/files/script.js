@@ -1,4 +1,4 @@
-function ShowOrHide( p_div ) {
+function ShowOrHide( p_div ) { 
 	t_div = document.getElementById( p_div );
 	t_expand_icon = document.getElementById( p_div + "_img" );
 

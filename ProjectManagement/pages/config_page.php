@@ -76,5 +76,5 @@
 </form>
 
 <?php
-   html_page_bottom(); 
+   html_page_bottom();
 ?>

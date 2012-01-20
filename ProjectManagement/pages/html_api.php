@@ -78,7 +78,7 @@ function print_background_color( $p_hue = 120, $p_style = PLUGIN_PM_DARK ) {
 	$t_h = $p_hue;
 	$t_s = ( $p_style == PLUGIN_PM_DARK ? plugin_config_get( 'dark_saturation' ) : plugin_config_get( 'light_saturation' ) );
 	$t_l = ( $p_style == PLUGIN_PM_DARK ? plugin_config_get( 'dark_lightness' ) : plugin_config_get( 'light_lightness' ) );
-	
+
 	echo "hsl($t_h, $t_s%, $t_l%);";
 }
 

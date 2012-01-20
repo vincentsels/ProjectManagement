@@ -16,8 +16,8 @@ $t_bug_table = db_get_table( 'mantis_bug_table' );
 $t_project_table = db_get_table( 'mantis_project_table' );
 $t_category_table = db_get_table( 'mantis_category_table' );
 
-$t_query_recent = "SELECT b.last_updated, b.handler_id, b.project_id, p.name as project_name, c.id as category_id, c.name as category_name, 
-					b.id as bug_id, b.summary as bug_summary, b.status, 
+$t_query_recent = "SELECT b.last_updated, b.handler_id, b.project_id, p.name as project_name, c.id as category_id, c.name as category_name,
+					b.id as bug_id, b.summary as bug_summary, b.status,
 					(SELECT SUM(minutes) FROM $t_work_table w WHERE w.bug_id = b.id AND minutes_type = " . PLUGIN_PM_DONE . ") as done
             FROM $t_bug_table b
        LEFT JOIN $t_project_table p ON b.project_id = p.id
@@ -47,7 +47,7 @@ $t_week_end = strtotime( date( 'Y-m-d', strtotime( 'next sunday' ) ) );
 $t_query_registered_week = "SELECT w.book_date, sum(w.minutes) as minutes
 							 FROM $t_work_table w
 							WHERE w.user_id = $t_user
-							  AND w.book_date BETWEEN " . db_param() . " AND " . db_param() . " 
+							  AND w.book_date BETWEEN " . db_param() . " AND " . db_param() . "
 							  AND w.minutes_type = 1
 							GROUP BY book_date
 							ORDER BY book_date DESC";
@@ -60,14 +60,14 @@ $t_last_week_start = mktime( 0, 0, 0, date( 'm', $t_last_sunday ), date('d', $t_
 $t_last_week_end = $t_last_sunday - 1;
 $t_params = array( $t_last_week_start, $t_last_week_end );
 $t_result_registered_last_week = db_query_bound( $t_query_registered_week, $t_params );
-$t_num_registered_last_week = db_num_rows( $t_result_registered_last_week );	
+$t_num_registered_last_week = db_num_rows( $t_result_registered_last_week );
 
 $t_month_start = mktime( 0, 0, 0, date('m'), 1 );
 $t_month_end = mktime( 0, 0, 0, date('m') + 1, 1 ) - 1;
 $t_query_registered_month = "SELECT sum(w.minutes) as minutes
 							 FROM $t_work_table w
 							WHERE w.user_id = $t_user
-							  AND w.book_date BETWEEN " . db_param() . " AND " . db_param() . " 
+							  AND w.book_date BETWEEN " . db_param() . " AND " . db_param() . "
 							  AND w.minutes_type = 1";
 $t_params = array( $t_month_start, $t_month_end );
 $t_result_registered_month = db_query_bound( $t_query_registered_month, $t_params );
@@ -90,11 +90,11 @@ $t_row_last_month = db_fetch_array( $t_result_registered_last_month );
 
 <input type="hidden" name="redirect_page" value="time_registration_page" />
 
-<?php 
+<?php
 echo form_security_field( 'plugin_ProjectManagement_time_registration_update' );
 
 foreach ( $t_recently_visited_array as $t_bug_id ) {
-	printf( "<input type=\"hidden\" name=\"bug_ids[]\" value=\"%d\" />", $t_bug_id ); 
+	printf( "<input type=\"hidden\" name=\"bug_ids[]\" value=\"%d\" />", $t_bug_id );
 }
 ?>
 
@@ -121,20 +121,20 @@ foreach ( $t_recently_visited_array as $t_bug_id ) {
 		<td><div align="center"><?php echo plugin_lang_get( 'done' ) ?></div></td>
 	</tr>
 	<tr class="spacer"/>
-	
+
 <?php
 	for ( $i = 0; $i < $t_num_recent; $i++ ) {
 		$row = db_fetch_array( $t_result_recent );
-		
+
 		$t_last_update = date( config_get( 'normal_date_format' ), $row["last_updated"] );
 		$t_project_name = $row["project_name"] . ' - ' . $row["category_name"];
 		$t_done_total = minutes_to_time( $row["done"], false );
-		
+
 		# choose color based on status
 		$status_color = get_status_color( $row["status"] );
-		
+
 		?>
-		
+
 		<tr bgcolor="<?php echo $status_color ?>">
 			<td>
 			<?php
@@ -150,21 +150,21 @@ foreach ( $t_recently_visited_array as $t_bug_id ) {
 			</td>
 			<td><?php echo $t_project_name ?></td>
 			<td>
-			<?php 
+			<?php
 				print_bug_link( $row["bug_id"], plugin_config_get( 'display_detailed_bug_link' ) );
-				echo ': ' . string_shorten( $row["bug_summary"], 70 ); 
+				echo ': ' . string_shorten( $row["bug_summary"], 70 );
 			?>
 			</td>
 			<td class="right" style="min-width:270px">
 				<?php echo $t_done_total ?>
-				+ <input type="text" size="4" maxlength="7" autocomplete="off" 
+				+ <input type="text" size="4" maxlength="7" autocomplete="off"
 					name= <?php echo '"add_' . $row["bug_id"] . '_' . PLUGIN_PM_DONE . '"' ?>>
 				<select name="work_type_<?php echo $row["bug_id"] ?>">
 					<?php print_plugin_enum_string_option_list( 'work_types', plugin_config_get( 'default_worktype' ) ) ?>
 				</select>
 			</td>
 		</tr>
-		
+
 		<?php
 	}
 ?>
@@ -184,7 +184,7 @@ foreach ( $t_recently_visited_array as $t_bug_id ) {
 		<td><div align="center"><?php echo init_cap( 'hours', true ) ?></div></td>
 	</tr>
 	<tr class="spacer"/>
-	
+
 <?php
 	if ( $t_num_registered_day > 0 ) {
 		$t_total = 0;
@@ -193,12 +193,12 @@ foreach ( $t_recently_visited_array as $t_bug_id ) {
 			$t_total += $row["minutes"];
 			$t_hours = minutes_to_time( $row["minutes"], false );
 			?>
-			
+
 			<tr <?php echo helper_alternate_class() ?>>
 				<td><?php print_bug_link( $row["bug_id"], plugin_config_get( 'display_detailed_bug_link' ) ); ?></td>
 				<td class="right"><?php echo $t_hours ?></td>
 			</tr>
-			
+
 			<?php
 		}
 		?>
@@ -225,7 +225,7 @@ foreach ( $t_recently_visited_array as $t_bug_id ) {
 		<td><div align="center"><?php echo plugin_lang_get( 'hours' ) ?></div></td>
 	</tr>
 	<tr class="spacer"/>
-	
+
 <?php
 	if ( $t_num_registered_week > 0 ) {
 		$t_total = 0;
@@ -235,12 +235,12 @@ foreach ( $t_recently_visited_array as $t_bug_id ) {
 			$t_book_date = date( config_get( 'short_date_format' ), $row["book_date"] );
 			$t_hours = minutes_to_time( $row["minutes"], false );
 			?>
-			
+
 			<tr <?php echo helper_alternate_class() ?>>
 				<td><?php echo $t_book_date ?></td>
 				<td class="right"><?php echo $t_hours ?></td>
 			</tr>
-			
+
 			<?php
 		}
 		?>
@@ -251,7 +251,7 @@ foreach ( $t_recently_visited_array as $t_bug_id ) {
 		<?php
 	}
 ?>
-	
+
 </table>
 
 <br />
@@ -267,7 +267,7 @@ foreach ( $t_recently_visited_array as $t_bug_id ) {
 		<td><div align="center"><?php echo plugin_lang_get( 'hours' ) ?></div></td>
 	</tr>
 	<tr class="spacer"/>
-	
+
 <?php
 	if ( $t_num_registered_last_week > 0 ) {
 		$t_total = 0;
@@ -277,12 +277,12 @@ foreach ( $t_recently_visited_array as $t_bug_id ) {
 			$t_book_date = date( config_get( 'short_date_format' ), $row["book_date"] );
 			$t_hours = minutes_to_time( $row["minutes"], false );
 			?>
-			
+
 			<tr <?php echo helper_alternate_class() ?>>
 				<td><?php echo $t_book_date ?></td>
 				<td class="right"><?php echo $t_hours ?></td>
 			</tr>
-			
+
 			<?php
 		}
 		?>
@@ -293,7 +293,7 @@ foreach ( $t_recently_visited_array as $t_bug_id ) {
 		<?php
 	}
 ?>
-	
+
 </table>
 
 <br />
@@ -309,17 +309,17 @@ foreach ( $t_recently_visited_array as $t_bug_id ) {
 		<td><div align="center"><?php echo plugin_lang_get( 'hours' ) ?></div></td>
 	</tr>
 	<tr class="spacer"/>
-	
+
 	<tr <?php echo helper_alternate_class() ?>>
 		<td><?php echo date( 'F' ) ?></td>
 		<td class="right"><?php echo minutes_to_time( $t_row_month["minutes"], false ) ?></td>
 	</tr>
-	
+
 	<tr <?php echo helper_alternate_class() ?>>
 		<td><?php echo date( 'F', mktime( 0, 0, 0, date('m') -1, 1 ) ) ?></td>
 		<td class="right"><?php echo minutes_to_time( $t_row_last_month["minutes"], false ) ?></td>
 	</tr>
-	
+
 </table>
 
 </td>

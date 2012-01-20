@@ -49,7 +49,7 @@ $t_access_levels = get_translated_assoc_array_for_enum( 'access_levels' );
 				value="<?php echo $t_row['hours_per_week'] ?>">
 			</td>
 			<td>
-				<input type="text" size="3" maxlength="6" name="hourly_rate_<?php echo $t_row['id']?>" 
+				<input type="text" size="3" maxlength="6" name="hourly_rate_<?php echo $t_row['id']?>"
 				value="<?php echo $t_row['hourly_rate'] ?>">
 			</td>
 			<td>
@@ -58,7 +58,7 @@ $t_access_levels = get_translated_assoc_array_for_enum( 'access_levels' );
 				</select>
 			</td>
 		</tr>
-		<?php 
+		<?php
 		}
 		?>
 
@@ -70,7 +70,7 @@ $t_access_levels = get_translated_assoc_array_for_enum( 'access_levels' );
 	</table>
 </form>
 
-<?php 
+<?php
 
 html_page_bottom1( __FILE__ );
 

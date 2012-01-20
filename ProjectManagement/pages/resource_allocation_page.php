@@ -30,7 +30,7 @@ $t_query = "SELECT pp.name as parent_project, pc.name as project_name, c.name as
   JOIN $t_category_table c ON b.category_id = c.id
   LEFT OUTER JOIN $t_hierarchy_table h ON pc.id = h.child_id
   LEFT OUTER JOIN $t_project_table pp ON h.parent_id = pp.id
-  LEFT OUTER JOIN $t_work_table w ON b.id = w.bug_id 
+  LEFT OUTER JOIN $t_work_table w ON b.id = w.bug_id
  WHERE b.target_version = '$f_target_version'";
 
 if ( $f_user_id != ALL_USERS ) {
@@ -47,7 +47,7 @@ $t_all_projects = array(); # Array containing all projects
 # Start creation of the objects
 for ($i = 0; $i < $t_rownum; $i++) {
 	$row = db_fetch_array( $t_result );
-	
+
 	# Check whether this project already exists and if not, create it
 	if ( array_key_exists( $row['project_name'], $t_all_projects ) ) {
 		$t_project = $t_all_projects[$row['project_name']];
@@ -55,7 +55,7 @@ for ($i = 0; $i < $t_rownum; $i++) {
 		$t_project = new MantisPmProject( $row['project_name'] );
 		$t_all_projects[$row['project_name']] = $t_project;
 	}
-	
+
 	# Check whether this category already exists in this project and if not, create it
 	if ( !is_null( $t_project->categories ) && array_key_exists( $row['category_name'], $t_project->categories ) ) {
 		$t_category = $t_project->categories[$row['category_name']];
@@ -63,7 +63,7 @@ for ($i = 0; $i < $t_rownum; $i++) {
 		$t_category = new MantisPmCategory( $row['category_name'], $row['project_name'] );
 		$t_project->categories[$row['category_name']] = $t_category;
 	}
-	
+
 	# Check whether this ticket already exists in this category and if not, add it
 	if ( !is_null( $t_category->bugs ) && array_key_exists( $row['id'], $t_category->bugs ) ) {
 		$t_bug = $t_category->bugs[$row['id']];
@@ -71,7 +71,7 @@ for ($i = 0; $i < $t_rownum; $i++) {
 		$t_bug = new MantisPmBug( $row['id'] );
 		$t_category->bugs[$row['id']] = $t_bug;
 	}
-	
+
 	# Set the est, done or todo for this bug and worktype
 	if ( $row['minutes_type'] == PLUGIN_PM_EST ) {
 		$t_bug->est[$row['work_type']] = $row['minutes'];
@@ -80,12 +80,12 @@ for ($i = 0; $i < $t_rownum; $i++) {
 	} else if ( $row['minutes_type'] == PLUGIN_PM_TODO ) {
 		$t_bug->todo[$row['work_type']] = $row['minutes'];
 	}
-	
+
 	# Set the handler_id
 	if ( !empty( $row['handler_id'] ) ) {
 		$t_bug->handler_id = $row['handler_id'];
 	}
-	
+
 	# Set the parent project
 	if ( !empty( $row['parent_project'] ) ) {
 		$t_project->parent_project = $row['parent_project'];
@@ -105,7 +105,7 @@ $t_main_projects = array();
 foreach ( $t_all_projects as $t_project_name => $t_project ) {
 	if ( !isset( $t_project->parent_project ) ) {
 		$t_main_projects[] = $t_project;
-	} else { 
+	} else {
 		$t_all_projects[$t_project->parent_project]->sub_projects[] = $t_project;
 	}
 }
@@ -154,7 +154,7 @@ for ( $i = 0; $i < $t_color_rownum; $i++ ) {
 </div>
 <br />
 
-<?php 
+<?php
 
 foreach ( $t_main_projects as $t_main_project ) {
 	$t_main_project->print_project( $t_largest_value );

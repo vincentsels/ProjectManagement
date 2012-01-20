@@ -1,5 +1,5 @@
 <?php
-	$s_plugin_ProjectManagement_title = 'Project Management';
+	$s_plugin_ProjectManagement_title = 'Project Management'; 
 	$s_plugin_ProjectManagement_configuration = 'Configuratie';
    
 	$s_plugin_ProjectManagement_work_type = 'Soort werk';
