@@ -147,16 +147,16 @@ echo ' - ', lang_get( 'username' ), ': ';
 		echo "<td class=\"right\">$t_cost</td>";
 		echo "</tr>";
 
-		$t_per_work_type[$row["user_id"]][$row["work_type"]] += $row["minutes"] / 60;
-		$t_per_work_type[$row["user_id"]][plugin_lang_get( 'total' )] += $row["minutes"] / 60;
+		@$t_per_work_type[$row["user_id"]][$row["work_type"]] += $row["minutes"] / 60;
+		@$t_per_work_type[$row["user_id"]][plugin_lang_get( 'total' )] += $row["minutes"] / 60;
 
-		$t_per_project[$row["user_id"]][$row["project_id"]] += $row["minutes"] / 60;
-		$t_per_project[$row["user_id"]][plugin_lang_get( 'total' )] += $row["minutes"] / 60;
+		@$t_per_project[$row["user_id"]][$row["project_id"]] += $row["minutes"] / 60;
+		@$t_per_project[$row["user_id"]][plugin_lang_get( 'total' )] += $row["minutes"] / 60;
 
-		$t_per_category[$row["user_id"]][$row["category_id"]] += $row["minutes"] / 60;
-		$t_per_category[$row["user_id"]][plugin_lang_get( 'total' )] += $row["minutes"] / 60;
+		@$t_per_category[$row["user_id"]][$row["category_id"]] += $row["minutes"] / 60;
+		@$t_per_category[$row["user_id"]][plugin_lang_get( 'total' )] += $row["minutes"] / 60;
 
-		$t_total_cost += $row["minutes"] * $row["hourly_rate"] / 60;
+		@$t_total_cost += $row["minutes"] * $row["hourly_rate"] / 60;
 	}
 
 	# Display a total cost line
@@ -200,9 +200,9 @@ echo ' - ', lang_get( 'username' ), ': ';
 				print_user( $t_user );
 				echo "</td>";
 				foreach ( $t_work_types as $t_work_type_value => $t_work_type_label ) {
-					echo "<td class=\"right\">". format( $t_categories[$t_work_type_value] ) . "</td>";
+					echo "<td class=\"right\">". format( @$t_categories[$t_work_type_value] ) . "</td>";
 				}
-				echo "<td class=\"right\">" . format( $t_categories[plugin_lang_get( 'total' )] ) . "</td></tr>";
+				echo "<td class=\"right\">" . format( @$t_categories[plugin_lang_get( 'total' )] ) . "</td></tr>";
 			}
 			?>
 
@@ -242,9 +242,9 @@ echo ' - ', lang_get( 'username' ), ': ';
 				print_user( $t_user );
 				echo "</td>";
 				foreach ( category_get_all_rows( $f_project_id  ) as $row ) {
-					echo "<td class=\"right\">" . format( $t_categories[$row["id"]] ) . "</td>";
+					echo "<td class=\"right\">" . format( @$t_categories[$row["id"]] ) . "</td>";
 				}
-				echo "<td class=\"right\">" . format( $t_categories[plugin_lang_get( 'total' )] ) . "</td></tr>";
+				echo "<td class=\"right\">" . format( @$t_categories[plugin_lang_get( 'total' )] ) . "</td></tr>";
 			}
 			?>
 
