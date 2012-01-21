@@ -62,7 +62,9 @@ class ProjectManagementPlugin extends MantisPlugin {
 				'light_lightness' => 90,
 				'display_detailed_bug_link' => TRUE,
 				'finish_upon_resolving' => array( 20, 50 ),
-				'finish_upon_closing' => array ( 80 )
+				'finish_upon_closing' => array ( 80 ),
+				'decimal_separator' => ',',
+				'thousand_separator' => ' '
 		);
 	}
 

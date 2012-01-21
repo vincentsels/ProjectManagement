@@ -62,4 +62,7 @@
 	$s_plugin_ProjectManagement_view_resource_management_threshold = 'View resource management threshold';
 	$s_plugin_ProjectManagement_view_resource_allocation_threshold = 'View resource allocation threshold';
 	$s_plugin_ProjectManagement_admin_threshold = 'Plugin administrator threshold';
+	
+	$s_plugin_ProjectManagement_decimal_separator = 'Decimal separator';
+	$s_plugin_ProjectManagement_thousand_separator = 'Thousand separator';
 ?>

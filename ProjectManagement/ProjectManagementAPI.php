@@ -204,12 +204,15 @@ function parse_float( $p_floatstring ){
 }
 
 /**
- * Formats the specified $p_decimal as '100 000,00'
+ * Formats the specified $p_decimal as defined by the decimal_separator and
+ * thousand_separator in the plugin config settings.
  * @param float $p_decimal
  * @return string
  */
 function format( $p_decimal ) {
-	return number_format( round( $p_decimal, 2 ), 2, ',', ' ' );
+	return number_format( round( $p_decimal, 2 ), 2,
+			plugin_config_get( 'decimal_separator' ),
+			plugin_config_get( 'thousand_separator' ) );
 }
 
 /**

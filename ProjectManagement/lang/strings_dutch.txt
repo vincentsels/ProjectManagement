@@ -62,4 +62,7 @@
 	$s_plugin_ProjectManagement_view_resource_management_threshold = 'Drempel voor beheer resources';
 	$s_plugin_ProjectManagement_view_resource_allocation_threshold = 'Drempel voor bekijken resource verdeling';
 	$s_plugin_ProjectManagement_admin_threshold = 'Drempel voor plugin admin';
+	
+	$s_plugin_ProjectManagement_decimal_separator = 'Decimaal scheidingsteken';
+	$s_plugin_ProjectManagement_thousand_separator = 'Duizendtal-scheidingsteken';
 ?>
