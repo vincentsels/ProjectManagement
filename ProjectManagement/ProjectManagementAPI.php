@@ -324,7 +324,7 @@ function init_cap( $p_lang_strings, $p_plugin = false ) {
 }
 
 function prepare_resource_name( $p_handler_id ) {
-	if ( empty( $p_handler_id ) ) {
+	if ( $p_handler_id == NO_USER ) {
 		return '<span class="italic">' . plugin_lang_get( 'unassigned' ) . '</span>';
 	} else {
 		return user_get_name( $p_handler_id );

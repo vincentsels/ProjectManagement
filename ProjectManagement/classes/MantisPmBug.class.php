@@ -26,7 +26,7 @@ class MantisPmBug {
 		$t_worktypes = MantisEnum::getAssocArrayIndexedByValues( plugin_config_get( 'work_types' ) );
 
 		foreach ( $this->done as $t_value ) {
-			$this->bug_data[PLUGIN_PM_DONE] += $t_value;
+			@$this->bug_data[PLUGIN_PM_DONE] += $t_value;
 		}
 
 		$t_todo = 0;
@@ -34,17 +34,17 @@ class MantisPmBug {
 			if ( isset( $this->todo[$t_work_type] ) ) {
 				$t_todo += $this->todo[$t_work_type];
 			} else if ( isset( $this->est[$t_work_type] ) ) {
-				$t_todo += ( $this->est[$t_work_type] - $this->done[$t_work_type] );
+				$t_todo += ( $this->est[$t_work_type] - @$this->done[$t_work_type] );
 			}
 		}
 		$this->bug_data[PLUGIN_PM_TODO] = max( $t_todo, 0 );
 
 		# Calculate the 'real estimate'
-		$this->bug_data[PLUGIN_PM_EST] = $this->bug_data[PLUGIN_PM_DONE] + $this->bug_data[PLUGIN_PM_TODO];
+		$this->bug_data[PLUGIN_PM_EST] = @$this->bug_data[PLUGIN_PM_DONE] + @$this->bug_data[PLUGIN_PM_TODO];
 
 		$t_overdue = 0;
 		foreach ( $t_worktypes as $t_work_type => $t_value ) {
-			$t_overdue += $this->done[$t_work_type] + $this->todo[$t_work_type] - $this->est[$t_work_type];
+			$t_overdue += @$this->done[$t_work_type] + @$this->todo[$t_work_type] - @$this->est[$t_work_type];
 		}
 		$this->bug_data[PLUGIN_PM_OVERDUE] = max( $t_overdue, 0 );
 	}
@@ -53,7 +53,7 @@ class MantisPmBug {
 		$this->calculate_bug_data();
 
 		foreach ( $this->bug_data as $t_minutse_type => $t_value ) {
-			$p_data[$this->handler_id][$t_minutse_type] += $t_value;
+			@$p_data[$this->handler_id][$t_minutse_type] += $t_value;
 		}
 	}
 
@@ -71,10 +71,10 @@ class MantisPmBug {
 
 		$this->calculate_bug_data();
 
-		$t_est = $this->bug_data[PLUGIN_PM_EST];
-		$t_done = $this->bug_data[PLUGIN_PM_DONE];
-		$t_todo = $this->bug_data[PLUGIN_PM_TODO];
-		$t_overdue = $this->bug_data[PLUGIN_PM_OVERDUE];
+		$t_est = @$this->bug_data[PLUGIN_PM_EST];
+		$t_done = @$this->bug_data[PLUGIN_PM_DONE];
+		$t_todo = @$this->bug_data[PLUGIN_PM_TODO];
+		$t_overdue = @$this->bug_data[PLUGIN_PM_OVERDUE];
 
 		# Calculate the width of the bug
 		$t_total = $t_est / $p_total_value * 100;

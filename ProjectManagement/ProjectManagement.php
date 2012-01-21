@@ -175,9 +175,9 @@ class ProjectManagementPlugin extends MantisPlugin {
 			$row = db_fetch_array( $result );
 			$t_summary_info[$row['minutes_type']] = $row['minutes'];
 		}
-		$t_est_total = minutes_to_time( $t_summary_info[0], true );
-		$t_done_total = minutes_to_time( $t_summary_info[1], false );
-		$t_todo_total = minutes_to_time( $t_summary_info[2], true );
+		$t_est_total = minutes_to_time( @$t_summary_info[0], true );
+		$t_done_total = minutes_to_time( @$t_summary_info[1], false );
+		$t_todo_total = minutes_to_time( @$t_summary_info[2], true );
 
 		echo '<tr ' . helper_alternate_class() . '>';
 		echo '<td class="category">Est</td><td>' . $t_est_total . '</td>
@@ -247,17 +247,17 @@ class ProjectManagementPlugin extends MantisPlugin {
 		for ( $i=0; $i < $num_fetch_est; $i++ ) {
 			$row = db_fetch_array( $result_fetch_est );
 			$t_work[PLUGIN_PM_EST][$row["work_type"]] = $row["est"];
-			$t_work[PLUGIN_PM_EST][PLUGIN_PM_WORKTYPE_TOTAL] += $row["est"];
+			@$t_work[PLUGIN_PM_EST][PLUGIN_PM_WORKTYPE_TOTAL] += $row["est"];
 		}
 		for ( $i=0; $i < $num_fetch_done; $i++ ) {
 			$row = db_fetch_array( $result_fetch_done );
 			$t_work[PLUGIN_PM_DONE][$row["work_type"]] = $row["done"];
-			$t_work[PLUGIN_PM_DONE][PLUGIN_PM_WORKTYPE_TOTAL] += $row["done"];
+			@$t_work[PLUGIN_PM_DONE][PLUGIN_PM_WORKTYPE_TOTAL] += $row["done"];
 		}
 		for ( $i=0; $i < $num_fetch_todo; $i++ ) {
 			$row = db_fetch_array( $result_fetch_todo );
 			$t_work[PLUGIN_PM_TODO][$row["work_type"]] = $row["todo"];
-			$t_work[PLUGIN_PM_TODO][PLUGIN_PM_WORKTYPE_TOTAL] += $row["todo"];
+			@$t_work[PLUGIN_PM_TODO][PLUGIN_PM_WORKTYPE_TOTAL] += $row["todo"];
 		}
 
 		foreach ( $t_work_types as $t_work_type_code => $t_work_type_label ) {

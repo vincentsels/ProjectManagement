@@ -84,6 +84,8 @@ for ($i = 0; $i < $t_rownum; $i++) {
 	# Set the handler_id
 	if ( !empty( $row['handler_id'] ) ) {
 		$t_bug->handler_id = $row['handler_id'];
+	} else {
+		$t_bug->handler_id = NO_USER;
 	}
 
 	# Set the parent project
@@ -131,6 +133,8 @@ for ( $i = 0; $i < $t_color_rownum; $i++ ) {
 	$t_row = db_fetch_array( $t_color_result );
 	$g_resource_colors[$t_row['user_id']] = $t_row['color'];
 }
+# Add default
+$g_resource_colors[NO_USER] = 120;
 
 ?>
 

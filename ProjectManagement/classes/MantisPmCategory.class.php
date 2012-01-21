@@ -32,7 +32,7 @@ class MantisPmCategory {
 
 		foreach ( $this->category_data as $t_handler_id => $t_data ) {
 			foreach ( $t_data as $t_minutes_type => $t_value ) {
-				$p_data[$t_handler_id][$t_minutes_type] += $t_value;
+				@$p_data[$t_handler_id][$t_minutes_type] += $t_value;
 			}
 		}
 	}
@@ -56,10 +56,10 @@ class MantisPmCategory {
 
 		foreach ( sort_array_by_key( $this->category_data ) as $t_handler_id => $t_data ) {
 
-			$t_est = $t_data[PLUGIN_PM_EST];
-			$t_done = $t_data[PLUGIN_PM_DONE];
-			$t_todo = $t_data[PLUGIN_PM_TODO];
-			$t_overdue = $t_data[PLUGIN_PM_OVERDUE];
+			$t_est = @$t_data[PLUGIN_PM_EST];
+			$t_done = @$t_data[PLUGIN_PM_DONE];
+			$t_todo = @$t_data[PLUGIN_PM_TODO];
+			$t_overdue = @$t_data[PLUGIN_PM_OVERDUE];
 
 			# Calculate the width of the project
 			$t_total = $t_est / $p_total_value * 100;

@@ -34,17 +34,8 @@ class MantisPmProject {
 
 		foreach ( $this->project_data as $t_handler_id => $t_data ) {
 			foreach ( $t_data as $t_minutes_type => $t_value ) {
-				$p_data[$t_handler_id][$t_minutes_type] += $t_value;
+				@$p_data[$t_handler_id][$t_minutes_type] += $t_value;
 			}
-		}
-	}
-
-	public function add_data( &$p_data ) {
-		foreach ( $this->sub_projects as $subproject ) {
-			$subproject->add_data( $p_data );
-		}
-		foreach ( $this->categories as $category ) {
-			$category->add_data( $p_data );
 		}
 	}
 
@@ -53,7 +44,7 @@ class MantisPmProject {
 
 		$t_max_val = 0;
 		foreach ( $this->project_data as $t_handler_id => $t_data ) {
-			$t_real_est = max( $t_data[PLUGIN_PM_EST], $t_data[PLUGIN_PM_DONE] + $t_data[PLUGIN_PM_TODO] );
+			$t_real_est = max( @$t_data[PLUGIN_PM_EST], @$t_data[PLUGIN_PM_DONE] + @$t_data[PLUGIN_PM_TODO] );
 			if ( $t_real_est > $t_max_val ) {
 				$t_max_val = $t_real_est;
 			}
@@ -85,10 +76,10 @@ class MantisPmProject {
 
 		foreach ( sort_array_by_key( $this->project_data ) as $t_handler_id => $t_data ) {
 
-			$t_est = $t_data[PLUGIN_PM_EST];
-			$t_done = $t_data[PLUGIN_PM_DONE];
-			$t_todo = $t_data[PLUGIN_PM_TODO];
-			$t_overdue = $t_data[PLUGIN_PM_OVERDUE];
+			$t_est = @$t_data[PLUGIN_PM_EST];
+			$t_done = @$t_data[PLUGIN_PM_DONE];
+			$t_todo = @$t_data[PLUGIN_PM_TODO];
+			$t_overdue = @$t_data[PLUGIN_PM_OVERDUE];
 
 			# Calculate the width of the project
 			$t_total = $t_est / $p_total_value * 100;
