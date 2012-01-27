@@ -25,7 +25,7 @@ class ProjectManagementTodoColumn extends MantisColumn {
 
 		$t_bug_ids = implode( ',', $t_bug_ids );
 
-		$t_query = "SELECT bug_id, minutes
+		$t_query = "SELECT bug_id, sum(minutes) as minutes
 			FROM $t_work_table
 			WHERE bug_id IN ( $t_bug_ids ) AND minutes_type = 2
 			GROUP BY bug_id";
