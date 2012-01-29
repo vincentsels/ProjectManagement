@@ -73,20 +73,23 @@ class MantisPmBug {
 
 		$t_est = @$this->bug_data[PLUGIN_PM_EST];
 		$t_done = @$this->bug_data[PLUGIN_PM_DONE];
-		$t_todo = @$this->bug_data[PLUGIN_PM_TODO];
 		$t_overdue = @$this->bug_data[PLUGIN_PM_OVERDUE];
 
 		# Calculate the width of the bug
 		$t_total = $t_est / $p_total_value * 100;
 
 		if ( $t_est > 0 ) {
-			$t_progress = $t_done / $t_est * 100;
+			$t_original_work = ( $t_done - $t_overdue ) / $t_est * 100;
+			$t_total_work = $t_done / $t_est * 100;
+			$t_extra_work = $t_overdue / $t_est * 100;
 		} else {
-			$t_progress = 0;
+			$t_original_work = 0;
+			$t_total_work = 0;
+			$t_extra_work = 0;
 		}
 
 		$t_progress_info = minutes_to_time( $t_done, false ) . '&nbsp;/&nbsp;' . minutes_to_time( $t_est, false );
-		$t_progress_text = '<a href="#" class="invisible" title="' . $t_progress_info . '">' . number_format( $t_progress, 1 ) . '%</a>';
+		$t_progress_text = '<a href="#" class="invisible" title="' . $t_progress_info . '">' . number_format( $t_total_work, 1 ) . '%</a>';
 
 		echo '<span class="progress-bar-section">';
 
@@ -103,7 +106,12 @@ class MantisPmBug {
 		echo ' width: ' . $t_total . '%">';
 		echo '<span class="bar" style="background-color:';
 		print_background_color( $g_resource_colors[$this->handler_id], PLUGIN_PM_DARK );
-		echo ' width: ' . $t_progress . '%">' . $t_progress_text . '</span>';
+		echo ' width: ' . $t_original_work . '%">' . $t_progress_text . '</span>';
+		if ( $t_extra_work > 0 ) {
+			echo '<span class="bar overdue" style="background-color:';
+			print_overdue_color();
+			echo ' width: ' . $t_extra_work . '%"></span>';
+		}
 		echo '</span>';
 		echo '</span>'; # End of resource progress section
 

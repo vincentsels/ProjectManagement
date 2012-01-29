@@ -91,3 +91,6 @@ span.bar {
 	height: 14px;
 	vertical-align: top;
 }
+span.overdue {
+	background: #666600;
+}

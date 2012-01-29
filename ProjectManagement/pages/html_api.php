@@ -83,6 +83,13 @@ function print_background_color( $p_hue = 120, $p_style = PLUGIN_PM_DARK ) {
 }
 
 /**
+ * Prints a transparent red overlay.
+ */
+function print_overdue_color() {
+	echo "rgba(255, 0, 0, 0.5);";
+}
+
+/**
  * Prints a color selection option list with 15 available colors.
  * @param int $p_val the value to select.
  */
