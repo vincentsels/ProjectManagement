@@ -73,36 +73,51 @@ function time_to_minutes( $p_time, $p_allow_negative = true, $p_throw_error_on_i
 		return null;
 	}
 
-	$t_time_array = explode( ':', $p_time );
+	$t_minutes = 0;
 
-	foreach ( $t_time_array as $t_value ) {
-		if ( !empty($t_value) && ( !is_numeric( $t_value ) || ( $t_value < 0 && !$p_allow_negative ) ) ) {
+	# Check for d notation
+	if ( !empty( $p_time ) && !is_numeric( $p_time ) && strrpos( strtolower( $p_time ), 'd' ) !== false ) {
+		$t_days = trim( $p_time, 'Dd ');
+		if ( empty($t_days) || ( !is_numeric( $t_days ) || ( $t_days < 0 && !$p_allow_negative ) ) ) {
 			if ( $p_throw_error_on_invalid_input ) {
 				trigger_error( ERROR_CUSTOM_FIELD_INVALID_VALUE, E_USER_ERROR );
 			} else {
 				return null;
 			}
 		}
-	}
 
-	$t_minutes;
-	if ( count( $t_time_array ) == 3 ) {
-		# User entered DD:HH:MM
-		$t_minutes += abs($t_time_array[0]) * 8 * 60;
-		$t_minutes += abs($t_time_array[1]) * 60;
-		$t_minutes += abs($t_time_array[2]);
-	} else if ( count( $t_time_array ) == 2 ) {
-		# User entered HH:MM
-		$t_minutes += abs($t_time_array[0]) * 60;
-		$t_minutes += abs($t_time_array[1]);
-	} else if ( count( $t_time_array ) == 1 ) {
-		# User entered HH
-		$t_minutes += abs($t_time_array[0]) * 60;
+		$t_minutes = abs( $t_days ) * 8 * 60;
 	} else {
-		if ( $p_throw_error_on_invalid_input || ( $t_value < 0 && !$p_allow_negative ) ) {
-			trigger_error( ERROR_CUSTOM_FIELD_INVALID_VALUE, E_USER_ERROR );
+		$t_time_array = explode( ':', $p_time );
+
+		foreach ( $t_time_array as $t_key => $t_value ) {
+			if ( !empty($t_value) && ( !is_numeric( $t_value ) || ( $t_value < 0 && !$p_allow_negative ) ) ) {
+				if ( $p_throw_error_on_invalid_input ) {
+					trigger_error( ERROR_CUSTOM_FIELD_INVALID_VALUE, E_USER_ERROR );
+				} else {
+					return null;
+				}
+			}
+		}
+
+		if ( count( $t_time_array ) == 3 ) {
+			# User entered DD:HH:MM
+			$t_minutes += abs( $t_time_array[0] ) * 8 * 60;
+			$t_minutes += abs( $t_time_array[1] ) * 60;
+			$t_minutes += abs( $t_time_array[2] );
+		} else if ( count( $t_time_array ) == 2 ) {
+			# User entered HH:MM
+			$t_minutes += abs( $t_time_array[0] ) * 60;
+			$t_minutes += abs( $t_time_array[1] );
+		} else if ( count( $t_time_array ) == 1 ) {
+			# User entered HH
+			$t_minutes += abs( $t_time_array[0] ) * 60;
 		} else {
-			return null;
+			if ( $p_throw_error_on_invalid_input || ( $t_value < 0 && !$p_allow_negative ) ) {
+				trigger_error( ERROR_CUSTOM_FIELD_INVALID_VALUE, E_USER_ERROR );
+			} else {
+				return null;
+			}
 		}
 	}
 
