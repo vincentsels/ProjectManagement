@@ -25,14 +25,30 @@ class ProjectManagementTodoColumn extends MantisColumn {
 
 		$t_bug_ids = implode( ',', $t_bug_ids );
 
-		$t_query = "SELECT bug_id, sum(minutes) as minutes
+			$t_query = "SELECT bug_id, minutes_type, work_type, sum(minutes) as minutes
 			FROM $t_work_table
-			WHERE bug_id IN ( $t_bug_ids ) AND minutes_type = 2
-			GROUP BY bug_id";
+			WHERE bug_id IN ( $t_bug_ids )
+			GROUP BY bug_id, minutes_type, work_type
+		    ORDER BY bug_id, minutes_type, work_type";
 		$t_result = db_query_bound( $t_query );
 
+		$t_work = array();
 		while ( $t_row = db_fetch_array( $t_result ) ) {
-			$this->cache[ $t_row['bug_id'] ] = $t_row['minutes'];
+			@$t_work[$t_row["bug_id"]][$t_row["work_type"]][$t_row["minutes_type"]] = $t_row["minutes"];
+		}
+
+		foreach ($t_work as $bug_id => $work_types) {
+			foreach ($work_types as $work_type => $minute_types) {
+				if ( isset( $minute_types[PLUGIN_PM_TODO] ) ) {
+					@$this->cache[ $bug_id ] += $minute_types[PLUGIN_PM_TODO];
+				} else if ( isset( $minute_types[PLUGIN_PM_EST] ) ) {
+					@$this->cache[ $bug_id ] += ( $minute_types[PLUGIN_PM_EST] - $minute_types[PLUGIN_PM_DONE] );
+				}
+			}
+
+			if ( array_key_exists( $bug_id, $this->cache ) && $this->cache[ $bug_id ] < 0 ) {
+				$this->cache[ $bug_id ] = max( $this->cache[ $bug_id ], 0 );
+			}
 		}
 	}
 
