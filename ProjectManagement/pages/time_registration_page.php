@@ -27,7 +27,6 @@ $t_query_recent = "SELECT b.last_updated, b.handler_id, b.project_id, p.name as 
 		   LIMIT " . PLUGIN_PM_TOKEN_RECENTLY_VISITED_COUNT;
 if ( !empty( $t_recently_visited ) ) {
 	$t_result_recent = db_query_bound( $t_query_recent );
-	$t_num_recent = db_num_rows( $t_result_recent );
 }
 
 $t_today = strtotime( date( 'Y-m-d' ) );
@@ -39,7 +38,6 @@ $t_query_registered_day = "SELECT b.id as bug_id, sum(w.minutes) as minutes, max
 							GROUP BY bug_id
 							ORDER BY timestamp DESC";
 $t_result_registered_day = db_query_bound( $t_query_registered_day );
-$t_num_registered_day = db_num_rows( $t_result_registered_day );
 
 $t_week_start = strtotime( date( 'Y-m-d', strtotime( 'last sunday' ) ) );
 $t_week_end = strtotime( date( 'Y-m-d', strtotime( 'next sunday' ) ) );
@@ -53,14 +51,12 @@ $t_query_registered_week = "SELECT w.book_date, sum(w.minutes) as minutes
 							ORDER BY book_date DESC";
 $t_params = array( $t_week_start, $t_week_end );
 $t_result_registered_week = db_query_bound( $t_query_registered_week, $t_params );
-$t_num_registered_week = db_num_rows( $t_result_registered_week );
 
 $t_last_sunday = strtotime( 'last sunday' );
 $t_last_week_start = mktime( 0, 0, 0, date( 'm', $t_last_sunday ), date('d', $t_last_sunday ) -7, date( 'Y', $t_last_sunday ) );
 $t_last_week_end = $t_last_sunday - 1;
 $t_params = array( $t_last_week_start, $t_last_week_end );
 $t_result_registered_last_week = db_query_bound( $t_query_registered_week, $t_params );
-$t_num_registered_last_week = db_num_rows( $t_result_registered_last_week );
 
 $t_month_start = mktime( 0, 0, 0, date('m'), 1 );
 $t_month_end = mktime( 0, 0, 0, date('m') + 1, 1 ) - 1;
@@ -123,9 +119,7 @@ foreach ( $t_recently_visited_array as $t_bug_id ) {
 	<tr class="spacer"/>
 
 <?php
-	for ( $i = 0; $i < $t_num_recent; $i++ ) {
-		$row = db_fetch_array( $t_result_recent );
-
+	while ( $row = db_fetch_array( $t_result_recent ) ) {
 		$t_last_update = date( config_get( 'normal_date_format' ), $row["last_updated"] );
 		$t_project_name = $row["project_name"] . ' - ' . $row["category_name"];
 		$t_done_total = minutes_to_time( $row["done"], false );
@@ -186,28 +180,25 @@ foreach ( $t_recently_visited_array as $t_bug_id ) {
 	<tr class="spacer"/>
 
 <?php
-	if ( $t_num_registered_day > 0 ) {
-		$t_total = 0;
-		for ( $i = 0; $i < $t_num_registered_day; $i++ ) {
-			$row = db_fetch_array( $t_result_registered_day );
-			$t_total += $row["minutes"];
-			$t_hours = minutes_to_time( $row["minutes"], false );
-			?>
-
-			<tr <?php echo helper_alternate_class() ?>>
-				<td><?php print_bug_link( $row["bug_id"], plugin_config_get( 'display_detailed_bug_link' ) ); ?></td>
-				<td class="right"><?php echo $t_hours ?></td>
-			</tr>
-
-			<?php
-		}
+	$t_total = 0;
+	while ( $row = db_fetch_array( $t_result_registered_day ) ) {
+		$t_total += $row["minutes"];
+		$t_hours = minutes_to_time( $row["minutes"], false );
 		?>
-		<tr class="row-category2">
-			<td class="bold"><?php echo init_cap( array( 'total', 'day'), true ) ?></td>
-			<td class="bold right"><?php echo minutes_to_time( $t_total, false ) ?></td>
+
+		<tr <?php echo helper_alternate_class() ?>>
+			<td><?php print_bug_link( $row["bug_id"], plugin_config_get( 'display_detailed_bug_link' ) ); ?></td>
+			<td class="right"><?php echo $t_hours ?></td>
 		</tr>
+
 		<?php
 	}
+	?>
+	<tr class="row-category2">
+		<td class="bold"><?php echo init_cap( array( 'total', 'day'), true ) ?></td>
+		<td class="bold right"><?php echo minutes_to_time( $t_total, false ) ?></td>
+	</tr>
+	<?php
 ?>
 
 </table>
@@ -227,29 +218,26 @@ foreach ( $t_recently_visited_array as $t_bug_id ) {
 	<tr class="spacer"/>
 
 <?php
-	if ( $t_num_registered_week > 0 ) {
-		$t_total = 0;
-		for ( $i = 0; $i < $t_num_registered_week; $i++ ) {
-			$row = db_fetch_array( $t_result_registered_week );
-			$t_total += $row["minutes"];
-			$t_book_date = date( config_get( 'short_date_format' ), $row["book_date"] );
-			$t_hours = minutes_to_time( $row["minutes"], false );
-			?>
-
-			<tr <?php echo helper_alternate_class() ?>>
-				<td><?php echo $t_book_date ?></td>
-				<td class="right"><?php echo $t_hours ?></td>
-			</tr>
-
-			<?php
-		}
+	$t_total = 0;
+	while ( $row = db_fetch_array( $t_result_registered_week ) ) {
+		$t_total += $row["minutes"];
+		$t_book_date = date( config_get( 'short_date_format' ), $row["book_date"] );
+		$t_hours = minutes_to_time( $row["minutes"], false );
 		?>
-		<tr class="row-category2">
-			<td class="bold"><?php echo init_cap( array( 'total', 'week'), true ) ?></td>
-			<td class="bold right"><?php echo minutes_to_time( $t_total, false ) ?></td>
+
+		<tr <?php echo helper_alternate_class() ?>>
+			<td><?php echo $t_book_date ?></td>
+			<td class="right"><?php echo $t_hours ?></td>
 		</tr>
+
 		<?php
 	}
+	?>
+	<tr class="row-category2">
+		<td class="bold"><?php echo init_cap( array( 'total', 'week'), true ) ?></td>
+		<td class="bold right"><?php echo minutes_to_time( $t_total, false ) ?></td>
+	</tr>
+	<?php
 ?>
 
 </table>
@@ -269,29 +257,26 @@ foreach ( $t_recently_visited_array as $t_bug_id ) {
 	<tr class="spacer"/>
 
 <?php
-	if ( $t_num_registered_last_week > 0 ) {
-		$t_total = 0;
-		for ( $i = 0; $i < $t_num_registered_last_week; $i++ ) {
-			$row = db_fetch_array( $t_result_registered_last_week );
-			$t_total += $row["minutes"];
-			$t_book_date = date( config_get( 'short_date_format' ), $row["book_date"] );
-			$t_hours = minutes_to_time( $row["minutes"], false );
-			?>
-
-			<tr <?php echo helper_alternate_class() ?>>
-				<td><?php echo $t_book_date ?></td>
-				<td class="right"><?php echo $t_hours ?></td>
-			</tr>
-
-			<?php
-		}
+	$t_total = 0;
+	while ( $row = db_fetch_array( $t_result_registered_last_week ) ) {
+		$t_total += $row["minutes"];
+		$t_book_date = date( config_get( 'short_date_format' ), $row["book_date"] );
+		$t_hours = minutes_to_time( $row["minutes"], false );
 		?>
-		<tr class="row-category2">
-			<td class="bold"><?php echo init_cap( array( 'total', 'last_week'), true ) ?></td>
-			<td class="bold right"><?php echo minutes_to_time( $t_total, false ) ?></td>
+
+		<tr <?php echo helper_alternate_class() ?>>
+			<td><?php echo $t_book_date ?></td>
+			<td class="right"><?php echo $t_hours ?></td>
 		</tr>
+
 		<?php
 	}
+	?>
+	<tr class="row-category2">
+		<td class="bold"><?php echo init_cap( array( 'total', 'last_week'), true ) ?></td>
+		<td class="bold right"><?php echo minutes_to_time( $t_total, false ) ?></td>
+	</tr>
+	<?php
 ?>
 
 </table>

@@ -165,18 +165,18 @@ class ProjectManagementPlugin extends MantisPlugin {
 
 		# Fetch time registration summary
 		$t_table = plugin_table('work');
-		$query = "SELECT work_type, minutes_type, sum(minutes) as minutes
+		$t_query = "SELECT work_type, minutes_type, sum(minutes) as minutes
 			FROM $t_table
 			WHERE bug_id = $p_bug_id
 			GROUP BY work_type, minutes_type
 		    ORDER BY work_type, minutes_type";
-		$result = db_query_bound( $query );
+		$t_result = db_query_bound( $t_query );
 
 		$t_est = null;
 		$t_done = null;
 
 		$t_work = array();
-		while ( $t_row = db_fetch_array( $result ) ) {
+		while ( $t_row = db_fetch_array( $t_result ) ) {
 			@$t_work[$t_row["work_type"]][$t_row["minutes_type"]] = $t_row["minutes"];
 
 			if ( $t_row["minutes_type"] == PLUGIN_PM_DONE ) {
@@ -211,29 +211,26 @@ class ProjectManagementPlugin extends MantisPlugin {
 		$t_todo = PLUGIN_PM_TODO;
 
 		# Fetch estimates for all work types
-		$query_fetch_est = "SELECT work_type, minutes as est
+		$t_query_fetch_est = "SELECT work_type, minutes as est
 			FROM $t_table
 			WHERE bug_id = $p_bug_id
 			AND minutes_type = $t_est";
-		$result_fetch_est = db_query_bound( $query_fetch_est );
-		$num_fetch_est = db_num_rows( $result_fetch_est );
+		$t_result_fetch_est = db_query_bound( $t_query_fetch_est );
 
 		# Fetch totals total of done of all work types
-		$query_fetch_done = "SELECT work_type, SUM(minutes) as done
+		$t_query_fetch_done = "SELECT work_type, SUM(minutes) as done
 			FROM $t_table
 			WHERE bug_id = $p_bug_id
 			AND minutes_type = $t_done
 			GROUP BY work_type";
-		$result_fetch_done = db_query_bound($query_fetch_done);
-		$num_fetch_done = db_num_rows( $result_fetch_done );
+		$t_result_fetch_done = db_query_bound($t_query_fetch_done);
 
 		# Fetch todo of all work types
-		$query_fetch_todo = "SELECT work_type, minutes as todo
+		$t_query_fetch_todo = "SELECT work_type, minutes as todo
 			FROM $t_table
 			WHERE bug_id = $p_bug_id
 			AND minutes_type = $t_todo";
-		$result_fetch_todo = db_query_bound($query_fetch_todo);
-		$num_fetch_todo = db_num_rows( $result_fetch_todo );
+		$t_result_fetch_todo = db_query_bound($t_query_fetch_todo);
 
 		# Get the different worktypes as an array
 		$t_work_types = MantisEnum::getAssocArrayIndexedByValues( plugin_config_get( 'work_types' ) );
@@ -253,18 +250,15 @@ class ProjectManagementPlugin extends MantisPlugin {
 
 		# Build a two-dimentional array with the data
 		$t_work = array(PLUGIN_PM_EST => array(), PLUGIN_PM_DONE => array(), PLUGIN_PM_TODO => array());
-		for ( $i=0; $i < $num_fetch_est; $i++ ) {
-			$row = db_fetch_array( $result_fetch_est );
+		while ( $row = db_fetch_array( $t_result_fetch_est ) ) {
 			$t_work[PLUGIN_PM_EST][$row["work_type"]] = $row["est"];
 			@$t_work[PLUGIN_PM_EST][PLUGIN_PM_WORKTYPE_TOTAL] += $row["est"];
 		}
-		for ( $i=0; $i < $num_fetch_done; $i++ ) {
-			$row = db_fetch_array( $result_fetch_done );
+		while ( $row = db_fetch_array( $t_result_fetch_done ) ) {
 			$t_work[PLUGIN_PM_DONE][$row["work_type"]] = $row["done"];
 			@$t_work[PLUGIN_PM_DONE][PLUGIN_PM_WORKTYPE_TOTAL] += $row["done"];
 		}
-		for ( $i=0; $i < $num_fetch_todo; $i++ ) {
-			$row = db_fetch_array( $result_fetch_todo );
+		while ( $row = db_fetch_array( $t_result_fetch_todo ) ) {
 			$t_work[PLUGIN_PM_TODO][$row["work_type"]] = $row["todo"];
 			@$t_work[PLUGIN_PM_TODO][PLUGIN_PM_WORKTYPE_TOTAL] += $row["todo"];
 		}

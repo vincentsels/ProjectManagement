@@ -58,7 +58,6 @@ if ( !empty( $f_category_id ) ) {
 $t_query .= " ORDER BY user_id, book_date, project_name, category_name, bug_id";
 
 $t_result = db_query_bound( $t_query );
-$t_num_result = db_num_rows( $t_result );
 
 $t_per_work_type = array();
 $t_per_project = array();
@@ -114,9 +113,7 @@ echo ' - ', lang_get( 'username' ), ': ';
 	<?php
 
 	$t_total_cost = 0;
-	for ( $i=0; $i < $t_num_result; $i++ ) {
-		$row = db_fetch_array( $t_result );
-
+	while ( $row = db_fetch_array( $t_result ) ) {
 		$t_plugin_page = plugin_page( 'report_registration_page.php' );
 		$t_username = $row["username"];
 		$t_user_link = $t_plugin_page . '&user_id=' . $row["user_id"];

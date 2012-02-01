@@ -15,7 +15,6 @@ FROM $t_user_table u
 LEFT OUTER JOIN $t_resource_table r ON u.id = r.user_id
 ORDER BY access_level, username";
 $t_result = db_query_bound( $t_query );
-$t_rownum = db_num_rows( $t_result );
 $t_user_array = array();
 
 $t_access_levels = get_translated_assoc_array_for_enum( 'access_levels' );
@@ -37,8 +36,7 @@ $t_access_levels = get_translated_assoc_array_for_enum( 'access_levels' );
 		</tr>
 
 		<?php
-		for ( $i = 0; $i < $t_rownum; $i++ ) {
-			$t_row = db_fetch_array( $t_result );
+		while ( $t_row = db_fetch_array( $t_result ) ) {
 			$t_user_array[] = $t_row['id'];
 			?>
 		<tr <?php echo helper_alternate_class() ?>>

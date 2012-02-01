@@ -40,14 +40,11 @@ if ( $f_user_id != ALL_USERS ) {
 $t_query .= " GROUP BY pp.name, pc.name, c.name, b.id, b.handler_id, w.work_type, w.minutes_type";
 
 $t_result = db_query_bound( $t_query );
-$t_rownum = db_num_rows( $t_result );
 
 $t_all_projects = array(); # Array containing all projects
 
 # Start creation of the objects
-for ($i = 0; $i < $t_rownum; $i++) {
-	$row = db_fetch_array( $t_result );
-
+while ( $row = db_fetch_array( $t_result ) ) {
 	# Check whether this project already exists and if not, create it
 	if ( array_key_exists( $row['project_name'], $t_all_projects ) ) {
 		$t_project = $t_all_projects[$row['project_name']];
@@ -127,10 +124,8 @@ global $g_resource_colors;
 $t_resource_table = plugin_table( 'resource' );
 $t_color_query = "SELECT user_id, color FROM $t_resource_table WHERE color IS NOT NULL";
 $t_color_result = db_query_bound( $t_color_query );
-$t_color_rownum = db_num_rows( $t_color_result );
 
-for ( $i = 0; $i < $t_color_rownum; $i++ ) {
-	$t_row = db_fetch_array( $t_color_result );
+while ( $t_row = db_fetch_array( $t_color_result ) ) {
 	$g_resource_colors[$t_row['user_id']] = $t_row['color'];
 }
 # Add default
