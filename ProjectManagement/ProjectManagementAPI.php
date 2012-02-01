@@ -170,6 +170,28 @@ function set_work( $p_bug_id, $p_work_type, $p_minutes_type, $p_minutes, $p_book
 }
 
 /**
+ * Calculates the actual work todo based on the supplied data.
+ * The data must be a multi-dimentional array in the form of
+ * $p_work[WORK_TYPE][MINUTES_TYPE] = MINUTES
+ * @param mixed $p_work multi-dimentional array in the form of
+ * $p_work[WORK_TYPE][MINUTES_TYPE] = MINUTES.
+ * @return the actual remaining hours todo.
+ */
+function get_actual_work_todo( $p_work_types ) {
+	$t_todo = 0;
+
+	foreach ($p_work_types as $work_type => $minute_types) {
+		if ( isset( $minute_types[PLUGIN_PM_TODO] ) ) {
+			$t_todo += $minute_types[PLUGIN_PM_TODO];
+		} else if ( isset( $minute_types[PLUGIN_PM_EST] ) ) {
+			@$t_todo += ( $minute_types[PLUGIN_PM_EST] - $minute_types[PLUGIN_PM_DONE] );
+		}
+	}
+
+	return max( $t_todo, 0 );
+}
+
+/**
  * Returns the first day of the current month, or when specified,
  * the current month added (or substracted) with $p_add_months months.
  * @param int $p_add_months Optional. The amount of months to add or substract from the current month.

@@ -165,26 +165,33 @@ class ProjectManagementPlugin extends MantisPlugin {
 
 		# Fetch time registration summary
 		$t_table = plugin_table('work');
-		$query = "SELECT minutes_type, sum(minutes) as minutes
+		$query = "SELECT work_type, minutes_type, sum(minutes) as minutes
 			FROM $t_table
 			WHERE bug_id = $p_bug_id
-			GROUP BY minutes_type";
+			GROUP BY work_type, minutes_type
+		    ORDER BY work_type, minutes_type";
 		$result = db_query_bound( $query );
-		$num = db_num_rows( $result );
 
-		$t_summary_info = array();
-		for ( $i = 0; $i < $num; $i++ ) {
-			$row = db_fetch_array( $result );
-			$t_summary_info[$row['minutes_type']] = $row['minutes'];
+		$t_est = null;
+		$t_done = null;
+
+		$t_work = array();
+		while ( $t_row = db_fetch_array( $result ) ) {
+			@$t_work[$t_row["work_type"]][$t_row["minutes_type"]] = $t_row["minutes"];
+
+			if ( $t_row["minutes_type"] == PLUGIN_PM_DONE ) {
+				@$t_done += $t_row["minutes"];
+			} else  if ( $t_row["minutes_type"] == PLUGIN_PM_EST ) {
+				$t_est = $t_row["minutes"];
+			}
 		}
-		$t_est_total = minutes_to_time( @$t_summary_info[0], true );
-		$t_done_total = minutes_to_time( @$t_summary_info[1], false );
-		$t_todo_total = minutes_to_time( @$t_summary_info[2], true );
+
+		$t_todo = get_actual_work_todo( $t_work );
 
 		echo '<tr ' . helper_alternate_class() . '>';
-		echo '<td class="category">Est</td><td>' . $t_est_total . '</td>
-		<td class="category">Done</td><td>' . $t_done_total . '</td>
-		<td class="category">Todo</td><td>' . $t_todo_total . '</td></tr>';
+		echo '<td class="category">Est</td><td>' .  minutes_to_time( $t_est, true ) . '</td>
+		<td class="category">Done</td><td>' . minutes_to_time( $t_done, false ) . '</td>
+		<td class="category">Todo</td><td>' . minutes_to_time( $t_todo, true ) . '</td></tr>';
 	}
 
 	function delete_time_registration ( $p_event, $p_bug_id ) {

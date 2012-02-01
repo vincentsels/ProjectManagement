@@ -38,17 +38,7 @@ class ProjectManagementTodoColumn extends MantisColumn {
 		}
 
 		foreach ($t_work as $bug_id => $work_types) {
-			foreach ($work_types as $work_type => $minute_types) {
-				if ( isset( $minute_types[PLUGIN_PM_TODO] ) ) {
-					@$this->cache[ $bug_id ] += $minute_types[PLUGIN_PM_TODO];
-				} else if ( isset( $minute_types[PLUGIN_PM_EST] ) ) {
-					@$this->cache[ $bug_id ] += ( $minute_types[PLUGIN_PM_EST] - $minute_types[PLUGIN_PM_DONE] );
-				}
-			}
-
-			if ( array_key_exists( $bug_id, $this->cache ) && $this->cache[ $bug_id ] < 0 ) {
-				$this->cache[ $bug_id ] = max( $this->cache[ $bug_id ], 0 );
-			}
+			$this->cache[ $bug_id ] = get_actual_work_todo( $work_types );
 		}
 	}
 
