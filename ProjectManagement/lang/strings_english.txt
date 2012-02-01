@@ -65,4 +65,8 @@
 	
 	$s_plugin_ProjectManagement_decimal_separator = 'Decimal separator';
 	$s_plugin_ProjectManagement_thousand_separator = 'Thousand separator';
+	
+	$s_plugin_ProjectManagement_include_bugs_with_deadline = 'Include bugs with deadline';
+	$s_plugin_ProjectManagement_include_bugs_with_deadline_info = 'In the resource allocation screen, also include bugs with a deadline before the release date of the version.';
+	$s_plugin_ProjectManagement_include_bugs_with_deadline_warning = '<b>Warning:</b> this option has a negative impact on the performance of this page!';
 ?>

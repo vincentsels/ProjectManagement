@@ -81,6 +81,12 @@
          <td class="category"><?php echo plugin_lang_get( 'thousand_separator' ) ?></td>
          <td><input type="text" size="2" maxlength="2" name="thousand_separator" id="thousand_separator" value="<?php echo plugin_config_get( 'thousand_separator' ) ?>"></td>
       </tr>
+      <tr <?php echo helper_alternate_class() ?>>
+         <td class="category"><?php echo plugin_lang_get( 'include_bugs_with_deadline' ) ?><br />
+         <span class="small"><?php echo plugin_lang_get( 'include_bugs_with_deadline_warning' ) ?></span></td>
+         <td><input type="checkbox" name="include_bugs_with_deadline" id="include_bugs_with_deadline" <?php echo plugin_config_get( 'include_bugs_with_deadline' ) ? 'checked="checked" ' : '' ?>>
+         <?php echo plugin_lang_get( 'include_bugs_with_deadline_info' ) ?></span></td>
+      </tr>
       <tr>
          <td class="center" colspan="2"><input type="submit" value="<?php echo lang_get( 'update' ) ?>"/></td>
       </tr>

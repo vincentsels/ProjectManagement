@@ -65,4 +65,8 @@
 	
 	$s_plugin_ProjectManagement_decimal_separator = 'Decimaal scheidingsteken';
 	$s_plugin_ProjectManagement_thousand_separator = 'Duizendtal-scheidingsteken';
+	
+	$s_plugin_ProjectManagement_include_bugs_with_deadline = 'Bugs met deadline meenemen';
+	$s_plugin_ProjectManagement_include_bugs_with_deadline_info = 'Neem in de pagina voor het bekijken van de verdeling van de resources ook meldingen mee met een deadline voor de opleverdatum van de doelversie.';
+	$s_plugin_ProjectManagement_include_bugs_with_deadline_warning = '<b>Waarschuwing:</b> dit heeft een negatieve impact op de performantie!';
 ?>

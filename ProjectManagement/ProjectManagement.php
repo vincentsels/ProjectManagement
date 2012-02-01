@@ -64,7 +64,8 @@ class ProjectManagementPlugin extends MantisPlugin {
 				'finish_upon_resolving' => array( 20, 50 ),
 				'finish_upon_closing' => array ( 80 ),
 				'decimal_separator' => ',',
-				'thousand_separator' => ' '
+				'thousand_separator' => ' ',
+				'include_bugs_with_deadline' => ON
 		);
 	}
 
