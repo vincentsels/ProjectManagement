@@ -183,7 +183,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 			if ( $t_row["minutes_type"] == PLUGIN_PM_DONE ) {
 				@$t_done += $t_row["minutes"];
 			} else  if ( $t_row["minutes_type"] == PLUGIN_PM_EST ) {
-				$t_est = $t_row["minutes"];
+				@$t_est += $t_row["minutes"];
 			}
 		}
 
