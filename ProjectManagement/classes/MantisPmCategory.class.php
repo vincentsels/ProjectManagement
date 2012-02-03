@@ -9,11 +9,11 @@ class MantisPmCategory {
 	private $category_data;
 
 	public function __construct( $p_category_name, $p_parent_project_name ) {
-		$this->category_name = $p_category_name;
+		$this->category_name  = $p_category_name;
 		$this->parent_project = $p_parent_project_name;
-		$this->unique_id = $this->parent_project . '_' . $this->category_name;
-		$this->bugs = array();
-		$this->category_data = null;
+		$this->unique_id      = $this->parent_project . '_' . $this->category_name;
+		$this->bugs           = array();
+		$this->category_data  = null;
 	}
 
 	public function calculate_category_data() {
@@ -56,8 +56,8 @@ class MantisPmCategory {
 
 		foreach ( sort_array_by_key( $this->category_data ) as $t_handler_id => $t_data ) {
 
-			$t_est = @$t_data[PLUGIN_PM_EST];
-			$t_done = @$t_data[PLUGIN_PM_DONE];
+			$t_est     = @$t_data[PLUGIN_PM_EST];
+			$t_done    = @$t_data[PLUGIN_PM_DONE];
 			$t_overdue = @$t_data[PLUGIN_PM_OVERDUE];
 
 			# Calculate the width of the project
@@ -65,12 +65,12 @@ class MantisPmCategory {
 
 			if ( $t_est > 0 ) {
 				$t_original_work = ( $t_done - $t_overdue ) / $t_est * 100;
-				$t_total_work = $t_done / $t_est * 100;
-				$t_extra_work = $t_overdue / $t_est * 100;
+				$t_total_work    = $t_done / $t_est * 100;
+				$t_extra_work    = $t_overdue / $t_est * 100;
 			} else {
 				$t_original_work = 0;
-				$t_total_work = 0;
-				$t_extra_work = 0;
+				$t_total_work    = 0;
+				$t_extra_work    = 0;
 			}
 
 			$t_progress_info = minutes_to_days( $t_done ) . '&nbsp;/&nbsp;' . minutes_to_days( $t_est );

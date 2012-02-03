@@ -10,14 +10,14 @@ class MantisPmBug {
 	private $bug_data;
 
 	public function __construct( $p_bug_id ) {
-		$this->bug_id = $p_bug_id;
-		$this->est = array();
-		$this->done = array();
-		$this->todo = array();
+		$this->bug_id   = $p_bug_id;
+		$this->est      = array();
+		$this->done     = array();
+		$this->todo     = array();
 		$this->bug_data = null;
 	}
 
-	public function calculate_bug_data( ) {
+	public function calculate_bug_data() {
 		if ( !is_null( $this->bug_data ) ) {
 			# Only calculate once
 			return;
@@ -71,8 +71,8 @@ class MantisPmBug {
 
 		$this->calculate_bug_data();
 
-		$t_est = @$this->bug_data[PLUGIN_PM_EST];
-		$t_done = @$this->bug_data[PLUGIN_PM_DONE];
+		$t_est     = @$this->bug_data[PLUGIN_PM_EST];
+		$t_done    = @$this->bug_data[PLUGIN_PM_DONE];
 		$t_overdue = @$this->bug_data[PLUGIN_PM_OVERDUE];
 
 		# Calculate the width of the bug
@@ -80,12 +80,12 @@ class MantisPmBug {
 
 		if ( $t_est > 0 ) {
 			$t_original_work = ( $t_done - $t_overdue ) / $t_est * 100;
-			$t_total_work = $t_done / $t_est * 100;
-			$t_extra_work = $t_overdue / $t_est * 100;
+			$t_total_work    = $t_done / $t_est * 100;
+			$t_extra_work    = $t_overdue / $t_est * 100;
 		} else {
 			$t_original_work = 0;
-			$t_total_work = 0;
-			$t_extra_work = 0;
+			$t_total_work    = 0;
+			$t_extra_work    = 0;
 		}
 
 		$t_progress_info = minutes_to_time( $t_done, false ) . '&nbsp;/&nbsp;' . minutes_to_time( $t_est, false );

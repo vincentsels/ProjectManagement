@@ -1,17 +1,17 @@
 <?php
 
 # Constants
-define( 'PLUGIN_PM_EST',		0 );
-define( 'PLUGIN_PM_DONE',		1 );
-define( 'PLUGIN_PM_TODO',		2 );
-define( 'PLUGIN_PM_REMAINING',	3 );
-define( 'PLUGIN_PM_DIFF',		4 );
-define( 'PLUGIN_PM_OVERDUE',	5 );
+define( 'PLUGIN_PM_EST', 0 );
+define( 'PLUGIN_PM_DONE', 1 );
+define( 'PLUGIN_PM_TODO', 2 );
+define( 'PLUGIN_PM_REMAINING', 3 );
+define( 'PLUGIN_PM_DIFF', 4 );
+define( 'PLUGIN_PM_OVERDUE', 5 );
 
-define( 'PLUGIN_PM_WORKTYPE_TOTAL',					100 );
-define( 'PLUGIN_PM_TOKEN_RECENTLY_VISITED',			6876 ); # Has to be unique among plugins !!
-define( 'PLUGIN_PM_TOKEN_RECENTLY_VISITED_COUNT',	50 );
-define( 'PLUGIN_PM_TOKEN_EXPIRY_RECENTLY_VISITED',	60 * 60 * 24 * 3 ); # 3 days ?
+define( 'PLUGIN_PM_WORKTYPE_TOTAL', 100 );
+define( 'PLUGIN_PM_TOKEN_RECENTLY_VISITED', 6876 ); # Has to be unique among plugins !!
+define( 'PLUGIN_PM_TOKEN_RECENTLY_VISITED_COUNT', 50 );
+define( 'PLUGIN_PM_TOKEN_EXPIRY_RECENTLY_VISITED', 60 * 60 * 24 * 3 ); # 3 days ?
 
 define( 'PLUGIN_PM_DARK', 0 );
 define( 'PLUGIN_PM_LIGHT', 1 );
@@ -19,10 +19,10 @@ define( 'PLUGIN_PM_LIGHT', 1 );
 # Enums
 
 class Action {
-	const UPDATE = 0;
-	const INSERT = 1;
+	const UPDATE           = 0;
+	const INSERT           = 1;
 	const INSERT_OR_UPDATE = 2;
-	const DELETE = 3;
+	const DELETE           = 3;
 }
 
 /**
@@ -41,8 +41,8 @@ function minutes_to_time( $p_minutes, $p_allow_blanks = true, $p_show_days = fal
 		}
 	}
 
-	$t_hours = str_pad( floor( abs($p_minutes) / 60 ), 2, '0', STR_PAD_LEFT );
-	$t_minutes = str_pad( abs($p_minutes) % 60, 2, '0', STR_PAD_LEFT );
+	$t_hours   = str_pad( floor( abs( $p_minutes ) / 60 ), 2, '0', STR_PAD_LEFT );
+	$t_minutes = str_pad( abs( $p_minutes ) % 60, 2, '0', STR_PAD_LEFT );
 
 	$t_sign = ( $p_minutes < 0 ) ? '-' : '';
 
@@ -67,7 +67,7 @@ function minutes_to_days( $p_minutes ) {
  * @return the amount of minutes represented by the specified $p_time string.
  */
 function time_to_minutes( $p_time, $p_allow_negative = true, $p_throw_error_on_invalid_input = true ) {
-	if ( $p_time == '0') {
+	if ( $p_time == '0' ) {
 		return 0;
 	} else if ( empty ( $p_time ) ) {
 		return null;
@@ -77,8 +77,8 @@ function time_to_minutes( $p_time, $p_allow_negative = true, $p_throw_error_on_i
 
 	# Check for d notation
 	if ( !empty( $p_time ) && !is_numeric( $p_time ) && strrpos( strtolower( $p_time ), 'd' ) !== false ) {
-		$t_days = trim( $p_time, 'Dd ');
-		if ( empty($t_days) || ( !is_numeric( $t_days ) || ( $t_days < 0 && !$p_allow_negative ) ) ) {
+		$t_days = trim( $p_time, 'Dd ' );
+		if ( empty( $t_days ) || ( !is_numeric( $t_days ) || ( $t_days < 0 && !$p_allow_negative ) ) ) {
 			if ( $p_throw_error_on_invalid_input ) {
 				trigger_error( ERROR_CUSTOM_FIELD_INVALID_VALUE, E_USER_ERROR );
 			} else {
@@ -91,7 +91,7 @@ function time_to_minutes( $p_time, $p_allow_negative = true, $p_throw_error_on_i
 		$t_time_array = explode( ':', $p_time );
 
 		foreach ( $t_time_array as $t_key => $t_value ) {
-			if ( !empty($t_value) && ( !is_numeric( $t_value ) || ( $t_value < 0 && !$p_allow_negative ) ) ) {
+			if ( !empty( $t_value ) && ( !is_numeric( $t_value ) || ( $t_value < 0 && !$p_allow_negative ) ) ) {
 				if ( $p_throw_error_on_invalid_input ) {
 					trigger_error( ERROR_CUSTOM_FIELD_INVALID_VALUE, E_USER_ERROR );
 				} else {
@@ -134,9 +134,9 @@ function time_to_minutes( $p_time, $p_allow_negative = true, $p_throw_error_on_i
  */
 function set_work( $p_bug_id, $p_work_type, $p_minutes_type, $p_minutes, $p_book_date, $p_action ) {
 	$t_rows_affected = 0;
-	$t_table = plugin_table('work');
-	$t_user_id = auth_get_current_user_id();
-	$t_timestamp = time();
+	$t_table         = plugin_table( 'work' );
+	$t_user_id       = auth_get_current_user_id();
+	$t_timestamp     = time();
 
 	if ( empty( $p_book_date ) ) {
 		# When no book_date was set, default to today
@@ -150,7 +150,7 @@ function set_work( $p_bug_id, $p_work_type, $p_minutes_type, $p_minutes, $p_book
 		db_query_bound( $t_query );
 		$t_rows_affected = db_affected_rows();
 	}
-	if ( $p_action == ACTION::INSERT || ( $p_action == ACTION::INSERT_OR_UPDATE && $t_rows_affected == 0 )) {
+	if ( $p_action == ACTION::INSERT || ( $p_action == ACTION::INSERT_OR_UPDATE && $t_rows_affected == 0 ) ) {
 		#Insert and check for rows affected
 		$t_query = "INSERT INTO $t_table ( bug_id, user_id, work_type, minutes_type,
 					minutes, book_date, timestamp )
@@ -180,7 +180,7 @@ function set_work( $p_bug_id, $p_work_type, $p_minutes_type, $p_minutes, $p_book
 function get_actual_work_todo( $p_work_types ) {
 	$t_todo = 0;
 
-	foreach ($p_work_types as $work_type => $minute_types) {
+	foreach ( $p_work_types as $work_type => $minute_types ) {
 		if ( isset( $minute_types[PLUGIN_PM_TODO] ) ) {
 			$t_todo += $minute_types[PLUGIN_PM_TODO];
 		} else if ( isset( $minute_types[PLUGIN_PM_EST] ) ) {
@@ -199,7 +199,7 @@ function get_actual_work_todo( $p_work_types ) {
  * @return string the first day of the month, formated as $p_format.
  */
 function first_day_of_month( $p_add_months = 0, $p_format = 'd/m/Y' ) {
-	return date( $p_format, mktime( 0, 0, 0, date('m') + $p_add_months, 1 ) );
+	return date( $p_format, mktime( 0, 0, 0, date( 'm' ) + $p_add_months, 1 ) );
 }
 
 /**
@@ -210,7 +210,7 @@ function first_day_of_month( $p_add_months = 0, $p_format = 'd/m/Y' ) {
  * @return string the last day of the month, formated as $p_format.
  */
 function last_day_of_month( $p_add_months = 0, $p_format = 'd/m/Y' ) {
-	return date( $p_format, mktime( 0, 0, 0, date('m') + $p_add_months + 1, 0 ) );
+	return date( $p_format, mktime( 0, 0, 0, date( 'm' ) + $p_add_months + 1, 0 ) );
 }
 
 /**
@@ -220,7 +220,7 @@ function last_day_of_month( $p_add_months = 0, $p_format = 'd/m/Y' ) {
  */
 function get_translated_assoc_array_for_enum( $p_enum_string ) {
 	$t_untranslated = MantisEnum::getAssocArrayIndexedByValues( config_get( $p_enum_string . '_enum_string' ) );
-	$t_translated = array();
+	$t_translated   = array();
 	foreach ( $t_untranslated as $t_key => $t_value ) {
 		$t_translated[$t_key] = get_enum_element( $p_enum_string, $t_key );
 	}
@@ -233,10 +233,10 @@ function get_translated_assoc_array_for_enum( $p_enum_string ) {
  * @param string $floatString
  * @return number
  */
-function parse_float( $p_floatstring ){
+function parse_float( $p_floatstring ) {
 	$t_locale_info = localeconv();
-	$p_floatstring = str_replace( $t_locale_info["mon_thousands_sep"] , "", $p_floatstring );
-	$p_floatstring = str_replace( $t_locale_info["mon_decimal_point"] , ".", $p_floatstring );
+	$p_floatstring = str_replace( $t_locale_info["mon_thousands_sep"], "", $p_floatstring );
+	$p_floatstring = str_replace( $t_locale_info["mon_decimal_point"], ".", $p_floatstring );
 	return floatval( $p_floatstring );
 }
 
@@ -248,8 +248,8 @@ function parse_float( $p_floatstring ){
  */
 function format( $p_decimal ) {
 	return number_format( round( $p_decimal, 2 ), 2,
-			plugin_config_get( 'decimal_separator' ),
-			plugin_config_get( 'thousand_separator' ) );
+		plugin_config_get( 'decimal_separator' ),
+		plugin_config_get( 'thousand_separator' ) );
 }
 
 /**
@@ -260,9 +260,9 @@ function format( $p_decimal ) {
  * @return the array
  */
 function string_to_array( $p_value ) {
-	$t_value = array();
+	$t_value       = array();
 	$t_full_string = trim( $p_value );
-	if ( preg_match('/array[\s]*\((.*)\)/s', $t_full_string, $t_match ) === 1 ) {
+	if ( preg_match( '/array[\s]*\((.*)\)/s', $t_full_string, $t_match ) === 1 ) {
 		// we have an array here
 		$t_values = explode( ',', trim( $t_match[1] ) );
 		foreach ( $t_values as $key => $value ) {
@@ -272,12 +272,12 @@ function string_to_array( $p_value ) {
 			$t_split = explode( '=>', $value, 2 );
 			if ( count( $t_split ) == 2 ) {
 				// associative array
-				$t_new_key = constant_replace( trim( $t_split[0], " \t\n\r\0\x0B\"'" ) );
-				$t_new_value = constant_replace( trim( $t_split[1], " \t\n\r\0\x0B\"'" ) );
-				$t_value[ $t_new_key ] = $t_new_value;
+				$t_new_key           = constant_replace( trim( $t_split[0], " \t\n\r\0\x0B\"'" ) );
+				$t_new_value         = constant_replace( trim( $t_split[1], " \t\n\r\0\x0B\"'" ) );
+				$t_value[$t_new_key] = $t_new_value;
 			} else {
 				// regular array
-				$t_value[ $key ] = constant_replace( trim( $value, " \t\n\r\0\x0B\"'" ) );
+				$t_value[$key] = constant_replace( trim( $value, " \t\n\r\0\x0B\"'" ) );
 			}
 		}
 	}
@@ -304,12 +304,12 @@ function constant_replace( $p_name ) {
  */
 function recently_visited_bug_add( $p_issue_id, $p_user_id = null ) {
 	$t_value = token_get_value( PLUGIN_PM_TOKEN_RECENTLY_VISITED, $p_user_id );
-	if( empty( $t_value ) ) {
+	if ( empty( $t_value ) ) {
 		$t_value = $p_issue_id;
 	} else {
-		$t_ids = explode( ',', $p_issue_id . ',' . $t_value );
-		$t_ids = array_unique( $t_ids );
-		$t_ids = array_slice( $t_ids, 0, PLUGIN_PM_TOKEN_RECENTLY_VISITED_COUNT );
+		$t_ids   = explode( ',', $p_issue_id . ',' . $t_value );
+		$t_ids   = array_unique( $t_ids );
+		$t_ids   = array_slice( $t_ids, 0, PLUGIN_PM_TOKEN_RECENTLY_VISITED_COUNT );
 		$t_value = implode( ',', $t_ids );
 	}
 
@@ -324,7 +324,7 @@ function recently_visited_bug_add( $p_issue_id, $p_user_id = null ) {
 function recently_visited_bugs_get( $p_user_id = null ) {
 	$t_value = token_get_value( PLUGIN_PM_TOKEN_RECENTLY_VISITED, $p_user_id );
 
-	if( is_null( $t_value ) ) {
+	if ( is_null( $t_value ) ) {
 		return array();
 	}
 
@@ -356,7 +356,8 @@ function init_cap( $p_lang_strings, $p_plugin = false ) {
 		}
 	} else {
 		foreach ( $p_lang_strings_arr as $t_str ) {
-			$t_val .= lang_get( $t_str ) . ' ';;
+			$t_val .= lang_get( $t_str ) . ' ';
+			;
 		}
 	}
 

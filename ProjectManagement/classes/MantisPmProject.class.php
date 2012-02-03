@@ -11,7 +11,7 @@ class MantisPmProject {
 	public function __construct( $p_projectname ) {
 		$this->project_name = $p_projectname;
 		$this->sub_projects = array();
-		$this->categories = array();
+		$this->categories   = array();
 		$this->project_data = null;
 	}
 
@@ -56,7 +56,7 @@ class MantisPmProject {
 	public function print_project( $p_total_value = -1 ) {
 		global $g_resource_colors;
 
-		if( $p_total_value == 0 ) {
+		if ( $p_total_value == 0 ) {
 			$p_total_value = -1;
 		}
 
@@ -76,8 +76,8 @@ class MantisPmProject {
 
 		foreach ( sort_array_by_key( $this->project_data ) as $t_handler_id => $t_data ) {
 
-			$t_est = @$t_data[PLUGIN_PM_EST];
-			$t_done = @$t_data[PLUGIN_PM_DONE];
+			$t_est     = @$t_data[PLUGIN_PM_EST];
+			$t_done    = @$t_data[PLUGIN_PM_DONE];
 			$t_overdue = @$t_data[PLUGIN_PM_OVERDUE];
 
 			# Calculate the width of the project
@@ -85,12 +85,12 @@ class MantisPmProject {
 
 			if ( $t_est > 0 ) {
 				$t_original_work = ( $t_done - $t_overdue ) / $t_est * 100;
-				$t_total_work = $t_done / $t_est * 100;
-				$t_extra_work = $t_overdue / $t_est * 100;
+				$t_total_work    = $t_done / $t_est * 100;
+				$t_extra_work    = $t_overdue / $t_est * 100;
 			} else {
 				$t_original_work = 0;
-				$t_total_work = 0;
-				$t_extra_work = 0;
+				$t_total_work    = 0;
+				$t_extra_work    = 0;
 			}
 
 			$t_progress_info = minutes_to_days( $t_done ) . '&nbsp;/&nbsp;' . minutes_to_days( $t_est );
