@@ -198,8 +198,6 @@ foreach ( $t_recently_visited_array as $t_bug_id ) {
 		<td class="bold"><?php echo init_cap( array( 'total', 'day'), true ) ?></td>
 		<td class="bold right"><?php echo minutes_to_time( $t_total, false ) ?></td>
 	</tr>
-	<?php
-?>
 
 </table>
 
@@ -237,8 +235,6 @@ foreach ( $t_recently_visited_array as $t_bug_id ) {
 		<td class="bold"><?php echo init_cap( array( 'total', 'week'), true ) ?></td>
 		<td class="bold right"><?php echo minutes_to_time( $t_total, false ) ?></td>
 	</tr>
-	<?php
-?>
 
 </table>
 
@@ -276,8 +272,6 @@ foreach ( $t_recently_visited_array as $t_bug_id ) {
 		<td class="bold"><?php echo init_cap( array( 'total', 'last_week'), true ) ?></td>
 		<td class="bold right"><?php echo minutes_to_time( $t_total, false ) ?></td>
 	</tr>
-	<?php
-?>
 
 </table>
 
