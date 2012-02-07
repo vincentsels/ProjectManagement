@@ -56,8 +56,14 @@ $t_result_registered_week = db_query_bound( $t_query_registered_week );
 $t_last_sunday                 = strtotime( 'last sunday' );
 $t_last_week_start             = mktime( 0, 0, 0, date( 'm', $t_last_sunday ), date( 'd', $t_last_sunday ) - 7, date( 'Y', $t_last_sunday ) );
 $t_last_week_end               = $t_last_sunday - 1;
-$t_params                      = array( $t_last_week_start, $t_last_week_end );
-$t_result_registered_last_week = db_query_bound( $t_query_registered_week, $t_params );
+$t_query_registered_last_week  = "SELECT w.book_date, sum(w.minutes) as minutes
+								 FROM $t_work_table w
+								WHERE w.user_id = $t_user
+								  AND w.book_date BETWEEN $t_last_week_start AND $t_last_week_end
+								  AND w.minutes_type = 1
+								GROUP BY book_date
+								ORDER BY book_date DESC";
+$t_result_registered_last_week = db_query_bound( $t_query_registered_last_week );
 
 $t_month_start             = mktime( 0, 0, 0, date( 'm' ), 1 );
 $t_month_end               = mktime( 0, 0, 0, date( 'm' ) + 1, 1 ) - 1;
@@ -71,8 +77,12 @@ $t_row_month               = db_fetch_array( $t_result_registered_month );
 
 $t_last_month_start             = mktime( 0, 0, 0, date( 'm' ) - 1, 1 );
 $t_last_month_end               = mktime( 0, 0, 0, date( 'm' ), 1 ) - 1;
-$t_params                       = array( $t_last_month_start, $t_last_month_end );
-$t_result_registered_last_month = db_query_bound( $t_query_registered_month, $t_params );
+$t_query_registered_last_month  = "SELECT sum(w.minutes) as minutes
+									 FROM $t_work_table w
+									WHERE w.user_id = $t_user
+									  AND w.book_date BETWEEN $t_last_month_start AND $t_last_month_end
+									  AND w.minutes_type = 1";
+$t_result_registered_last_month = db_query_bound( $t_query_registered_last_month );
 $t_row_last_month               = db_fetch_array( $t_result_registered_last_month );
 
 ?>
@@ -235,7 +245,7 @@ $t_row_last_month               = db_fetch_array( $t_result_registered_last_mont
 
 		<?php
 		$t_total = 0;
-		while ( $row = db_fetch_array( $t_result_registered_week ) ) {
+		while ( @$row = db_fetch_array( $t_result_registered_week ) ) {
 			$t_total += $row["minutes"];
 			$t_book_date = date( config_get( 'short_date_format' ), $row["book_date"] );
 			$t_hours     = minutes_to_time( $row["minutes"], false );
