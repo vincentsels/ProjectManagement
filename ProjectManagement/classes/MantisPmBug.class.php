@@ -34,7 +34,7 @@ class MantisPmBug {
 			if ( isset( $this->todo[$t_work_type] ) ) {
 				$t_todo += $this->todo[$t_work_type];
 			} else if ( isset( $this->est[$t_work_type] ) ) {
-				$t_todo += ( $this->est[$t_work_type] - @$this->done[$t_work_type] );
+				$t_todo += max( $this->est[$t_work_type] - @$this->done[$t_work_type], 0 );
 			}
 		}
 		$this->bug_data[PLUGIN_PM_TODO] = max( $t_todo, 0 );
