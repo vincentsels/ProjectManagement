@@ -94,24 +94,34 @@ span.category {
     background: #c8c8e8;
 }
 
-span.progress {
+span.progress, span.bar {
     display: inline-block;
-    border: 1px solid #4D994D;
-    background: #C8FFC8;
     height: 14px;
     vertical-align: top;
 }
 
+span.progress {
+    border: 1px solid #4D994D;
+    background: #C8FFC8;
+}
+
 span.bar {
-    display: inline-block;
     background: #4D994D;
     text-align: center;
     font-size: 8pt;
     color: #333;
-    height: 14px;
-    vertical-align: top;
 }
 
 span.overdue {
     background: #666600;
+}
+
+span.progress a, span.progress :link, span.progress :visited, span.progress :link:hover, span.progress :visited:hover {
+    border: none;
+    display: inline-block;
+    width: 100%;
+    height: 14px;
+    padding: 0px;
+    margin: 0px;
+    text-decoration: none;
 }
