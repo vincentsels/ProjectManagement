@@ -7,7 +7,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 		$this->description = 'Project management plugin that adds advanced functionality for timetracking, estimations, reporting,...';
 		$this->page        = 'config_page';
 
-		$this->version  = '1.1.0';
+		$this->version  = '1.1.1';
 		$this->requires = array(
 			'MantisCore' => '1.2.0'
 		);
@@ -38,34 +38,50 @@ class ProjectManagementPlugin extends MantisPlugin {
 						" ) ),
 			array( 'CreateIndexSQL', array( 'idx_plugin_pm_work_user_id_book_date', # used for reporting
 											plugin_table( 'work' ), 'user_id, book_date' ) ),
-			array( 'AddColumnSQL', array( plugin_table( 'resource' ), 'color I UNSIGNED' ) )
+			array( 'AddColumnSQL', array( plugin_table( 'resource' ), 'color I UNSIGNED' ) ),
+			array( 'CreateTableSQL', array( plugin_table( 'customer' ), "
+						id			I		NOTNULL UNSIGNED AUTOINCREMENT PRIMARY,
+						name		C(64)	NOTNULL,
+						share		F(3,5)	NOTNULL DEFAULT 0,
+						can_approve	L		NOTNULL DEFAULT 1
+						" ) ),
+			array( 'CreateTableSQL', array( plugin_table( 'bug_customer' ), "
+						bug_id		I		NOTNULL UNSIGNED PRIMARY,
+						type		I2		NOTNULL PRIMARY,
+						customers	C(64)	NOTNULL DEFAULT 0
+						" ) ),
+			array( 'CreateTableSQL', array( plugin_table( 'user_customer' ), "
+						user_id		I		NOTNULL UNSIGNED PRIMARY,
+						customer_id	I		NOTNULL,
+						function	C(64)
+						" ) )
 		);
 	}
 
 	function config() {
 		return array(
-			'work_types'							=> '20:analysis,50:development,80:testing',
-			'enable_time_registration_threshold'	=> DEVELOPER,
-			'view_time_reg_summary_threshold'	   => REPORTER,
-			'edit_estimates_threshold'			  => MANAGER,
-			'include_bookdate_threshold'			=> DEVELOPER,
-			'view_registration_worksheet_threshold' => DEVELOPER,
-			'view_registration_report_threshold'	=> DEVELOPER,
-			'view_resource_management_threshold'	=> MANAGER,
-			'view_resource_allocation_threshold'	=> DEVELOPER,
-			'admin_threshold'					   => ADMINISTRATOR,
-			'work_type_thresholds'				  => array( 50 => DEVELOPER ),
-			'default_worktype'					  => 50,
-			'dark_saturation'					   => 33,
-			'dark_lightness'						=> 45,
-			'light_saturation'					  => 100,
-			'light_lightness'					   => 90,
-			'display_detailed_bug_link'			 => TRUE,
-			'finish_upon_resolving'				 => array( 20, 50 ),
-			'finish_upon_closing'				   => array( 80 ),
-			'decimal_separator'					 => ',',
-			'thousand_separator'					=> ' ',
-			'include_bugs_with_deadline'			=> ON
+			'work_types'						   => '20:analysis,50:development,80:testing',
+			'enable_time_registration_threshold'   => DEVELOPER,
+			'view_time_reg_summary_threshold'	  => REPORTER,
+			'edit_estimates_threshold'			 => MANAGER,
+			'include_bookdate_threshold'		   => DEVELOPER,
+			'view_registration_worksheet_threshold'=> DEVELOPER,
+			'view_registration_report_threshold'   => DEVELOPER,
+			'view_resource_management_threshold'   => MANAGER,
+			'view_resource_allocation_threshold'   => DEVELOPER,
+			'admin_threshold'					  => ADMINISTRATOR,
+			'work_type_thresholds'				 => array( 50 => DEVELOPER ),
+			'default_worktype'					 => 50,
+			'dark_saturation'					  => 33,
+			'dark_lightness'					   => 45,
+			'light_saturation'					 => 100,
+			'light_lightness'					  => 90,
+			'display_detailed_bug_link'			=> TRUE,
+			'finish_upon_resolving'				=> array( 20, 50 ),
+			'finish_upon_closing'				  => array( 80 ),
+			'decimal_separator'					=> ',',
+			'thousand_separator'				   => ' ',
+			'include_bugs_with_deadline'		   => ON
 		);
 	}
 
@@ -290,7 +306,8 @@ class ProjectManagementPlugin extends MantisPlugin {
 		}
 
 		?>
-	<br/><a name="time_registration" id="time_registration"></a>
+	<br/>
+	<a name="time_registration" id="time_registration"></a>
 	<?php
 		collapse_open( 'plugin_pm_time_reg' );
 		?>
@@ -440,7 +457,55 @@ class ProjectManagementPlugin extends MantisPlugin {
 
 	<?php
 		collapse_end( 'plugin_pm_time_reg' );
+		?>
 
+	<br/>
+	<a name="customer_section" id="customer_section"></a>
+	<?php
+		collapse_open( 'customer_section' );
+		?>
+	<form name="time_registration" method="post" action="<?php echo plugin_page( 'time_registration_update' ) ?>">
+		<?php echo form_security_field( 'plugin_ProjectManagement_time_registration_update' ) ?>
+
+		<table class="width50" cellspacing="1">
+			<tr>
+				<td colspan="100%" class="form-title">
+					<?php
+					collapse_icon( 'customer_section' );
+					echo 'Customer section';
+					?>
+				</td>
+			</tr>
+			<tr class="row-2">
+				<td class="category" width="20%">
+					<?php echo 'Paying customers' ?>
+				</td>
+				<td>jipla kasjes</td>
+			</tr>
+			<tr class="row-2">
+				<td class="category" width="20%">
+					<?php echo 'Approving customers' ?>
+				</td>
+				<td>jipla kasjes</td>
+			</tr>
+		</table>
+		<?php
+		collapse_closed( 'customer_section' );
+		?>
+
+		<table class="width50" cellspacing="1">
+			<tr>
+				<td class="form-title" colspan="2">
+					<?php
+					collapse_icon( 'customer_section' );
+					echo 'Customer section';
+					?></td>
+			</tr>
+		</table>
+	</form>
+
+	<?php
+		collapse_end( 'customer_section' );
 	}
 
 }
