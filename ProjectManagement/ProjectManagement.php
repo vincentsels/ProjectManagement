@@ -480,13 +480,17 @@ class ProjectManagementPlugin extends MantisPlugin {
 				<td class="category" width="20%">
 					<?php echo plugin_lang_get( 'paying_customers' ) ?>
 				</td>
-				<td>jipla kasjes</td>
+				<td>
+					<?php print_customer_list( $p_bug_id ); ?>
+				</td>
 			</tr>
 			<tr class="row-2">
 				<td class="category" width="20%">
 					<?php echo plugin_lang_get( 'approving_customers' ) ?>
 				</td>
-				<td>jipla kasjes</td>
+				<td>
+					<?php print_customer_list( $p_bug_id, 1, false ); ?>
+				</td>
 			</tr>
 		</table>
 		<?php

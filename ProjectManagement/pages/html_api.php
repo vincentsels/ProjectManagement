@@ -124,4 +124,34 @@ function print_color_option_list( $p_val = 0 ) {
 	}
 }
 
+function print_customer_list( $p_bug_id = null, $p_type = 0, $p_include_all = true ) {
+	# In case a bug_id and type were supplied, check to see which customers
+	# were checked for this type.
+	$t_selected_cust = array();
+	if ( !is_null( $p_bug_id ) ) {
+		$t_bug_customer_table = plugin_table( 'bug_customer' );
+		$t_query_bug_cust = "SELECT * FROM $t_bug_customer_table WHERE bug_id = $p_bug_id AND type = $p_type";
+		$t_result_bug_cust = db_query_bound( $t_query_bug_cust );
+		while ( $t_bug_cust = db_fetch_array( $t_result_bug_cust ) ) {
+			$t_selected_cust = explode( '|', $t_bug_cust );
+		}
+	}
+
+	$t_customer_table = plugin_table( 'customer' );
+	$t_query_cust = "SELECT id, name  FROM $t_customer_table ";
+	$t_result_cust = db_query_bound( $t_query_cust );
+	while ( $row = db_fetch_array( $t_result_cust ) ) {
+		$t_id = $row['id'];
+		$t_name = $row['name'];
+		$t_exists = array_key_exists( $t_id, $t_selected_cust );
+
+		echo '<input type="checkbox" name="'. $t_id . '" ' . ($t_exists ? 'checked="checked"' : '') . ' > ' . $t_name . ' &nbsp;';
+	}
+
+	if ( $p_include_all ) {
+		$t_all = array_key_exists( 0, $t_selected_cust );
+		echo '<input type="checkbox" name="0" ' . ($t_all ? 'checked="checked"' : '') . ' > ' . init_cap( 'all' ) . ' &nbsp;';
+	}
+}
+
 ?>
