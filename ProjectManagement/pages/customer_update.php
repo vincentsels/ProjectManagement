@@ -24,6 +24,6 @@ if ( empty( $f_customer_id ) ) {
 	db_query_bound( $t_query );
 }
 
-form_security_purge( 'plugin_ProjectManagement_config_update' );
+form_security_purge( 'plugin_ProjectManagement_customer_update' );
 print_successful_redirect( plugin_page( 'customer_overview_page', true ) );
 ?>

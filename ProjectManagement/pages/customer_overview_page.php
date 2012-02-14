@@ -31,7 +31,7 @@ $t_result = db_query_bound( $t_query );
 	while ( $row = db_fetch_array( $t_result ) ) {
 		$t_customer_id = $row['id'];
 		$t_name = $row['name'];
-		$t_share = format( $row['share'] );
+		$t_share = format( $row['share'], 2 );
 		$t_can_approve = $row['can_approve'] == 1 ? '<img src="images/ok.gif" width="20" height="15" alt="X" title="X" />' : '&nbsp;';
 		?>
 		<tr <?php echo helper_alternate_class() ?>>
@@ -43,7 +43,8 @@ $t_result = db_query_bound( $t_query );
 					<input type="hidden" name="customer_id" value="<?php echo $t_customer_id ?>" />
 					<input type="submit" value="<?php echo lang_get( 'edit_link' ) ?>"/>
 				</form>
-				<form method="post" action="<?php echo plugin_page( 'customer_delete_page' ) ?>">
+				<form method="post" action="<?php echo plugin_page( 'customer_delete' ) ?>">
+					<?php echo form_security_field( 'plugin_ProjectManagement_customer_delete' ) ?>
 					<input type="hidden" name="customer_id" value="<?php echo $t_customer_id ?>" />
 					<input type="submit" value="<?php echo lang_get( 'remove_link' ) ?>"/>
 				</form>

@@ -18,7 +18,7 @@ if ( !empty( $f_customer_id ) ) {
 	$t_customer = db_fetch_array( $t_result );
 	if ( is_array( $t_customer ) ) {
 		$t_name = $t_customer['name'];
-		$t_share = format( $t_customer['share'] );
+		$t_share = format( $t_customer['share'], 5 );
 		$t_can_approve = $t_customer['can_approve'];
 	}
 }
