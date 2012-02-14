@@ -11,18 +11,17 @@ $t_user_table     = db_get_table( 'mantis_user_table' );
 $t_resource_table = plugin_table( 'resource' );
 
 $t_query      = "SELECT u.id, u.username, u.realname, u.access_level, r.hours_per_week, r.hourly_rate, r.color
-                  FROM $t_user_table u
-            LEFT OUTER JOIN $t_resource_table r ON u.id = r.user_id
-              ORDER BY access_level, username";
+                   FROM $t_user_table u
+        LEFT OUTER JOIN $t_resource_table r ON u.id = r.user_id
+                  WHERE u.enabled = 1
+               ORDER BY access_level DESC, username";
 $t_result     = db_query_bound( $t_query );
 $t_user_array = array();
 
 $t_access_levels = get_translated_assoc_array_for_enum( 'access_levels' );
-
 ?>
 
-<form method="post"
-	  action="<?php echo plugin_page( 'resource_management_update' ) ?>">
+<form method="post" action="<?php echo plugin_page( 'resource_management_update' ) ?>">
 	<?php echo form_security_field( 'plugin_ProjectManagement_resource_management' ) ?>
 
 	<table class="width100">
@@ -33,8 +32,9 @@ $t_access_levels = get_translated_assoc_array_for_enum( 'access_levels' );
 			<td><?php echo lang_get( 'access_level' ) ?></td>
 			<td><?php echo lang_get( 'username' ) ?></td>
 			<td><?php echo plugin_lang_get( 'hours_per_week' ) ?></td>
-			<td><?php echo plugin_lang_get( 'hourly_rate' )?></td>
-			<td><?php echo plugin_lang_get( 'color' )?></td>
+			<td><?php echo plugin_lang_get( 'hourly_rate' ) ?></td>
+			<td><?php echo plugin_lang_get( 'color' ) ?></td>
+			<td><?php echo plugin_lang_get( 'clear' ) ?></td>
 		</tr>
 
 		<?php
@@ -50,12 +50,16 @@ $t_access_levels = get_translated_assoc_array_for_enum( 'access_levels' );
 				</td>
 				<td>
 					<input type="text" size="3" maxlength="6" name="hourly_rate_<?php echo $t_row['id']?>"
-						   value="<?php echo $t_row['hourly_rate'] ?>">
+						   value="<?php echo format( $t_row['hourly_rate'] ) ?>">
 				</td>
 				<td>
 					<select name="color_<?php echo $t_row['id'] ?>">
 						<?php print_color_option_list( $t_row['color'] ) ?>
 					</select>
+				</td>
+				<td>
+					<input type="checkbox"
+						   name="clear_<?php echo $t_row['id']?>"> <?php echo plugin_lang_get( 'clear' ) ?>
 				</td>
 			</tr>
 			<?php

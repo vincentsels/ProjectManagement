@@ -235,8 +235,8 @@ function get_translated_assoc_array_for_enum( $p_enum_string ) {
  */
 function parse_float( $p_floatstring ) {
 	$t_locale_info = localeconv();
-	$p_floatstring = str_replace( $t_locale_info["mon_thousands_sep"], "", $p_floatstring );
-	$p_floatstring = str_replace( $t_locale_info["mon_decimal_point"], ".", $p_floatstring );
+	$p_floatstring = str_replace( plugin_config_get( 'thousand_separator' ), "", $p_floatstring );
+	$p_floatstring = str_replace( plugin_config_get( 'decimal_separator' ), ".", $p_floatstring );
 	return floatval( $p_floatstring );
 }
 
