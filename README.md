@@ -27,6 +27,7 @@ Project Management is a plugin for the open source [MantisBT](http://www.mantisb
   * The ability to delete or **change** time registration entries *(todo)*.
   * Easily **navigate** to data for a specific project, category, user, type of work,...
   * Displays summary reports per user.
+  * Allow easy export to excel or other formats *(todo)*.
 
 ### Project timeline
 
@@ -42,6 +43,13 @@ Project Management is a plugin for the open source [MantisBT](http://www.mantisb
 * For each user, optionally specify the amount of hours per week and hourly cost, default type of work,...
 
 ## Upcoming features
+
+### Customer management
+
+* Specify which customer/company your reporting users are part of.
+* Allow only a selection of customers to pay for certain features ('custom development'), or all customers ('common development').
+* Divide the total billable cost among all participating customers, optionally in proportion to the customer size.
+* Allow certain customers to be able to approve of tickets simply as a notion, or in order to be able to assign them.
 
 ### Prioritizing features
 
