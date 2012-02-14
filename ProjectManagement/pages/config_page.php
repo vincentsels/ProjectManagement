@@ -1,7 +1,12 @@
 <?php
 auth_reauthenticate();
 access_ensure_global_level( plugin_config_get( 'admin_threshold' ) );
-html_page_top( plugin_lang_get( 'configuration' ) );
+
+html_page_top1( plugin_lang_get( 'configuration' ) );
+html_page_top2();
+
+print_manage_menu();
+print_pm_config_menu( 'config_page' );
 ?>
 
 <br/>

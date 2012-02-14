@@ -472,19 +472,19 @@ class ProjectManagementPlugin extends MantisPlugin {
 				<td colspan="100%" class="form-title">
 					<?php
 					collapse_icon( 'customer_section' );
-					echo 'Customer section';
+					echo plugin_lang_get( 'customer_section' );
 					?>
 				</td>
 			</tr>
 			<tr class="row-2">
 				<td class="category" width="20%">
-					<?php echo 'Paying customers' ?>
+					<?php echo plugin_lang_get( 'paying_customers' ) ?>
 				</td>
 				<td>jipla kasjes</td>
 			</tr>
 			<tr class="row-2">
 				<td class="category" width="20%">
-					<?php echo 'Approving customers' ?>
+					<?php echo plugin_lang_get( 'approving_customers' ) ?>
 				</td>
 				<td>jipla kasjes</td>
 			</tr>
@@ -498,7 +498,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 				<td class="form-title" colspan="2">
 					<?php
 					collapse_icon( 'customer_section' );
-					echo 'Customer section';
+					echo plugin_lang_get( 'customer_section' );
 					?></td>
 			</tr>
 		</table>

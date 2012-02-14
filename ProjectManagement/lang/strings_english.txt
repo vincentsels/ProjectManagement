@@ -69,4 +69,15 @@
 	$s_plugin_ProjectManagement_include_bugs_with_deadline = 'Include bugs with deadline';
 	$s_plugin_ProjectManagement_include_bugs_with_deadline_info = 'In the resource allocation screen, also include bugs with a deadline before the release date of the version.';
 	$s_plugin_ProjectManagement_include_bugs_with_deadline_warning = '<b>Warning:</b> this option has a negative impact on the performance of this page!';
+
+	$s_plugin_ProjectManagement_customer_section = 'Customer section';
+	$s_plugin_ProjectManagement_paying_customers = 'Paying customers';
+	$s_plugin_ProjectManagement_approving_customers = 'Approving customers';
+	$s_plugin_ProjectManagement_general_configuration = 'Plugin configuration';
+	$s_plugin_ProjectManagement_customer_management = 'Customer configuration';
+	$s_plugin_ProjectManagement_add_new_customer = 'Add new customer';
+	$s_plugin_ProjectManagement_edit_customer = 'Edit customer';
+	$s_plugin_ProjectManagement_customer_name = 'Customer name';
+	$s_plugin_ProjectManagement_customer_share = 'Share';
+	$s_plugin_ProjectManagement_customer_can_approve = 'Can approve';
 ?>

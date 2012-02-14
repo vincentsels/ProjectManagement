@@ -37,6 +37,29 @@ function print_pm_reports_menu( $p_page = '' ) {
 	echo '</p></div>';
 }
 
+function print_pm_config_menu( $p_page = '' ) {
+	$t_pm_config_main_page   = plugin_page( 'config_page' );
+	$t_pm_config_customer_overview_page = plugin_page( 'customer_overview_page' );
+
+	switch ( plugin_page( $p_page ) ) {
+		case $t_pm_config_main_page:
+			$t_pm_config_main_page = '';
+			break;
+		case $t_pm_config_customer_overview_page:
+			$t_pm_config_customer_overview_page = '';
+			break;
+	}
+
+	echo '<div align="center"><p>';
+	if ( access_has_global_level( plugin_config_get( 'admin_threshold' ) ) ) {
+		print_bracket_link( $t_pm_config_main_page, plugin_lang_get( 'general_configuration' ) );
+	}
+	if ( access_has_global_level( plugin_config_get( 'admin_threshold' ) ) ) {
+		print_bracket_link( $t_pm_config_customer_overview_page, plugin_lang_get( 'customer_management' ) );
+	}
+	echo '</p></div>';
+}
+
 function print_plugin_enum_string_option_list( $p_enum_name, $p_val = 0 ) {
 	$t_config_var_value = plugin_config_get( $p_enum_name );
 	$t_enum_values      = MantisEnum::getAssocArrayIndexedByValues( $t_config_var_value );
