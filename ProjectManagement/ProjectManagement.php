@@ -312,9 +312,12 @@ class ProjectManagementPlugin extends MantisPlugin {
 		collapse_open( 'plugin_pm_time_reg' );
 		?>
 	<form name="time_registration" method="post" action="<?php echo plugin_page( 'time_registration_update' ) ?>">
-		<?php echo form_security_field( 'plugin_ProjectManagement_time_registration_update' ) ?>
+		<?php
+		echo form_security_field( 'plugin_ProjectManagement_time_registration_update' );
 
-		<?php printf( "<input type=\"hidden\" name=\"bug_ids[]\" value=\"%d\" />", $p_bug_id ); ?>
+		# Rather strange way to pass an array of bug id's with only the selected bug_id in it.
+		printf( "<input type=\"hidden\" name=\"bug_ids[]\" value=\"%d\" />", $p_bug_id );
+		?>
 
 		<table class="width50" cellspacing="1">
 			<tr>
@@ -464,8 +467,13 @@ class ProjectManagementPlugin extends MantisPlugin {
 	<?php
 		collapse_open( 'customer_section' );
 		?>
-	<form name="time_registration" method="post" action="<?php echo plugin_page( 'time_registration_update' ) ?>">
-		<?php echo form_security_field( 'plugin_ProjectManagement_time_registration_update' ) ?>
+	<form name="customer_section" method="post" action="<?php echo plugin_page( 'bug_customer_update' ) ?>">
+		<?php
+		echo form_security_field( 'plugin_ProjectManagement_bug_customer_update' );
+
+		# Rather strange way to pass an array of bug id's with only the selected bug_id in it.
+		printf( "<input type=\"hidden\" name=\"bug_ids[]\" value=\"%d\" />", $p_bug_id );
+		?>
 
 		<table class="width50" cellspacing="1">
 			<tr>
@@ -474,9 +482,12 @@ class ProjectManagementPlugin extends MantisPlugin {
 					collapse_icon( 'customer_section' );
 					echo plugin_lang_get( 'customer_section' );
 					?>
+					<span class="floatright">
+						<input name="submit" type="submit" value="<?php echo lang_get( 'update' ) ?>">
+					</span>
 				</td>
 			</tr>
-			<tr class="row-2">
+			<tr class="row-1">
 				<td class="category" width="20%">
 					<?php echo plugin_lang_get( 'paying_customers' ) ?>
 				</td>

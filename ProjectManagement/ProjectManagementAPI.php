@@ -16,6 +16,14 @@ define( 'PLUGIN_PM_TOKEN_EXPIRY_RECENTLY_VISITED', 60 * 60 * 24 * 3 ); # 3 days 
 define( 'PLUGIN_PM_DARK', 0 );
 define( 'PLUGIN_PM_LIGHT', 1 );
 
+define( 'PLUGIN_PM_CUST_PAYING', 0 );
+define( 'PLUGIN_PM_CUST_APPROVING', 1 );
+define( 'PLUGIN_PM_CUST_BOTH', -1 );
+
+define( 'PLUGIN_PM_ALL_CUSTOMERS', 0 );
+
+define( 'CUST_CONCATENATION_CHAR', '|' );
+
 # Enums
 
 class Action {
@@ -377,6 +385,54 @@ function prepare_resource_name( $p_handler_id ) {
 function sort_array_by_key( &$p_array ) {
 	ksort( $p_array );
 	return $p_array;
+}
+
+/**
+ * Retrieves an array of all customers, indexed by the customer_id.
+ * @param int $p_type Optionally specify to only retrieve customers that 'can approve'.
+ * @return array A list of all customers.
+ */
+function customer_get_all( $p_type = PLUGIN_PM_CUST_BOTH ) {
+	$t_customer_table = plugin_table( 'customer' );
+	$t_query_cust = "SELECT *  FROM $t_customer_table";
+	$t_cust = array();
+
+	if ( $p_type == PLUGIN_PM_CUST_APPROVING ) {
+		$t_query_cust .= " WHERE can_approve = 1";
+	}
+	$t_result_cust = db_query_bound( $t_query_cust );
+	while ( $row = db_fetch_array( $t_result_cust ) ) {
+		$t_cust[$row['id']] = $row;
+	}
+
+	return $t_cust;
+}
+
+/**
+ * Updates the list of customers of the specified $p_type for the specified $p_bug_id.
+ * @param $p_bug_id
+ * @param string $p_cust_string A CUST_CONCATENATION_CHAR seperated list of customer id's
+ * @param int $p_type Default = PLUGIN_PM_CUST_PAYING
+ */
+function bug_customer_update_or_insert( $p_bug_id, $p_cust_string, $p_type = PLUGIN_PM_CUST_PAYING) {
+	$t_bug_cust_table = plugin_table( 'bug_customer' );
+
+	$t_query = "SELECT count(1) as count FROM $t_bug_cust_table WHERE bug_id = $p_bug_id AND type = $p_type";
+	$t_result = db_query_bound( $t_query );
+	$t_array = db_fetch_array( $t_result );
+	$t_exists = $t_array['count'] > 0;
+
+	if ( $t_exists ) {
+		$t_query = "UPDATE $t_bug_cust_table
+					   SET customers = '$p_cust_string'
+					 WHERE bug_id = $p_bug_id
+					   AND type = $p_type";
+		db_query_bound( $t_query );
+	} else {
+		$t_query = "INSERT INTO $t_bug_cust_table(bug_id, type, customers)
+	                VALUES($p_bug_id, $p_type, '$p_cust_string')";
+		db_query_bound( $t_query );
+	}
 }
 
 ?>
