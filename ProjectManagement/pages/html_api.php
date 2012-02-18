@@ -138,6 +138,12 @@ function print_customer_list( $p_bug_id = null, $p_type = PLUGIN_PM_CUST_PAYING,
 	}
 
 	$t_customers = customer_get_all( $p_type );
+
+	if ( $p_include_all ) {
+		$t_all = array_search( (string)PLUGIN_PM_ALL_CUSTOMERS, $t_selected_cust, true );
+		echo '<input type="checkbox" name="' . $p_bug_id . '_' . $p_type . '_' . PLUGIN_PM_ALL_CUSTOMERS . '" ' .
+			(false === $t_all ? '' : 'checked="checked"') . ' > ' . init_cap( 'all' ) . ' &nbsp;';
+	}
 	if ( count( $t_customers ) > 0 ) {
 		foreach ( $t_customers as $row ) {
 			$t_id = $row['id'];
@@ -147,12 +153,6 @@ function print_customer_list( $p_bug_id = null, $p_type = PLUGIN_PM_CUST_PAYING,
 			echo '<input type="checkbox" name="'. $p_bug_id . '_' . $p_type . '_' . $t_id . '" ' .
 				($t_exists ? 'checked="checked"' : '') . ' > ' . $t_name . ' &nbsp;';
 		}
-	}
-
-	if ( $p_include_all ) {
-		$t_all = array_search( (string)PLUGIN_PM_ALL_CUSTOMERS, $t_selected_cust, true );
-		echo '<input type="checkbox" name="' . $p_bug_id . '_' . $p_type . '_' . PLUGIN_PM_ALL_CUSTOMERS . '" ' .
-			(false === $t_all ? '' : 'checked="checked"') . ' > ' . init_cap( 'all' ) . ' &nbsp;';
 	}
 }
 

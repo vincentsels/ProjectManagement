@@ -81,20 +81,23 @@ class ProjectManagementPlugin extends MantisPlugin {
 			'finish_upon_closing'				  => array( 80 ),
 			'decimal_separator'					=> ',',
 			'thousand_separator'				   => ' ',
-			'include_bugs_with_deadline'		   => ON
+			'include_bugs_with_deadline'		   => ON,
+			'enable_customer_payment'			  => ON,
+			'enable_customer_approval'			 => ON
 		);
 	}
 
 	function hooks() {
 		return array(
-			'EVENT_VIEW_BUG_DETAILS' => 'view_bug_time_registration_summary',
-			'EVENT_VIEW_BUG_EXTRA'   => 'view_bug_time_registration',
-			'EVENT_MENU_MAIN'		=> 'main_menu',
-			'EVENT_BUG_DELETED'	  => 'delete_time_registration',
-			'EVENT_REPORT_BUG'	   => 'bug_set_recently_visited',
-			'EVENT_UPDATE_BUG'	   => 'bug_finish_worktypes',
-			'EVENT_FILTER_COLUMNS'   => 'filter_columns',
-			'EVENT_LAYOUT_RESOURCES' => 'link_files'
+			'EVENT_VIEW_BUG_DETAILS'      => 'view_bug_time_registration_summary',
+			'EVENT_VIEW_BUG_EXTRA'        => 'view_bug_time_registration',
+			'EVENT_MENU_MAIN'             => 'main_menu',
+			'EVENT_BUG_DELETED'           => 'delete_time_registration',
+			'EVENT_REPORT_BUG'            => 'bug_set_recently_visited',
+			'EVENT_UPDATE_BUG'            => 'update_bug',
+			'EVENT_FILTER_COLUMNS'        => 'filter_columns',
+			'EVENT_LAYOUT_RESOURCES'      => 'link_files',
+			'EVENT_UPDATE_BUG_FORM' 	  => 'update_bug_form'
 		);
 	}
 
@@ -146,8 +149,52 @@ class ProjectManagementPlugin extends MantisPlugin {
 
 	/**
 	 * Upon resolving or closing a bug, 'finish' certain work types.
+	 * Handle updated customer data.
 	 */
-	function bug_finish_worktypes( $p_event, $p_bug_data, $p_bug_id ) {
+	function update_bug( $p_event, $p_bug_data, $p_bug_id ) {
+		if ( plugin_config_get( 'enable_customer_payment' ) ) {
+			# In case customer payment is enabled, check to see whether at least one paying customer was selected
+			# Populate an array with the supplied data
+			$t_customers = customer_get_all();
+			$t_data = array();
+			foreach ( $t_customers as $t_cust ) {
+				$t_data[PLUGIN_PM_CUST_PAYING][$t_cust['id']] =
+					gpc_get_bool( $p_bug_id . '_' . PLUGIN_PM_CUST_PAYING . '_' . $t_cust['id'], false );
+				$t_data[PLUGIN_PM_CUST_APPROVING][$t_cust['id']] =
+					gpc_get_bool( $p_bug_id . '_' . PLUGIN_PM_CUST_APPROVING . '_' . $t_cust['id'], false );
+			}
+			# Add possible 'all customers'
+			$t_data[PLUGIN_PM_CUST_PAYING][PLUGIN_PM_ALL_CUSTOMERS] =
+				gpc_get_bool( $p_bug_id . '_' . PLUGIN_PM_CUST_PAYING . '_' . PLUGIN_PM_ALL_CUSTOMERS, false );
+
+			# Save
+			$t_paying_string = '';
+			if ( count( $t_data[PLUGIN_PM_CUST_PAYING] ) > 0 ) {
+				foreach ( $t_data[PLUGIN_PM_CUST_PAYING] as $t_cust_id => $t_selected ) {
+					if ( $t_selected ) {
+						$t_paying_string .= CUST_CONCATENATION_CHAR . $t_cust_id;
+					}
+				}
+			}
+			if ( empty( $t_paying_string ) ) {
+				# No customers selected, at least one is required.
+				error_parameters( plugin_lang_get( 'paying_customers' ) );
+				trigger_error( ERROR_EMPTY_FIELD, ERROR );
+			}
+		}
+
+		$t_approving_string = '';
+		if ( count( $t_data[PLUGIN_PM_CUST_APPROVING] ) > 0 ) {
+			foreach ( $t_data[PLUGIN_PM_CUST_APPROVING] as $t_cust_id => $t_selected ) {
+				if ( $t_selected && $t_customers[$t_cust_id]['can_approve'] == 1 ) {
+					$t_approving_string .= CUST_CONCATENATION_CHAR . $t_cust_id;
+				}
+			}
+		}
+
+		bug_customer_update_or_insert( $p_bug_id, $t_paying_string, PLUGIN_PM_CUST_PAYING );
+		bug_customer_update_or_insert( $p_bug_id, $t_approving_string, PLUGIN_PM_CUST_APPROVING );
+
 		if ( $p_bug_data->status >= config_get( 'bug_resolved_status_threshold' ) ) {
 			# The bug was resolved: if there was any work todo left, clear it
 			$t_work_types_to_finish_upon_resolving = plugin_config_get( 'finish_upon_resolving' );
@@ -460,67 +507,96 @@ class ProjectManagementPlugin extends MantisPlugin {
 
 	<?php
 		collapse_end( 'plugin_pm_time_reg' );
-		?>
 
-	<br/>
-	<a name="customer_section" id="customer_section"></a>
-	<?php
-		collapse_open( 'customer_section' );
-		?>
-	<form name="customer_section" method="post" action="<?php echo plugin_page( 'bug_customer_update' ) ?>">
+		if ( plugin_config_get( 'enable_customer_payment' ) || plugin_config_get( 'enable_customer_approval' ) ) {
+			?>
+
+		<br/>
+		<a name="customer_section" id="customer_section"></a>
 		<?php
-		echo form_security_field( 'plugin_ProjectManagement_bug_customer_update' );
+			collapse_open( 'customer_section' );
+			?>
+		<form name="customer_section" method="post" action="<?php echo plugin_page( 'bug_customer_update' ) ?>">
+			<?php
+			echo form_security_field( 'plugin_ProjectManagement_bug_customer_update' );
 
-		# Rather strange way to pass an array of bug id's with only the selected bug_id in it.
-		printf( "<input type=\"hidden\" name=\"bug_ids[]\" value=\"%d\" />", $p_bug_id );
-		?>
+			# Rather strange way to pass an array of bug id's with only the selected bug_id in it.
+			printf( "<input type=\"hidden\" name=\"bug_ids[]\" value=\"%d\" />", $p_bug_id );
+			?>
 
-		<table class="width50" cellspacing="1">
-			<tr>
-				<td colspan="100%" class="form-title">
-					<?php
-					collapse_icon( 'customer_section' );
-					echo plugin_lang_get( 'customer_section' );
-					?>
-					<span class="floatright">
+			<table class="width50" cellspacing="1">
+				<tr>
+					<td colspan="100%" class="form-title">
+						<?php
+						collapse_icon( 'customer_section' );
+						echo plugin_lang_get( 'customer_section' );
+						?>
+						<span class="floatright">
 						<input name="submit" type="submit" value="<?php echo lang_get( 'update' ) ?>">
 					</span>
-				</td>
-			</tr>
-			<tr class="row-1">
-				<td class="category" width="20%">
-					<?php echo plugin_lang_get( 'paying_customers' ) ?>
-				</td>
-				<td>
-					<?php print_customer_list( $p_bug_id ); ?>
-				</td>
-			</tr>
-			<tr class="row-2">
-				<td class="category" width="20%">
-					<?php echo plugin_lang_get( 'approving_customers' ) ?>
-				</td>
-				<td>
-					<?php print_customer_list( $p_bug_id, 1, false ); ?>
-				</td>
-			</tr>
-		</table>
+					</td>
+				</tr>
+				<tr class="row-1">
+					<td class="category" width="20%">
+						<?php echo plugin_lang_get( 'paying_customers' ) ?>
+					</td>
+					<td>
+						<?php print_customer_list( $p_bug_id ); ?>
+					</td>
+				</tr>
+				<tr class="row-2">
+					<td class="category" width="20%">
+						<?php echo plugin_lang_get( 'approving_customers' ) ?>
+					</td>
+					<td>
+						<?php print_customer_list( $p_bug_id, PLUGIN_PM_CUST_APPROVING, false ); ?>
+					</td>
+				</tr>
+			</table>
+			<?php
+			collapse_closed( 'customer_section' );
+			?>
+
+			<table class="width50" cellspacing="1">
+				<tr>
+					<td class="form-title" colspan="2">
+						<?php
+						collapse_icon( 'customer_section' );
+						echo plugin_lang_get( 'customer_section' );
+						?></td>
+				</tr>
+			</table>
+		</form>
+
 		<?php
-		collapse_closed( 'customer_section' );
+			collapse_end( 'customer_section' );
+		}
+	}
+
+	function update_bug_form( $p_event, $p_bug_id ) {
 		?>
-
-		<table class="width50" cellspacing="1">
-			<tr>
-				<td class="form-title" colspan="2">
-					<?php
-					collapse_icon( 'customer_section' );
-					echo plugin_lang_get( 'customer_section' );
-					?></td>
-			</tr>
-		</table>
-	</form>
-
+	<tr <?php echo helper_alternate_class() ?>>
+		<td class="category">
+			<?php
+			if ( plugin_config_get( 'enable_customer_payment' ) ) {
+				echo '<span class="required">*</span>';
+				echo plugin_lang_get( 'paying_customers' );
+			}
+			?>
+		</td>
+		<td colspan="5">
+			<?php print_customer_list( $p_bug_id ); ?>
+		</td>
+	</tr>
+	<tr <?php echo helper_alternate_class() ?>>
+		<td class="category">
+			<?php echo plugin_lang_get( 'approving_customers' ) ?>
+		</td>
+		<td colspan="5">
+			<?php print_customer_list( $p_bug_id, PLUGIN_PM_CUST_APPROVING, false ); ?>
+		</td>
+	</tr>
 	<?php
-		collapse_end( 'customer_section' );
 	}
 
 }

@@ -409,6 +409,33 @@ function customer_get_all( $p_type = PLUGIN_PM_CUST_BOTH ) {
 }
 
 /**
+ * Tries to fetch any supplied customer data through gpc for the supplied $p_bug_id.
+ * @param $p_bug_id
+ * @param array $p_customers the set of all customers. Leave blank to re-fetch.
+ * @return array
+ */
+function pgc_get_bug_customer_data_for_bug_id( $p_bug_id, $p_customers = null ) {
+	if ( is_null( $p_customers ) ) {
+		$p_customers = customer_get_all();
+	}
+
+	$t_bug_data = array();
+
+	foreach ( $p_customers as $t_cust ) {
+		$f_data[PLUGIN_PM_CUST_PAYING][$t_cust['id']]    =
+			gpc_get_bool( $p_bug_id . '_' . PLUGIN_PM_CUST_PAYING . '_' . $t_cust['id'], false );
+		$f_data[PLUGIN_PM_CUST_APPROVING][$t_cust['id']] =
+			gpc_get_bool( $p_bug_id . '_' . PLUGIN_PM_CUST_APPROVING . '_' . $t_cust['id'], false );
+	}
+
+	# Add possible 'all customers'
+	$f_data[PLUGIN_PM_CUST_PAYING][PLUGIN_PM_ALL_CUSTOMERS] =
+		gpc_get_bool( $p_bug_id . '_' . PLUGIN_PM_CUST_PAYING . '_' . PLUGIN_PM_ALL_CUSTOMERS, false );
+
+	return $t_bug_data;
+}
+
+/**
  * Updates the list of customers of the specified $p_type for the specified $p_bug_id.
  * @param $p_bug_id
  * @param string $p_cust_string A CUST_CONCATENATION_CHAR seperated list of customer id's
