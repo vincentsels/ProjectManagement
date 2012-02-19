@@ -409,30 +409,22 @@ function customer_get_all( $p_type = PLUGIN_PM_CUST_BOTH ) {
 }
 
 /**
- * Tries to fetch any supplied customer data through gpc for the supplied $p_bug_id.
+ * Gets an array with the selected customer_id's for the specified bug.
  * @param $p_bug_id
- * @param array $p_customers the set of all customers. Leave blank to re-fetch.
- * @return array
+ * @param $p_type
+ * @return array the selected customers for the specified bug
  */
-function pgc_get_bug_customer_data_for_bug_id( $p_bug_id, $p_customers = null ) {
-	if ( is_null( $p_customers ) ) {
-		$p_customers = customer_get_all();
+function bug_customer_get_selected( $p_bug_id, $p_type ) {
+	$t_selected_cust = array();
+	if ( !is_null( $p_bug_id ) ) {
+		$t_bug_customer_table = plugin_table( 'bug_customer' );
+		$t_query_bug_cust     = "SELECT * FROM $t_bug_customer_table WHERE bug_id = $p_bug_id AND type = $p_type";
+		$t_result_bug_cust    = db_query_bound( $t_query_bug_cust );
+		while ( $t_bug_cust = db_fetch_array( $t_result_bug_cust ) ) {
+			$t_selected_cust = explode( CUST_CONCATENATION_CHAR, $t_bug_cust['customers'] );
+		}
 	}
-
-	$t_bug_data = array();
-
-	foreach ( $p_customers as $t_cust ) {
-		$f_data[PLUGIN_PM_CUST_PAYING][$t_cust['id']]    =
-			gpc_get_bool( $p_bug_id . '_' . PLUGIN_PM_CUST_PAYING . '_' . $t_cust['id'], false );
-		$f_data[PLUGIN_PM_CUST_APPROVING][$t_cust['id']] =
-			gpc_get_bool( $p_bug_id . '_' . PLUGIN_PM_CUST_APPROVING . '_' . $t_cust['id'], false );
-	}
-
-	# Add possible 'all customers'
-	$f_data[PLUGIN_PM_CUST_PAYING][PLUGIN_PM_ALL_CUSTOMERS] =
-		gpc_get_bool( $p_bug_id . '_' . PLUGIN_PM_CUST_PAYING . '_' . PLUGIN_PM_ALL_CUSTOMERS, false );
-
-	return $t_bug_data;
+	return $t_selected_cust;
 }
 
 /**

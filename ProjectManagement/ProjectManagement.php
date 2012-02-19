@@ -60,36 +60,37 @@ class ProjectManagementPlugin extends MantisPlugin {
 
 	function config() {
 		return array(
-			'work_types'						   => '20:analysis,50:development,80:testing',
-			'enable_time_registration_threshold'   => DEVELOPER,
-			'view_time_reg_summary_threshold'	  => REPORTER,
-			'edit_estimates_threshold'			 => MANAGER,
-			'include_bookdate_threshold'		   => DEVELOPER,
-			'view_registration_worksheet_threshold'=> DEVELOPER,
-			'view_registration_report_threshold'   => DEVELOPER,
-			'view_resource_management_threshold'   => MANAGER,
-			'view_resource_allocation_threshold'   => DEVELOPER,
-			'admin_threshold'					  => ADMINISTRATOR,
-			'work_type_thresholds'				 => array( 50 => DEVELOPER ),
-			'default_worktype'					 => 50,
-			'dark_saturation'					  => 33,
-			'dark_lightness'					   => 45,
-			'light_saturation'					 => 100,
-			'light_lightness'					  => 90,
-			'display_detailed_bug_link'			=> TRUE,
-			'finish_upon_resolving'				=> array( 20, 50 ),
-			'finish_upon_closing'				  => array( 80 ),
-			'decimal_separator'					=> ',',
-			'thousand_separator'				   => ' ',
-			'include_bugs_with_deadline'		   => ON,
-			'enable_customer_payment_threshold'    => DEVELOPER,
-			'enable_customer_approval_threshold'	 => UPDATER
+			'work_types'                              => '20:analysis,50:development,80:testing',
+			'enable_time_registration_threshold'      => DEVELOPER,
+			'view_time_reg_summary_threshold'         => REPORTER,
+			'edit_estimates_threshold'                => MANAGER,
+			'include_bookdate_threshold'              => DEVELOPER,
+			'view_registration_worksheet_threshold'   => DEVELOPER,
+			'view_registration_report_threshold'      => DEVELOPER,
+			'view_resource_management_threshold'      => MANAGER,
+			'view_resource_allocation_threshold'      => DEVELOPER,
+			'admin_threshold'                         => ADMINISTRATOR,
+			'work_type_thresholds'                    => array( 50 => DEVELOPER ),
+			'default_worktype'                        => 50,
+			'dark_saturation'                         => 33,
+			'dark_lightness'                          => 45,
+			'light_saturation'                        => 100,
+			'light_lightness'                         => 90,
+			'display_detailed_bug_link'               => TRUE,
+			'finish_upon_resolving'                   => array( 20, 50 ),
+			'finish_upon_closing'                     => array( 80 ),
+			'decimal_separator'                       => ',',
+			'thousand_separator'                      => ' ',
+			'include_bugs_with_deadline'              => ON,
+			'view_customer_payment_summary_threshold' => REPORTER,
+			'enable_customer_payment_threshold'       => DEVELOPER,
+			'enable_customer_approval_threshold'      => UPDATER
 		);
 	}
 
 	function hooks() {
 		return array(
-			'EVENT_VIEW_BUG_DETAILS'	  => 'view_bug_time_registration_summary',
+			'EVENT_VIEW_BUG_DETAILS'	  => 'view_bug_pm_summary',
 			'EVENT_VIEW_BUG_EXTRA'		=> 'view_bug_time_registration',
 			'EVENT_MENU_MAIN'			 => 'main_menu',
 			'EVENT_BUG_DELETED'		   => 'delete_time_registration',
@@ -153,7 +154,8 @@ class ProjectManagementPlugin extends MantisPlugin {
 	 */
 	function update_bug( $p_event, $p_bug_data, $p_bug_id ) {
 		if ( access_has_bug_level( plugin_config_get( 'enable_customer_payment_threshold' ), $p_bug_id ) ||
-			access_has_bug_level( plugin_config_get( 'enable_customer_approval_threshold' ), $p_bug_id ) ) {
+			access_has_bug_level( plugin_config_get( 'enable_customer_approval_threshold' ), $p_bug_id )
+		) {
 			$t_customers = customer_get_all();
 			$t_data      = array();
 			foreach ( $t_customers as $t_cust ) {
@@ -220,43 +222,63 @@ class ProjectManagementPlugin extends MantisPlugin {
 		}
 	}
 
-	function view_bug_time_registration_summary( $p_event, $p_bug_id ) {
-		if ( !access_has_project_level( plugin_config_get( 'view_time_reg_summary_threshold' ) ) ) {
-			return;
-		}
-
+	function view_bug_pm_summary( $p_event, $p_bug_id ) {
 		recently_visited_bug_add( $p_bug_id );
 
 		# Fetch time registration summary
-		$t_table  = plugin_table( 'work' );
-		$t_query  = "SELECT work_type, minutes_type, sum(minutes) as minutes
-                       FROM $t_table
-			          WHERE bug_id = $p_bug_id
-			          GROUP BY work_type, minutes_type
-		              ORDER BY work_type, minutes_type";
-		$t_result = db_query_bound( $t_query );
+		if ( access_has_bug_level( plugin_config_get( 'view_time_reg_summary_threshold' ), $p_bug_id ) ) {
+			$t_table  = plugin_table( 'work' );
+			$t_query  = "SELECT work_type, minutes_type, sum(minutes) as minutes
+						   FROM $t_table
+						  WHERE bug_id = $p_bug_id
+						  GROUP BY work_type, minutes_type
+						  ORDER BY work_type, minutes_type";
+			$t_result = db_query_bound( $t_query );
 
-		$t_est  = null;
-		$t_done = null;
+			$t_est  = null;
+			$t_done = null;
 
-		$t_work = array();
-		while ( $t_row = db_fetch_array( $t_result ) ) {
-			@$t_work[$t_row["work_type"]][$t_row["minutes_type"]] = $t_row["minutes"];
+			$t_work = array();
+			while ( $t_row = db_fetch_array( $t_result ) ) {
+				@$t_work[$t_row["work_type"]][$t_row["minutes_type"]] = $t_row["minutes"];
 
-			if ( $t_row["minutes_type"] == PLUGIN_PM_DONE ) {
-				@$t_done += $t_row["minutes"];
-			} else if ( $t_row["minutes_type"] == PLUGIN_PM_EST ) {
-				@$t_est += $t_row["minutes"];
+				if ( $t_row["minutes_type"] == PLUGIN_PM_DONE ) {
+					@$t_done += $t_row["minutes"];
+				} else if ( $t_row["minutes_type"] == PLUGIN_PM_EST ) {
+					@$t_est += $t_row["minutes"];
+				}
 			}
+
+			$t_todo = get_actual_work_todo( $t_work );
+
+			echo '<tr ' . helper_alternate_class() . '>';
+			echo '<td class="category">Est</td><td>' . minutes_to_time( $t_est, true ) . '</td>
+			<td class="category">Done</td><td>' . minutes_to_time( $t_done, false ) . '</td>
+			<td class="category">Todo</td><td>' . minutes_to_time( $t_todo, true ) . '</td></tr>';
 		}
 
-		$t_todo = get_actual_work_todo( $t_work );
+		# Fetch customer payment summary
+		if ( access_has_bug_level( plugin_config_get( 'view_time_reg_summary_threshold' ), $p_bug_id ) ) {
+			$t_selected_cust_string = '';
+			$t_all_cust             = customer_get_all();
+			$t_selected_cust        = bug_customer_get_selected( $p_bug_id, PLUGIN_PM_CUST_PAYING );
 
-		echo '<tr ' . helper_alternate_class() . '>';
-		echo '<td class="category">Est</td><td>' . minutes_to_time( $t_est, true ) . '</td>
-		<td class="category">Done</td><td>' . minutes_to_time( $t_done, false ) . '</td>
-		<td class="category">Todo</td><td>' . minutes_to_time( $t_todo, true ) . '</td></tr>';
+			if ( array_search( (string)PLUGIN_PM_ALL_CUSTOMERS, $t_selected_cust, true ) ) {
+				$t_selected_cust_string .= init_cap( 'all' ) . ', ';
+			} else {
+				foreach ( $t_selected_cust as $t_customer_id ) {
+					if ( array_key_exists( $t_customer_id, $t_all_cust ) ) {
+						$t_selected_cust_string .= $t_all_cust[$t_customer_id]['name'] . ', ';
+					}
+				}
+			}
+
+			echo '<tr ' . helper_alternate_class() . '>';
+			echo '<td class="category">' . plugin_lang_get( 'paying_customers' ) . '</td>';
+			echo '<td colspan="100%" >' . rtrim( $t_selected_cust_string, ', ' ) . '</td></tr>';
+		}
 	}
+
 
 	function delete_time_registration( $p_event, $p_bug_id ) {
 		$t_table = plugin_table( 'work' );
@@ -513,7 +535,8 @@ class ProjectManagementPlugin extends MantisPlugin {
 		collapse_end( 'plugin_pm_time_reg' );
 
 		if ( access_has_bug_level( plugin_config_get( 'enable_customer_payment_threshold' ), $p_bug_id ) ||
-			access_has_bug_level( plugin_config_get( 'enable_customer_approval_threshold' ), $p_bug_id ) ) {
+			access_has_bug_level( plugin_config_get( 'enable_customer_approval_threshold' ), $p_bug_id )
+		) {
 			?>
 
 		<br/>

@@ -127,16 +127,7 @@ function print_color_option_list( $p_val = 0 ) {
 function print_customer_list( $p_bug_id = null, $p_type = PLUGIN_PM_CUST_PAYING, $p_include_all = true ) {
 	# In case a bug_id and type were supplied, check to see which customers
 	# were checked for this type.
-	$t_selected_cust = array();
-	if ( !is_null( $p_bug_id ) ) {
-		$t_bug_customer_table = plugin_table( 'bug_customer' );
-		$t_query_bug_cust = "SELECT * FROM $t_bug_customer_table WHERE bug_id = $p_bug_id AND type = $p_type";
-		$t_result_bug_cust = db_query_bound( $t_query_bug_cust );
-		while ( $t_bug_cust = db_fetch_array( $t_result_bug_cust ) ) {
-			$t_selected_cust = explode( CUST_CONCATENATION_CHAR, $t_bug_cust['customers'] );
-		}
-	}
-
+	$t_selected_cust = bug_customer_get_selected( $p_bug_id, $p_type );
 	$t_customers = customer_get_all( $p_type );
 
 	if ( $p_include_all ) {

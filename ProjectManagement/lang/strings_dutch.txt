@@ -70,6 +70,7 @@
 	$s_plugin_ProjectManagement_include_bugs_with_deadline_info = 'Neem in de pagina voor het bekijken van de verdeling van de resources ook meldingen mee met een deadline voor de opleverdatum van de doelversie.';
 	$s_plugin_ProjectManagement_include_bugs_with_deadline_warning = '<b>Waarschuwing:</b> dit heeft een negatieve impact op de performantie!';
 
+	$s_plugin_ProjectManagement_view_customer_payment_summary_threshold = 'Drempel voor betalende klanten te zien';
 	$s_plugin_ProjectManagement_enable_customer_payment_threshold = 'Drempel voor betaling per klant';
 	$s_plugin_ProjectManagement_enable_customer_payment_threshold_info = 'Laat toe om meldingen enkel door de geselecteerde klanten te laten betalen.';
 	$s_plugin_ProjectManagement_enable_customer_approval_threshold = 'Drempel voor goedkeuring door klanten';
