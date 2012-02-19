@@ -89,15 +89,15 @@ class ProjectManagementPlugin extends MantisPlugin {
 
 	function hooks() {
 		return array(
-			'EVENT_VIEW_BUG_DETAILS'      => 'view_bug_time_registration_summary',
-			'EVENT_VIEW_BUG_EXTRA'        => 'view_bug_time_registration',
-			'EVENT_MENU_MAIN'             => 'main_menu',
-			'EVENT_BUG_DELETED'           => 'delete_time_registration',
-			'EVENT_REPORT_BUG'            => 'bug_set_recently_visited',
-			'EVENT_UPDATE_BUG'            => 'update_bug',
-			'EVENT_FILTER_COLUMNS'        => 'filter_columns',
-			'EVENT_LAYOUT_RESOURCES'      => 'link_files',
-			'EVENT_UPDATE_BUG_FORM' 	  => 'update_bug_form'
+			'EVENT_VIEW_BUG_DETAILS'	  => 'view_bug_time_registration_summary',
+			'EVENT_VIEW_BUG_EXTRA'		=> 'view_bug_time_registration',
+			'EVENT_MENU_MAIN'			 => 'main_menu',
+			'EVENT_BUG_DELETED'		   => 'delete_time_registration',
+			'EVENT_REPORT_BUG'			=> 'bug_set_recently_visited',
+			'EVENT_UPDATE_BUG'			=> 'update_bug',
+			'EVENT_FILTER_COLUMNS'		=> 'filter_columns',
+			'EVENT_LAYOUT_RESOURCES'	  => 'link_files',
+			'EVENT_UPDATE_BUG_FORM'	   => 'update_bug_form'
 		);
 	}
 
@@ -152,13 +152,11 @@ class ProjectManagementPlugin extends MantisPlugin {
 	 * Handle updated customer data.
 	 */
 	function update_bug( $p_event, $p_bug_data, $p_bug_id ) {
-		if ( plugin_config_get( 'enable_customer_payment' ) ) {
-			# In case customer payment is enabled, check to see whether at least one paying customer was selected
-			# Populate an array with the supplied data
+		if ( plugin_config_get( 'enable_customer_payment' ) || plugin_config_get( 'enable_customer_approval' ) ) {
 			$t_customers = customer_get_all();
-			$t_data = array();
+			$t_data      = array();
 			foreach ( $t_customers as $t_cust ) {
-				$t_data[PLUGIN_PM_CUST_PAYING][$t_cust['id']] =
+				$t_data[PLUGIN_PM_CUST_PAYING][$t_cust['id']]    =
 					gpc_get_bool( $p_bug_id . '_' . PLUGIN_PM_CUST_PAYING . '_' . $t_cust['id'], false );
 				$t_data[PLUGIN_PM_CUST_APPROVING][$t_cust['id']] =
 					gpc_get_bool( $p_bug_id . '_' . PLUGIN_PM_CUST_APPROVING . '_' . $t_cust['id'], false );
@@ -167,33 +165,38 @@ class ProjectManagementPlugin extends MantisPlugin {
 			$t_data[PLUGIN_PM_CUST_PAYING][PLUGIN_PM_ALL_CUSTOMERS] =
 				gpc_get_bool( $p_bug_id . '_' . PLUGIN_PM_CUST_PAYING . '_' . PLUGIN_PM_ALL_CUSTOMERS, false );
 
-			# Save
-			$t_paying_string = '';
-			if ( count( $t_data[PLUGIN_PM_CUST_PAYING] ) > 0 ) {
-				foreach ( $t_data[PLUGIN_PM_CUST_PAYING] as $t_cust_id => $t_selected ) {
-					if ( $t_selected ) {
-						$t_paying_string .= CUST_CONCATENATION_CHAR . $t_cust_id;
+			if ( plugin_config_get( 'enable_customer_payment' ) ) {
+				# In case customer payment is enabled, check to see whether at least one paying customer was selected
+				# Populate an array with the supplied data
+				$t_paying_string = '';
+				if ( count( $t_data[PLUGIN_PM_CUST_PAYING] ) > 0 ) {
+					foreach ( $t_data[PLUGIN_PM_CUST_PAYING] as $t_cust_id => $t_selected ) {
+						if ( $t_selected ) {
+							$t_paying_string .= CUST_CONCATENATION_CHAR . $t_cust_id;
+						}
+					}
+				}
+				if ( empty( $t_paying_string ) ) {
+					# No customers selected, at least one is required.
+					error_parameters( plugin_lang_get( 'paying_customers' ) );
+					trigger_error( ERROR_EMPTY_FIELD, ERROR );
+				}
+			}
+
+			if ( plugin_config_get( 'enable_customer_approval' ) ) {
+				$t_approving_string = '';
+				if ( count( $t_data[PLUGIN_PM_CUST_APPROVING] ) > 0 ) {
+					foreach ( $t_data[PLUGIN_PM_CUST_APPROVING] as $t_cust_id => $t_selected ) {
+						if ( $t_selected && $t_customers[$t_cust_id]['can_approve'] == 1 ) {
+							$t_approving_string .= CUST_CONCATENATION_CHAR . $t_cust_id;
+						}
 					}
 				}
 			}
-			if ( empty( $t_paying_string ) ) {
-				# No customers selected, at least one is required.
-				error_parameters( plugin_lang_get( 'paying_customers' ) );
-				trigger_error( ERROR_EMPTY_FIELD, ERROR );
-			}
-		}
 
-		$t_approving_string = '';
-		if ( count( $t_data[PLUGIN_PM_CUST_APPROVING] ) > 0 ) {
-			foreach ( $t_data[PLUGIN_PM_CUST_APPROVING] as $t_cust_id => $t_selected ) {
-				if ( $t_selected && $t_customers[$t_cust_id]['can_approve'] == 1 ) {
-					$t_approving_string .= CUST_CONCATENATION_CHAR . $t_cust_id;
-				}
-			}
+			bug_customer_update_or_insert( $p_bug_id, $t_paying_string, PLUGIN_PM_CUST_PAYING );
+			bug_customer_update_or_insert( $p_bug_id, $t_approving_string, PLUGIN_PM_CUST_APPROVING );
 		}
-
-		bug_customer_update_or_insert( $p_bug_id, $t_paying_string, PLUGIN_PM_CUST_PAYING );
-		bug_customer_update_or_insert( $p_bug_id, $t_approving_string, PLUGIN_PM_CUST_APPROVING );
 
 		if ( $p_bug_data->status >= config_get( 'bug_resolved_status_threshold' ) ) {
 			# The bug was resolved: if there was any work todo left, clear it
@@ -536,22 +539,30 @@ class ProjectManagementPlugin extends MantisPlugin {
 					</span>
 					</td>
 				</tr>
-				<tr class="row-1">
-					<td class="category" width="20%">
-						<?php echo plugin_lang_get( 'paying_customers' ) ?>
-					</td>
-					<td>
-						<?php print_customer_list( $p_bug_id ); ?>
-					</td>
-				</tr>
-				<tr class="row-2">
-					<td class="category" width="20%">
-						<?php echo plugin_lang_get( 'approving_customers' ) ?>
-					</td>
-					<td>
-						<?php print_customer_list( $p_bug_id, PLUGIN_PM_CUST_APPROVING, false ); ?>
-					</td>
-				</tr>
+				<?php
+				if ( plugin_config_get( 'enable_customer_payment' ) ) {
+					?>
+					<tr class="row-1">
+						<td class="category" width="20%">
+							<?php echo plugin_lang_get( 'paying_customers' ) ?>
+						</td>
+						<td>
+							<?php print_customer_list( $p_bug_id ); ?>
+						</td>
+					</tr>
+					<?php
+				}
+				if ( plugin_config_get( 'enable_customer_approval' ) ) {
+					?>
+					<tr class="row-2">
+						<td class="category" width="20%">
+							<?php echo plugin_lang_get( 'approving_customers' ) ?>
+						</td>
+						<td>
+							<?php print_customer_list( $p_bug_id, PLUGIN_PM_CUST_APPROVING, false ); ?>
+						</td>
+					</tr>
+					<?php }	 ?>
 			</table>
 			<?php
 			collapse_closed( 'customer_section' );
@@ -574,29 +585,33 @@ class ProjectManagementPlugin extends MantisPlugin {
 	}
 
 	function update_bug_form( $p_event, $p_bug_id ) {
-		?>
-	<tr <?php echo helper_alternate_class() ?>>
-		<td class="category">
-			<?php
-			if ( plugin_config_get( 'enable_customer_payment' ) ) {
+		if ( plugin_config_get( 'enable_customer_payment' ) ) {
+			?>
+		<tr <?php echo helper_alternate_class() ?>>
+			<td class="category">
+				<?php
 				echo '<span class="required">*</span>';
 				echo plugin_lang_get( 'paying_customers' );
-			}
+				?>
+			</td>
+			<td colspan="5">
+				<?php print_customer_list( $p_bug_id ); ?>
+			</td>
+		</tr>
+		<?php
+		}
+		if ( plugin_config_get( 'enable_customer_approval' ) ) {
 			?>
-		</td>
-		<td colspan="5">
-			<?php print_customer_list( $p_bug_id ); ?>
-		</td>
-	</tr>
-	<tr <?php echo helper_alternate_class() ?>>
-		<td class="category">
-			<?php echo plugin_lang_get( 'approving_customers' ) ?>
-		</td>
-		<td colspan="5">
-			<?php print_customer_list( $p_bug_id, PLUGIN_PM_CUST_APPROVING, false ); ?>
-		</td>
-	</tr>
-	<?php
+		<tr <?php echo helper_alternate_class() ?>>
+			<td class="category">
+				<?php echo plugin_lang_get( 'approving_customers' ) ?>
+			</td>
+			<td colspan="5">
+				<?php print_customer_list( $p_bug_id, PLUGIN_PM_CUST_APPROVING, false ); ?>
+			</td>
+		</tr>
+		<?php
+		}
 	}
 
 }
