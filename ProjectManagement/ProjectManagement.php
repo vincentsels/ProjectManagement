@@ -82,8 +82,8 @@ class ProjectManagementPlugin extends MantisPlugin {
 			'decimal_separator'					=> ',',
 			'thousand_separator'				   => ' ',
 			'include_bugs_with_deadline'		   => ON,
-			'enable_customer_payment'			  => ON,
-			'enable_customer_approval'			 => ON
+			'enable_customer_payment_threshold'    => DEVELOPER,
+			'enable_customer_approval_threshold'	 => UPDATER
 		);
 	}
 
@@ -152,7 +152,8 @@ class ProjectManagementPlugin extends MantisPlugin {
 	 * Handle updated customer data.
 	 */
 	function update_bug( $p_event, $p_bug_data, $p_bug_id ) {
-		if ( plugin_config_get( 'enable_customer_payment' ) || plugin_config_get( 'enable_customer_approval' ) ) {
+		if ( access_has_bug_level( plugin_config_get( 'enable_customer_payment_threshold' ), $p_bug_id ) ||
+			access_has_bug_level( plugin_config_get( 'enable_customer_approval_threshold' ), $p_bug_id ) ) {
 			$t_customers = customer_get_all();
 			$t_data      = array();
 			foreach ( $t_customers as $t_cust ) {
@@ -165,7 +166,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 			$t_data[PLUGIN_PM_CUST_PAYING][PLUGIN_PM_ALL_CUSTOMERS] =
 				gpc_get_bool( $p_bug_id . '_' . PLUGIN_PM_CUST_PAYING . '_' . PLUGIN_PM_ALL_CUSTOMERS, false );
 
-			if ( plugin_config_get( 'enable_customer_payment' ) ) {
+			if ( access_has_bug_level( plugin_config_get( 'enable_customer_payment_threshold' ), $p_bug_id ) ) {
 				# In case customer payment is enabled, check to see whether at least one paying customer was selected
 				# Populate an array with the supplied data
 				$t_paying_string = '';
@@ -183,7 +184,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 				}
 			}
 
-			if ( plugin_config_get( 'enable_customer_approval' ) ) {
+			if ( access_has_bug_level( plugin_config_get( 'enable_customer_approval_threshold' ), $p_bug_id ) ) {
 				$t_approving_string = '';
 				if ( count( $t_data[PLUGIN_PM_CUST_APPROVING] ) > 0 ) {
 					foreach ( $t_data[PLUGIN_PM_CUST_APPROVING] as $t_cust_id => $t_selected ) {
@@ -511,7 +512,8 @@ class ProjectManagementPlugin extends MantisPlugin {
 	<?php
 		collapse_end( 'plugin_pm_time_reg' );
 
-		if ( plugin_config_get( 'enable_customer_payment' ) || plugin_config_get( 'enable_customer_approval' ) ) {
+		if ( access_has_bug_level( plugin_config_get( 'enable_customer_payment_threshold' ), $p_bug_id ) ||
+			access_has_bug_level( plugin_config_get( 'enable_customer_approval_threshold' ), $p_bug_id ) ) {
 			?>
 
 		<br/>
@@ -540,7 +542,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 					</td>
 				</tr>
 				<?php
-				if ( plugin_config_get( 'enable_customer_payment' ) ) {
+				if ( access_has_bug_level( plugin_config_get( 'enable_customer_payment_threshold' ), $p_bug_id ) ) {
 					?>
 					<tr class="row-1">
 						<td class="category" width="20%">
@@ -552,7 +554,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 					</tr>
 					<?php
 				}
-				if ( plugin_config_get( 'enable_customer_approval' ) ) {
+				if ( access_has_bug_level( plugin_config_get( 'enable_customer_approval' ), $p_bug_id ) ) {
 					?>
 					<tr class="row-2">
 						<td class="category" width="20%">
@@ -585,7 +587,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 	}
 
 	function update_bug_form( $p_event, $p_bug_id ) {
-		if ( plugin_config_get( 'enable_customer_payment' ) ) {
+		if ( access_has_bug_level( plugin_config_get( 'enable_customer_payment_threshold' ), $p_bug_id ) ) {
 			?>
 		<tr <?php echo helper_alternate_class() ?>>
 			<td class="category">
@@ -600,7 +602,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 		</tr>
 		<?php
 		}
-		if ( plugin_config_get( 'enable_customer_approval' ) ) {
+		if ( access_has_bug_level( plugin_config_get( 'enable_customer_approval_threshold' ), $p_bug_id ) ) {
 			?>
 		<tr <?php echo helper_alternate_class() ?>>
 			<td class="category">

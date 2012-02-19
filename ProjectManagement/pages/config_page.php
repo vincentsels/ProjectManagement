@@ -121,16 +121,20 @@ print_pm_config_menu( 'config_page' );
 		</tr>
 		<tr class="spacer"/>
 		<tr <?php echo helper_alternate_class() ?>>
-			<td class="category"><?php echo plugin_lang_get( 'enable_customer_payment' ) ?></td>
-			<td><input type="checkbox" name="enable_customer_payment"
-					   id="enable_customer_payment" <?php echo plugin_config_get( 'enable_customer_payment' ) ? 'checked="checked" ' : '' ?>>
-				<?php echo plugin_lang_get( 'enable_customer_payment_info' ) ?></span></td>
+			<td class="category"><?php echo plugin_lang_get( 'enable_customer_payment_threshold' ) ?><br/>
+				<span class="small"><?php echo plugin_lang_get( 'enable_customer_payment_threshold_info' ) ?></span>
+			</td>
+			<td><select
+				name="enable_customer_payment_threshold"><?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'enable_customer_payment_threshold' ) ) ?></select>
+			</td>
 		</tr>
 		<tr <?php echo helper_alternate_class() ?>>
-			<td class="category"><?php echo plugin_lang_get( 'enable_customer_approval' ) ?></td>
-			<td><input type="checkbox" name="enable_customer_approval"
-					   id="enable_customer_approval" <?php echo plugin_config_get( 'enable_customer_approval' ) ? 'checked="checked" ' : '' ?>>
-				<?php echo plugin_lang_get( 'enable_customer_approval_info' ) ?></span></td>
+			<td class="category"><?php echo plugin_lang_get( 'enable_customer_approval_threshold' ) ?><br/>
+				<span class="small"><?php echo plugin_lang_get( 'enable_customer_approval_threshold_info' ) ?></span>
+			</td>
+			<td><select
+				name="enable_customer_approval_threshold"><?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'enable_customer_approval_threshold' ) ) ?></select>
+			</td>
 		</tr>
 		<tr>
 			<td class="center" colspan="2"><input type="submit" value="<?php echo lang_get( 'update' ) ?>"/></td>
