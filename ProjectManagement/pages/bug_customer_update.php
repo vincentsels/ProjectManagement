@@ -28,7 +28,7 @@ if ( count( $t_customers ) > 0 ) {
 		if ( count( $t_bug_data[PLUGIN_PM_CUST_PAYING] ) > 0 ) {
 			foreach ( $t_bug_data[PLUGIN_PM_CUST_PAYING] as $t_cust_id => $t_selected ) {
 				if ( $t_selected ) {
-					$t_paying_string .= CUST_CONCATENATION_CHAR . $t_cust_id;
+					$t_paying_string .= PLUGIN_PM_CUST_CONCATENATION_CHAR . $t_cust_id;
 				}
 			}
 		}
@@ -36,7 +36,7 @@ if ( count( $t_customers ) > 0 ) {
 		if ( count( $t_bug_data[PLUGIN_PM_CUST_APPROVING] ) > 0 ) {
 			foreach ( $t_bug_data[PLUGIN_PM_CUST_APPROVING] as $t_cust_id => $t_selected ) {
 				if ( $t_selected && $t_customers[$t_cust_id]['can_approve'] == 1 ) {
-					$t_approving_string .= CUST_CONCATENATION_CHAR . $t_cust_id;
+					$t_approving_string .= PLUGIN_PM_CUST_CONCATENATION_CHAR . $t_cust_id;
 				}
 			}
 		}

@@ -86,4 +86,5 @@
 	$s_plugin_ProjectManagement_customer_name = 'Customer name';
 	$s_plugin_ProjectManagement_customer_share = 'Share';
 	$s_plugin_ProjectManagement_customer_can_approve = 'Can approve';
+	$s_plugin_ProjectManagement_billing = 'Billing';
 ?>

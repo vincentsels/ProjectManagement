@@ -80,11 +80,12 @@ class ProjectManagementPlugin extends MantisPlugin {
 			'finish_upon_resolving'                   => array( 20, 50 ),
 			'finish_upon_closing'                     => array( 80 ),
 			'decimal_separator'                       => ',',
-			'thousand_separator'                      => ' ',
+			'thousand_separator'                      => '',
 			'include_bugs_with_deadline'              => ON,
 			'view_customer_payment_summary_threshold' => REPORTER,
 			'enable_customer_payment_threshold'       => DEVELOPER,
-			'enable_customer_approval_threshold'      => UPDATER
+			'enable_customer_approval_threshold'      => UPDATER,
+			'view_billing_threshold'				  => MANAGER
 		);
 	}
 
@@ -175,7 +176,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 				if ( count( $t_data[PLUGIN_PM_CUST_PAYING] ) > 0 ) {
 					foreach ( $t_data[PLUGIN_PM_CUST_PAYING] as $t_cust_id => $t_selected ) {
 						if ( $t_selected ) {
-							$t_paying_string .= CUST_CONCATENATION_CHAR . $t_cust_id;
+							$t_paying_string .= PLUGIN_PM_CUST_CONCATENATION_CHAR . $t_cust_id;
 						}
 					}
 				}
@@ -191,7 +192,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 				if ( count( $t_data[PLUGIN_PM_CUST_APPROVING] ) > 0 ) {
 					foreach ( $t_data[PLUGIN_PM_CUST_APPROVING] as $t_cust_id => $t_selected ) {
 						if ( $t_selected && $t_customers[$t_cust_id]['can_approve'] == 1 ) {
-							$t_approving_string .= CUST_CONCATENATION_CHAR . $t_cust_id;
+							$t_approving_string .= PLUGIN_PM_CUST_CONCATENATION_CHAR . $t_cust_id;
 						}
 					}
 				}

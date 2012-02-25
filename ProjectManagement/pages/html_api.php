@@ -5,6 +5,7 @@ function print_pm_reports_menu( $p_page = '' ) {
 	$t_pm_report_registration_page = plugin_page( 'report_registration_page' );
 	$t_pm_resource_allocation_page = plugin_page( 'resource_allocation_page' );
 	$t_pm_resource_management_page = plugin_page( 'resource_management_page' );
+	$t_pm_billing_page 			   = plugin_page( 'billing_page' );
 
 	switch ( plugin_page( $p_page ) ) {
 		case $t_pm_time_registration_page:
@@ -18,6 +19,9 @@ function print_pm_reports_menu( $p_page = '' ) {
 			break;
 		case $t_pm_resource_management_page:
 			$t_pm_resource_management_page = '';
+			break;
+		case $t_pm_billing_page:
+			$t_pm_billing_page = '';
 			break;
 	}
 
@@ -33,6 +37,9 @@ function print_pm_reports_menu( $p_page = '' ) {
 	}
 	if ( access_has_global_level( plugin_config_get( 'view_resource_management_threshold' ) ) ) {
 		print_bracket_link( $t_pm_resource_management_page, plugin_lang_get( 'resource_management' ) );
+	}
+	if ( access_has_global_level( plugin_config_get( 'view_billing_threshold' ) ) ) {
+		print_bracket_link( $t_pm_billing_page, plugin_lang_get( 'billing' ) );
 	}
 	echo '</p></div>';
 }
@@ -50,14 +57,14 @@ function print_pm_config_menu( $p_page = '' ) {
 			break;
 	}
 
-	echo '<div align="center"><p>';
+	echo '<br /><div align="center">';
 	if ( access_has_global_level( plugin_config_get( 'admin_threshold' ) ) ) {
 		print_bracket_link( $t_pm_config_main_page, plugin_lang_get( 'general_configuration' ) );
 	}
 	if ( access_has_global_level( plugin_config_get( 'admin_threshold' ) ) ) {
 		print_bracket_link( $t_pm_config_customer_overview_page, plugin_lang_get( 'customer_management' ) );
 	}
-	echo '</p></div>';
+	echo '</div>';
 }
 
 function print_plugin_enum_string_option_list( $p_enum_name, $p_val = 0 ) {
