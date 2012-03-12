@@ -19,6 +19,7 @@ $t_project_table      = db_get_table( 'mantis_project_table' );
 $t_category_table     = db_get_table( 'mantis_category_table' );
 
 $t_const_done = PLUGIN_PM_DONE;
+# TODO: repalce with strtotime_safe
 $t_startdate  = strtotime( str_replace( '/', '-', $f_period_start ) );
 $t_enddate    = strtotime( str_replace( '/', '-', $f_period_end ) );
 $t_query      = "SELECT p.name as project_name, c.name as category_name, u.username,

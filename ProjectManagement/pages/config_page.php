@@ -143,6 +143,12 @@ print_pm_config_menu( 'config_page' );
 				name="view_customer_payment_summary_threshold"><?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'view_customer_payment_summary_threshold' ) ) ?></select>
 			</td>
 		</tr>
+		<tr <?php echo helper_alternate_class() ?>>
+			<td class="category"><?php echo plugin_lang_get( 'view_billing_threshold' ) ?><br/></td>
+			<td><select
+				name="view_billing_threshold"><?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'view_billing_threshold' ) ) ?></select>
+			</td>
+		</tr>
 		<tr>
 			<td class="center" colspan="2"><input type="submit" value="<?php echo lang_get( 'update' ) ?>"/></td>
 		</tr>

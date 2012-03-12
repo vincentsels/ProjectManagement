@@ -75,6 +75,7 @@
 	$s_plugin_ProjectManagement_enable_customer_payment_threshold_info = 'Laat toe om meldingen enkel door de geselecteerde klanten te laten betalen.';
 	$s_plugin_ProjectManagement_enable_customer_approval_threshold = 'Drempel voor goedkeuring door klanten';
 	$s_plugin_ProjectManagement_enable_customer_approval_threshold_info = 'Laat klanten toe om aan te duiden of ze ontwikkeling aan bepaalde meldingen goedkeuren.';
+	$s_plugin_ProjectManagement_view_billing_threshold = 'Drempel voor bekijken facturatiepagina';
 
 	$s_plugin_ProjectManagement_customer_section = 'Klanten sectie';
 	$s_plugin_ProjectManagement_paying_customers = 'Betalende klanten';

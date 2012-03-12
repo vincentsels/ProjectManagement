@@ -75,6 +75,7 @@
 	$s_plugin_ProjectManagement_enable_customer_payment_info = 'Allows bugs to be payed by specific customers only.';
 	$s_plugin_ProjectManagement_enable_customer_approval = 'Enable customer approval threshold';
 	$s_plugin_ProjectManagement_enable_customer_approval_info = 'Allows customers to indicate whether or not they approve development on specific bugs.';
+	$s_plugin_ProjectManagement_view_billing_threshold = 'View billing threshold';
 
 	$s_plugin_ProjectManagement_customer_section = 'Customer section';
 	$s_plugin_ProjectManagement_paying_customers = 'Paying customers';

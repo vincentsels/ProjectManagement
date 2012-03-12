@@ -28,7 +28,8 @@ maybe_set_option( 'thousand_separator', gpc_get_string( 'thousand_separator' ) )
 maybe_set_option( 'include_bugs_with_deadline', gpc_get_bool( 'include_bugs_with_deadline' ) );
 maybe_set_option( 'enable_customer_payment_threshold', gpc_get_int( 'enable_customer_payment_threshold' ) );
 maybe_set_option( 'enable_customer_approval_threshold', gpc_get_int( 'enable_customer_approval_threshold' ) );
-maybe_set_option( 'enable_customer_approval_threshold', gpc_get_int( 'view_customer_payment_summary_threshold' ) );
+maybe_set_option( 'view_customer_payment_summary_threshold', gpc_get_int( 'view_customer_payment_summary_threshold' ) );
+maybe_set_option( 'view_billing_threshold', gpc_get_int( 'view_billing_threshold' ) );
 
 form_security_purge( 'plugin_ProjectManagement_config_update' );
 print_successful_redirect( plugin_page( 'config_page', true ) );

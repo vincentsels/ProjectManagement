@@ -578,7 +578,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 					</tr>
 					<?php
 				}
-				if ( access_has_bug_level( plugin_config_get( 'enable_customer_approval' ), $p_bug_id ) ) {
+				if ( access_has_bug_level( plugin_config_get( 'enable_customer_approval_threshold' ), $p_bug_id ) ) {
 					?>
 					<tr class="row-2">
 						<td class="category" width="20%">
