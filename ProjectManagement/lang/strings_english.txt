@@ -77,6 +77,9 @@
 	$s_plugin_ProjectManagement_enable_customer_approval_info = 'Allows customers to indicate whether or not they approve development on specific bugs.';
 	$s_plugin_ProjectManagement_view_billing_threshold = 'View billing threshold';
 
+	$s_plugin_ProjectManagement_default_owner = 'Default target owner for types of work';
+	$s_plugin_ProjectManagement_default_owner_info = 'Per type of work, a default owner for the target can be chosen. REPORTER assigns the reporter of the bug as the owner, DEVELOPER assigns the handler as owner. Other values are ignored.';
+
 	$s_plugin_ProjectManagement_customer_section = 'Customer section';
 	$s_plugin_ProjectManagement_paying_customers = 'Paying customers';
 	$s_plugin_ProjectManagement_approving_customers = 'Approving customers';
@@ -88,4 +91,10 @@
 	$s_plugin_ProjectManagement_customer_share = 'Share';
 	$s_plugin_ProjectManagement_customer_can_approve = 'Can approve';
 	$s_plugin_ProjectManagement_billing = 'Billing';
+
+	$s_plugin_ProjectManagement_targets = 'Targets';
+	$s_plugin_ProjectManagement_target_date = 'Target date';
+	$s_plugin_ProjectManagement_overdue = 'Overdue';
+	$s_plugin_ProjectManagement_owner = 'Owner';
+	$s_plugin_ProjectManagement_completed = 'Completed';
 ?>

@@ -77,6 +77,9 @@
 	$s_plugin_ProjectManagement_enable_customer_approval_threshold_info = 'Laat klanten toe om aan te duiden of ze ontwikkeling aan bepaalde meldingen goedkeuren.';
 	$s_plugin_ProjectManagement_view_billing_threshold = 'Drempel voor bekijken facturatiepagina';
 
+	$s_plugin_ProjectManagement_default_owner = 'Standaard target owner voor type werk';
+	$s_plugin_ProjectManagement_default_owner_info = 'Per type werk kan een standaard target owner gekozen worden. REPORTER kent de aanmelder van de melding toe als owner, DEVELOPER kent de behandelaar toe als owner. Andere waarden worden genegeerd.';
+
 	$s_plugin_ProjectManagement_customer_section = 'Klanten sectie';
 	$s_plugin_ProjectManagement_paying_customers = 'Betalende klanten';
 	$s_plugin_ProjectManagement_approving_customers = 'Goedkeurende klanten';
@@ -88,4 +91,10 @@
 	$s_plugin_ProjectManagement_customer_share = 'Aandeel in kost';
 	$s_plugin_ProjectManagement_customer_can_approve = 'Kan goedkeuren';
 	$s_plugin_ProjectManagement_billing = 'Facturatie';
+
+	$s_plugin_ProjectManagement_targets = 'Targets';
+	$s_plugin_ProjectManagement_target_date = 'Richtdatum';
+	$s_plugin_ProjectManagement_overdue = 'Overtijd';
+	$s_plugin_ProjectManagement_owner = 'Eigenaar';
+	$s_plugin_ProjectManagement_completed = 'Opgeleverd';
 ?>

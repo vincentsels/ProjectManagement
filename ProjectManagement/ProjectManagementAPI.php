@@ -454,4 +454,44 @@ function bug_customer_update_or_insert( $p_bug_id, $p_cust_string, $p_type = PLU
 	}
 }
 
+/**
+ * Returns the days between two given dates, or between the given date and today if only one is supplied.
+ * Returns a positive number if the given date is in the future, negative if it is in the past.
+ */
+function days_between( $p_date, $p_refdate = null ) {
+	if ( is_null( $p_refdate ) ) {
+		$p_refdate = time();
+	}
+
+	return floor( ( $p_refdate - $p_date ) / (60*60*24) );
+}
+
+/**
+ * Updates or inserts the specified target data.
+ */
+function target_update( $p_bug_id, $p_work_type, $p_owner_id, $p_target_date, $p_completed_date = null ) {
+	if ( empty( $p_completed_date ) ) {
+		$p_completed_date = 'NULL';
+	}
+
+	$t_target_table = plugin_table( 'target' );
+
+	$t_query = "SELECT count(1) as count FROM $t_target_table WHERE bug_id = $p_bug_id AND work_type = $p_work_type";
+	$t_result = db_query_bound( $t_query );
+	$t_array = db_fetch_array( $t_result );
+	$t_exists = $t_array['count'] > 0;
+
+	if ( $t_exists ) {
+		$t_query = "UPDATE $t_target_table
+					   SET owner_id = $p_owner_id, target_date = $p_target_date, completed_date = $p_completed_date
+					 WHERE bug_id = $p_bug_id
+					   AND work_type = $p_work_type";
+		db_query_bound( $t_query );
+	} else {
+		$t_query = "INSERT INTO $t_target_table(bug_id, work_type, owner_id, target_date, completed_date)
+	                VALUES($p_bug_id, $p_work_type, $p_owner_id, $p_target_date, $p_completed_date)";
+		db_query_bound( $t_query );
+	}
+}
+
 ?>

@@ -7,7 +7,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 		$this->description = 'Project management plugin that adds advanced functionality for timetracking, estimations, reporting,...';
 		$this->page        = 'config_page';
 
-		$this->version  = '1.1.1';
+		$this->version  = '1.2.0';
 		$this->requires = array(
 			'MantisCore' => '1.2.0'
 		);
@@ -54,38 +54,49 @@ class ProjectManagementPlugin extends MantisPlugin {
 						user_id		I		NOTNULL UNSIGNED PRIMARY,
 						customer_id	I		NOTNULL,
 						function	C(64)
+						" ) ),
+			array( 'CreateTableSQL', array( plugin_table( 'target' ), "
+						id                 I       NOTNULL UNSIGNED AUTOINCREMENT PRIMARY,
+						bug_id             I       NOTNULL UNSIGNED,
+						owner_id           I       NOTNULL UNSIGNED,
+						work_type          I2      NOTNULL DEFAULT 50,
+						target_date        I	   NOTNULL UNSIGNED,
+						completed_date     I	   UNSIGNED
 						" ) )
 		);
 	}
 
 	function config() {
 		return array(
-			'work_types'                              => '20:analysis,50:development,80:testing',
-			'enable_time_registration_threshold'      => DEVELOPER,
-			'view_time_reg_summary_threshold'         => REPORTER,
-			'edit_estimates_threshold'                => MANAGER,
-			'include_bookdate_threshold'              => DEVELOPER,
-			'view_registration_worksheet_threshold'   => DEVELOPER,
-			'view_registration_report_threshold'      => DEVELOPER,
-			'view_resource_management_threshold'      => MANAGER,
-			'view_resource_allocation_threshold'      => DEVELOPER,
-			'admin_threshold'                         => ADMINISTRATOR,
-			'work_type_thresholds'                    => array( 50 => DEVELOPER ),
-			'default_worktype'                        => 50,
-			'dark_saturation'                         => 33,
-			'dark_lightness'                          => 45,
-			'light_saturation'                        => 100,
-			'light_lightness'                         => 90,
-			'display_detailed_bug_link'               => TRUE,
-			'finish_upon_resolving'                   => array( 20, 50 ),
-			'finish_upon_closing'                     => array( 80 ),
-			'decimal_separator'                       => ',',
-			'thousand_separator'                      => '',
-			'include_bugs_with_deadline'              => ON,
-			'view_customer_payment_summary_threshold' => REPORTER,
-			'enable_customer_payment_threshold'       => DEVELOPER,
-			'enable_customer_approval_threshold'      => UPDATER,
-			'view_billing_threshold'				  => MANAGER
+			'work_types'								 => '20:analysis,50:development,80:testing',
+			'enable_time_registration_threshold'		 => DEVELOPER,
+			'view_time_reg_summary_threshold'			=> REPORTER,
+			'edit_estimates_threshold'				   => MANAGER,
+			'include_bookdate_threshold'				 => DEVELOPER,
+			'view_registration_worksheet_threshold'	  => DEVELOPER,
+			'view_registration_report_threshold'		 => DEVELOPER,
+			'view_resource_management_threshold'		 => MANAGER,
+			'view_resource_allocation_threshold'		 => DEVELOPER,
+			'admin_threshold'							=> ADMINISTRATOR,
+			'work_type_thresholds'					   => array( 50 => DEVELOPER ),
+			'default_worktype'						   => 50,
+			'dark_saturation'							=> 33,
+			'dark_lightness'							 => 45,
+			'light_saturation'						   => 100,
+			'light_lightness'							=> 90,
+			'display_detailed_bug_link'				  => TRUE,
+			'finish_upon_resolving'					  => array( 20, 50 ),
+			'finish_upon_closing'						=> array( 80 ),
+			'decimal_separator'						  => ',',
+			'thousand_separator'						 => '',
+			'include_bugs_with_deadline'				 => ON,
+			'view_customer_payment_summary_threshold'	=> REPORTER,
+			'enable_customer_payment_threshold'		  => DEVELOPER,
+			'enable_customer_approval_threshold'		 => UPDATER,
+			'view_billing_threshold'					 => MANAGER,
+			'default_owner'							  => array( 20 => REPORTER,
+																   50 => DEVELOPER,
+																   80 => REPORTER )
 		);
 	}
 
@@ -292,21 +303,22 @@ class ProjectManagementPlugin extends MantisPlugin {
 			return;
 		}
 
-		$t_table = plugin_table( 'work' );
-		$t_est   = PLUGIN_PM_EST;
-		$t_done  = PLUGIN_PM_DONE;
-		$t_todo  = PLUGIN_PM_TODO;
+		$t_work_table   = plugin_table( 'work' );
+		$t_target_table = plugin_table( 'target' );
+		$t_est          = PLUGIN_PM_EST;
+		$t_done         = PLUGIN_PM_DONE;
+		$t_todo         = PLUGIN_PM_TODO;
 
 		# Fetch estimates for all work types
 		$t_query_fetch_est  = "SELECT work_type, minutes as est
-                                 FROM $t_table
+                                 FROM $t_work_table
                                 WHERE bug_id = $p_bug_id
                                  AND minutes_type = $t_est";
 		$t_result_fetch_est = db_query_bound( $t_query_fetch_est );
 
 		# Fetch totals total of done of all work types
 		$t_query_fetch_done  = "SELECT work_type, SUM(minutes) as done
-                                  FROM $t_table
+                                  FROM $t_work_table
                                  WHERE bug_id = $p_bug_id
                                    AND minutes_type = $t_done
                                  GROUP BY work_type";
@@ -314,7 +326,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 
 		# Fetch todo of all work types
 		$t_query_fetch_todo  = "SELECT work_type, minutes as todo
-                                  FROM $t_table
+                                  FROM $t_work_table
                                  WHERE bug_id = $p_bug_id
                                    AND minutes_type = $t_todo";
 		$t_result_fetch_todo = db_query_bound( $t_query_fetch_todo );
@@ -355,7 +367,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 		foreach ( $t_work_types as $t_work_type_code => $t_work_type_label ) {
 			# Calculate remaining
 			if ( isset( $t_work[PLUGIN_PM_EST][$t_work_type_code] ) ) {
-				$t_work[PLUGIN_PM_REMAINING][$t_work_type_code] =
+				@$t_work[PLUGIN_PM_REMAINING][$t_work_type_code] =
 					$t_work[PLUGIN_PM_EST][$t_work_type_code]
 						- $t_work[PLUGIN_PM_DONE][$t_work_type_code];
 
@@ -374,15 +386,33 @@ class ProjectManagementPlugin extends MantisPlugin {
 
 					# If remaining was calculated but no todo was specified,
 					# add this to the calculated remaining to the total column
-					$t_work[PLUGIN_PM_TODO][PLUGIN_PM_WORKTYPE_TOTAL] += $t_work[PLUGIN_PM_REMAINING][$t_work_type_code];
+					@$t_work[PLUGIN_PM_TODO][PLUGIN_PM_WORKTYPE_TOTAL] += $t_work[PLUGIN_PM_REMAINING][$t_work_type_code];
 				}
 			}
 		}
 
+		# Fetch target data for all work types
+		$t_query_fetch_targets  = "SELECT work_type, owner_id, target_date, completed_date
+										  FROM $t_target_table
+										 WHERE bug_id = $p_bug_id";
+		$t_result_fetch_targets = db_query_bound( $t_query_fetch_targets );
+
+		# Convert to 2-dimentional array
+		$t_targets = array();
+		while ( $row = db_fetch_array( $t_result_fetch_targets ) ) {
+			$t_targets[$row["work_type"]] = $row;
+		}
+
 		?>
 	<br/>
+
+	<table width="100%" style="padding:0px">
+	<tr class="print">
+
+	<td>
+
 	<a name="time_registration" id="time_registration"></a>
-	<?php
+		<?php
 		collapse_open( 'plugin_pm_time_reg' );
 		?>
 	<form name="time_registration" method="post" action="<?php echo plugin_page( 'time_registration_update' ) ?>">
@@ -393,7 +423,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 		printf( "<input type=\"hidden\" name=\"bug_ids[]\" value=\"%d\" />", $p_bug_id );
 		?>
 
-		<table class="width50" cellspacing="1">
+		<table class="width100" cellspacing="1">
 			<tr>
 				<td colspan="100%" class="form-title">
 					<?php
@@ -403,7 +433,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 				</td>
 			</tr>
 			<tr class="row-category">
-				<td width="20%" style="min-width:130px">
+				<td width="20%" style="min-width:145px">
 					<div align="center"><?php echo plugin_lang_get( 'work_type' ) ?></div>
 				</td>
 				<td style="min-width:130px">
@@ -412,7 +442,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 				<td width="20%" style="min-width:130px">
 					<div align="center"><?php echo plugin_lang_get( 'done' ) ?></div>
 				</td>
-				<td width="30%" style="min-width:200px">
+				<td width="30%" style="min-width:130px">
 					<div align="center"><?php echo plugin_lang_get( 'todo' ) ?></div>
 				</td>
 				<td style="min-width:100px">
@@ -517,11 +547,12 @@ class ProjectManagementPlugin extends MantisPlugin {
 				</td>
 			</tr>
 		</table>
+
 		<?php
 		collapse_closed( 'plugin_pm_time_reg' );
 		?>
 
-		<table class="width50" cellspacing="1">
+		<table class="width100" cellspacing="1">
 			<tr>
 				<td class="form-title" colspan="2">
 					<?php
@@ -532,7 +563,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 		</table>
 	</form>
 
-	<?php
+		<?php
 		collapse_end( 'plugin_pm_time_reg' );
 
 		if ( access_has_bug_level( plugin_config_get( 'enable_customer_payment_threshold' ), $p_bug_id ) ||
@@ -542,7 +573,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 
 		<br/>
 		<a name="customer_section" id="customer_section"></a>
-		<?php
+			<?php
 			collapse_open( 'customer_section' );
 			?>
 		<form name="customer_section" method="post" action="<?php echo plugin_page( 'bug_customer_update' ) ?>">
@@ -553,7 +584,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 			printf( "<input type=\"hidden\" name=\"bug_ids[]\" value=\"%d\" />", $p_bug_id );
 			?>
 
-			<table class="width50" cellspacing="1">
+			<table class="width100" cellspacing="1">
 				<tr>
 					<td colspan="100%" class="form-title">
 						<?php
@@ -594,7 +625,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 			collapse_closed( 'customer_section' );
 			?>
 
-			<table class="width50" cellspacing="1">
+			<table class="width100" cellspacing="1">
 				<tr>
 					<td class="form-title" colspan="2">
 						<?php
@@ -605,9 +636,168 @@ class ProjectManagementPlugin extends MantisPlugin {
 			</table>
 		</form>
 
-		<?php
+			<?php
 			collapse_end( 'customer_section' );
 		}
+		?>
+	</td>
+
+	<td>
+
+		<a name="targets" id="targets"></a>
+		<?php
+		collapse_open( 'plugin_pm_targets' );
+		?>
+		<form name="targets" method="post" action="<?php echo plugin_page( 'target_update' ) ?>">
+			<?php
+			echo form_security_field( 'plugin_pm_targets_update' );
+
+			# Rather strange way to pass an array of bug id's with only the selected bug_id in it.
+			printf( "<input type=\"hidden\" name=\"bug_ids[]\" value=\"%d\" />", $p_bug_id );
+			?>
+
+			<table class="width100" cellspacing="1">
+				<tr>
+					<td colspan="100%" class="form-title">
+						<?php
+						collapse_icon( 'plugin_pm_targets' );
+						echo plugin_lang_get( 'targets' );
+						?>
+					</td>
+				</tr>
+				<tr class="row-category">
+					<td style="min-width:145px">
+						<div align="center"><?php echo plugin_lang_get( 'work_type' ) ?></div>
+					</td>
+					<td style="min-width:115px">
+						<div align="center"><?php echo plugin_lang_get( 'target_date' ) ?></div>
+					</td>
+					<td>
+						<div align="center"><?php echo plugin_lang_get( 'overdue' ) ?></div>
+					</td>
+					<td>
+						<div align="center"><?php echo plugin_lang_get( 'owner' ) ?></div>
+					</td>
+					<td>
+						<div align="center"><?php echo plugin_lang_get( 'completed' ) ?></div>
+					</td>
+				</tr>
+				<?php
+				foreach ( $t_work_types as $t_work_type_code => $t_work_type_label ) {
+					if ( $t_work_type_code == PLUGIN_PM_WORKTYPE_TOTAL ) {
+						continue;
+					} else if ( array_key_exists( $t_work_type_code, $t_targets ) ) {
+						$t_target             = $t_targets[$t_work_type_code];
+						$t_target_date        = date( config_get( 'short_date_format' ), $t_target["target_date"] );
+						$t_owner_id           = $t_target["owner_id"];
+						$t_completed_date     = is_null( $t_target["completed_date"] ) ? null :
+							date( config_get( 'short_date_format' ), $t_target["completed_date"] );
+						$t_days_overdue       = days_between( $t_target["target_date"], $t_target["completed_date"] ) * -1;
+						$t_days_overdue_class = $t_days_overdue < 0 ? 'class="negative"' : 'class="positive"';
+
+						$t_target_date_class = '';
+						if ( is_null( $t_completed_date ) ) {
+							if ( $t_owner_id == auth_get_current_user_id() ) {
+								if ( $t_days_overdue < 0 ) {
+									$t_target_date_class = 'class="target-date-overdue"';
+								} else if ( $t_days_overdue == 0 ) {
+									$t_target_date_class = 'class="target-date-notice"';
+								}
+							} else if ( $t_days_overdue < 0 ) {
+								$t_target_date_class = 'class="target-date-notice"';
+							}
+						}
+
+						$t_days_overdue = abs( $t_days_overdue );
+					} else {
+						# target for this worktype has not yet been defined
+						$t_target_date        = null;
+						$t_target_date_class  = '';
+						$t_days_overdue       = null;
+						$t_days_overdue_class = '';
+						$t_completed_date     = null;
+						# Find the default owner for this work type
+						$t_default_owners = plugin_config_get( 'default_owner' );
+						@$t_owner_type = $t_default_owners[$t_work_type_code];
+						if ( $t_owner_type == REPORTER ) {
+							$t_reporter_id = bug_get_field( $p_bug_id, 'reporter_id' );
+							$t_owner_id    = is_null( $t_reporter_id ) ? -1 : $t_reporter_id;
+						} else if ( $t_owner_type == DEVELOPER ) {
+							$t_handler_id = bug_get_field( $p_bug_id, 'handler_id' );
+							$t_owner_id   = is_null( $t_handler_id ) ? -1 : $t_handler_id;
+						} else {
+							$t_owner_id = -1;
+						}
+					}
+					?>
+					<tr <?php echo helper_alternate_class() ?>>
+
+						<td class="category"><?php echo $t_work_type_label ?></td>
+
+						<td <?php echo $t_target_date_class ?>>
+							<input type="text" size="8" maxlength="10" autocomplete="off"
+								   id="<?php echo $p_bug_id . '_target_date_' . $t_work_type_code ?>"
+								   name="<?php echo $p_bug_id . '_target_date_' . $t_work_type_code ?>"
+								   value="<?php echo $t_target_date ?>">
+							<?php
+							date_print_calendar( 'target_date_cal_' . $t_work_type_code );
+							date_finish_calendar( $p_bug_id . '_target_date_' . $t_work_type_code, 'target_date_cal_' . $t_work_type_code );
+							?>
+						</td>
+
+						<td <?php echo $t_days_overdue_class ?>><?php echo $t_days_overdue ?></td>
+
+						<td>
+							<select name="<?php echo $p_bug_id . '_owner_id_' . $t_work_type_code ?>">
+								<option value="-1" selected="selected"></option>
+								<?php print_user_option_list( $t_owner_id ) ?>
+							</select>
+						</td>
+
+						<td>
+							<input type="text" size="8" maxlength="10" autocomplete="off"
+								   id="<?php echo $p_bug_id . '_completed_date_' . $t_work_type_code ?>"
+								   name="<?php echo $p_bug_id . '_completed_date_' . $t_work_type_code ?>"
+								   value="<?php echo $t_completed_date ?>">
+							<?php
+							date_print_calendar( 'completed_date_cal_' . $t_work_type_code );
+							date_finish_calendar( $p_bug_id . '_completed_date_' . $t_work_type_code, 'completed_date_cal_' . $t_work_type_code );
+							?>
+						</td>
+					</tr>
+					<?php
+				}
+				?>
+
+				<tr>
+					<td colspan="100%">
+						<input name="submit" type="submit" value="<?php echo lang_get( 'update' ) ?>">
+					</td>
+				</tr>
+			</table>
+
+			<?php
+			collapse_closed( 'plugin_pm_targets' );
+			?>
+
+			<table class="width100" cellspacing="1">
+				<tr>
+					<td class="form-title" colspan="2">
+						<?php
+						collapse_icon( 'plugin_pm_targets' );
+						echo plugin_lang_get( 'targets' );
+						?></td>
+				</tr>
+			</table>
+		</form>
+
+		<?php
+		collapse_end( 'plugin_pm_targets' );
+		?>
+
+	</td>
+	</table>
+	<?php
 	}
 
 	function update_bug_form( $p_event, $p_bug_id ) {

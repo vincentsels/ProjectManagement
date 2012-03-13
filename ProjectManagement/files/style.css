@@ -125,3 +125,11 @@ span.progress a, span.progress :link, span.progress :visited, span.progress :lin
     margin: 0px;
     text-decoration: none;
 }
+
+td.target-date-overdue {
+    background-color: #ff4438;
+}
+
+td.target-date-notice {
+    background-color: #ffcb52;
+}
