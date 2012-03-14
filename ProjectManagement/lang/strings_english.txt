@@ -82,6 +82,8 @@
 
 	$s_plugin_ProjectManagement_customer_section = 'Customer section';
 	$s_plugin_ProjectManagement_paying_customers = 'Paying customers';
+	$s_plugin_ProjectManagement_integration_custom_dev = 'Integration custom development';
+	$s_plugin_ProjectManagement_integration_custom_dev_info = 'Integration of a core functionality with existing custom features.';
 	$s_plugin_ProjectManagement_approving_customers = 'Approving customers';
 	$s_plugin_ProjectManagement_general_configuration = 'Plugin configuration';
 	$s_plugin_ProjectManagement_customer_management = 'Customer configuration';

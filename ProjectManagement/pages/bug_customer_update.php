@@ -40,9 +40,14 @@ if ( count( $t_customers ) > 0 ) {
 				}
 			}
 		}
+		$t_integration_custom_dev_string = '';
+		if ( gpc_get_bool( $t_bug_id . '_' . PLUGIN_PM_CUST_INTEGRATION_DEV . '_' . PLUGIN_PM_ALL_CUSTOMERS, false ) ) {
+			$t_integration_custom_dev_string = PLUGIN_PM_ALL_CUSTOMERS;
+		}
 
 		bug_customer_update_or_insert( $t_bug_id, $t_paying_string, PLUGIN_PM_CUST_PAYING );
 		bug_customer_update_or_insert( $t_bug_id, $t_approving_string, PLUGIN_PM_CUST_APPROVING );
+		bug_customer_update_or_insert( $t_bug_id, $t_integration_custom_dev_string, PLUGIN_PM_CUST_INTEGRATION_DEV );
 	}
 
 	form_security_purge( 'plugin_ProjectManagement_bug_customer_update' );

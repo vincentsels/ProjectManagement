@@ -82,6 +82,8 @@
 
 	$s_plugin_ProjectManagement_customer_section = 'Klanten sectie';
 	$s_plugin_ProjectManagement_paying_customers = 'Betalende klanten';
+	$s_plugin_ProjectManagement_integration_custom_dev = 'Integratiemaatwerk';
+	$s_plugin_ProjectManagement_integration_custom_dev_info = 'Integratie van een kernfunctionaliteit met bestaand maatwerk.';
 	$s_plugin_ProjectManagement_approving_customers = 'Goedkeurende klanten';
 	$s_plugin_ProjectManagement_general_configuration = 'Configureer plugin';
 	$s_plugin_ProjectManagement_customer_management = 'Configureer klanten';

@@ -620,7 +620,27 @@ class ProjectManagementPlugin extends MantisPlugin {
 							<?php print_customer_list( $p_bug_id, PLUGIN_PM_CUST_APPROVING, false ); ?>
 						</td>
 					</tr>
-					<?php }	 ?>
+					<?php }
+				if ( access_has_bug_level( plugin_config_get( 'enable_customer_payment_threshold' ), $p_bug_id ) ) {
+					$t_integration_dev_array = bug_customer_get_selected( $p_bug_id, PLUGIN_PM_CUST_INTEGRATION_DEV );
+					$t_integration_dev = array_search( (string)PLUGIN_PM_ALL_CUSTOMERS, $t_integration_dev_array, true );
+					?>
+					<tr class="row-1">
+						<td class="category" width="25%">
+							<?php echo plugin_lang_get( 'integration_custom_dev' ) ?>
+						</td>
+						<td>
+							<input type="checkbox"
+							<?php
+								echo ' name="' . $p_bug_id . '_' . PLUGIN_PM_CUST_INTEGRATION_DEV . '_' . PLUGIN_PM_ALL_CUSTOMERS . '"';
+								echo false === $t_integration_dev ? '' : ' checked="checked"';
+								echo '>';
+								echo plugin_lang_get( 'integration_custom_dev_info' )
+							?>
+						</td>
+					</tr>
+					<?php
+				}	 ?>
 			</table>
 			<?php
 			collapse_closed( 'customer_section' );
@@ -678,7 +698,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 					<td>
 						<div align="center"><?php echo plugin_lang_get( 'owner' ) ?></div>
 					</td>
-					<td>
+					<td style="min-width:115px">
 						<div align="center"><?php echo plugin_lang_get( 'completed' ) ?></div>
 					</td>
 				</tr>

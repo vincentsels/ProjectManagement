@@ -19,6 +19,7 @@ $t_project_table      = db_get_table( 'mantis_project_table' );
 $t_category_table     = db_get_table( 'mantis_category_table' );
 
 $t_const_done = PLUGIN_PM_DONE;
+$t_const_paying = PLUGIN_PM_CUST_PAYING;
 # TODO: repalce with strtotime_safe
 $t_startdate  = strtotime( str_replace( '/', '-', $f_period_start ) );
 $t_enddate    = strtotime( str_replace( '/', '-', $f_period_end ) );
@@ -32,7 +33,7 @@ $t_query      = "SELECT p.name as project_name, c.name as category_name, u.usern
 			   LEFT JOIN $t_project_table p ON b.project_id = p.id
 			   LEFT JOIN $t_category_table c ON b.category_id = c.id
 			   LEFT OUTER JOIN $t_resource_table r ON w.user_id = r.user_id
-			   LEFT OUTER JOIN $t_bug_customer_table bc ON b.id = bc.bug_id
+			   LEFT OUTER JOIN $t_bug_customer_table bc ON b.id = bc.bug_id AND $t_const_paying = bc.type
 				   WHERE w.minutes_type = $t_const_done
 					 AND w.book_date BETWEEN $t_startdate AND $t_enddate
 				   GROUP BY project_name, category_name, username, bug_id, bug_summary

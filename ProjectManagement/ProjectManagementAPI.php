@@ -16,9 +16,10 @@ define( 'PLUGIN_PM_TOKEN_EXPIRY_RECENTLY_VISITED', 60 * 60 * 24 * 3 ); # 3 days 
 define( 'PLUGIN_PM_DARK', 0 );
 define( 'PLUGIN_PM_LIGHT', 1 );
 
+define( 'PLUGIN_PM_CUST_BOTH', -1 );
 define( 'PLUGIN_PM_CUST_PAYING', 0 );
 define( 'PLUGIN_PM_CUST_APPROVING', 1 );
-define( 'PLUGIN_PM_CUST_BOTH', -1 );
+define( 'PLUGIN_PM_CUST_INTEGRATION_DEV', 2 );
 
 define( 'PLUGIN_PM_ALL_CUSTOMERS', 0 );
 
