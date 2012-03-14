@@ -96,7 +96,8 @@ class ProjectManagementPlugin extends MantisPlugin {
 			'view_billing_threshold'					 => MANAGER,
 			'default_owner'							  => array( 20 => REPORTER,
 																   50 => DEVELOPER,
-																   80 => REPORTER )
+																   80 => REPORTER ),
+			'edit_targets_threshold'					 => DEVELOPER
 		);
 	}
 
@@ -673,7 +674,6 @@ class ProjectManagementPlugin extends MantisPlugin {
 						<div align="center"><?php echo plugin_lang_get( 'target_date' ) ?></div>
 					</td>
 					<td>
-						<div align="center"><?php echo plugin_lang_get( 'overdue' ) ?></div>
 					</td>
 					<td>
 						<div align="center"><?php echo plugin_lang_get( 'owner' ) ?></div>
@@ -728,12 +728,15 @@ class ProjectManagementPlugin extends MantisPlugin {
 							$t_owner_id = -1;
 						}
 					}
+
+					$t_can_edit_targets = access_has_global_level( plugin_config_get( 'edit_targets_threshold' ) );
 					?>
 					<tr <?php echo helper_alternate_class() ?>>
 
 						<td class="category"><?php echo $t_work_type_label ?></td>
 
 						<td <?php echo $t_target_date_class ?>>
+							<?php  if ( $t_can_edit_targets || empty( $t_target_date ) ) { ?>
 							<input type="text" size="8" maxlength="10" autocomplete="off"
 								   id="<?php echo $p_bug_id . '_target_date_' . $t_work_type_code ?>"
 								   name="<?php echo $p_bug_id . '_target_date_' . $t_work_type_code ?>"
@@ -741,19 +744,31 @@ class ProjectManagementPlugin extends MantisPlugin {
 							<?php
 							date_print_calendar( 'target_date_cal_' . $t_work_type_code );
 							date_finish_calendar( $p_bug_id . '_target_date_' . $t_work_type_code, 'target_date_cal_' . $t_work_type_code );
-							?>
+						} else {
+							echo $t_target_date;
+							echo '<input type="hidden" name="' . $p_bug_id . '_target_date_' . $t_work_type_code .
+								'" value="' . $t_target_date . '"';
+						} ?>
 						</td>
 
 						<td <?php echo $t_days_overdue_class ?>><?php echo $t_days_overdue ?></td>
 
 						<td>
+							<?php  if ( $t_can_edit_targets || empty( $t_target_date ) ) { ?>
 							<select name="<?php echo $p_bug_id . '_owner_id_' . $t_work_type_code ?>">
 								<option value="-1" selected="selected"></option>
 								<?php print_user_option_list( $t_owner_id ) ?>
 							</select>
+							<?php
+						} else {
+							echo user_get_name( $t_owner_id );
+							echo '<input type="hidden" name="' . $p_bug_id . '_owner_id_' . $t_work_type_code .
+								'" value="' . $t_owner_id . '"';
+						} ?>
 						</td>
 
 						<td>
+							<?php  if ( $t_can_edit_targets || empty( $t_completed_date ) ) { ?>
 							<input type="text" size="8" maxlength="10" autocomplete="off"
 								   id="<?php echo $p_bug_id . '_completed_date_' . $t_work_type_code ?>"
 								   name="<?php echo $p_bug_id . '_completed_date_' . $t_work_type_code ?>"
@@ -761,6 +776,11 @@ class ProjectManagementPlugin extends MantisPlugin {
 							<?php
 							date_print_calendar( 'completed_date_cal_' . $t_work_type_code );
 							date_finish_calendar( $p_bug_id . '_completed_date_' . $t_work_type_code, 'completed_date_cal_' . $t_work_type_code );
+						} else {
+							echo $t_completed_date;
+							echo '<input type="hidden" name="' . $p_bug_id . '_completed_date_' . $t_work_type_code .
+								'" value="' . $t_completed_date . '"';
+						}
 							?>
 						</td>
 					</tr>

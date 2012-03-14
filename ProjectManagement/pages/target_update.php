@@ -6,12 +6,18 @@ $f_bug_ids       = gpc_get_int_array( 'bug_ids' );
 $f_redirect_page = gpc_get_string( 'redirect_page', null );
 
 $t_work_types = MantisEnum::getAssocArrayIndexedByValues( plugin_config_get( 'work_types' ) );
+$t_work_type_thresholds = plugin_config_get( 'work_type_thresholds' );
 $f_data 	  = array();
 
 if ( count( $t_work_types ) > 0 ) {
 	# Populate an array with the supplied data
 	foreach ( $f_bug_ids as $t_bug_id ) {
 		foreach ( $t_work_types as $t_work_type => $t_work_type_label ) {
+			# Check whether this work type is enabled for the current user
+			if ( array_key_exists( $t_work_type, $t_work_type_thresholds ) &&
+				!access_has_global_level( $t_work_type_thresholds[$t_work_type] ) )
+				continue; # Ignore otherwise
+
 			$f_data[$t_bug_id][$t_work_type]["target_date"] =
 				strtotime( str_replace( '/', '-',
 					gpc_get_string( $t_bug_id . '_target_date_' . $t_work_type, date( 'd/m/Y' ), null ) ) );
