@@ -690,8 +690,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 						$t_target             = $t_targets[$t_work_type_code];
 						$t_target_date        = date( config_get( 'short_date_format' ), $t_target["target_date"] );
 						$t_owner_id           = $t_target["owner_id"];
-						$t_completed_date     = is_null( $t_target["completed_date"] ) ? null :
-							date( config_get( 'short_date_format' ), $t_target["completed_date"] );
+						$t_completed_date     = format_short_date( $t_target["completed_date"] );
 						$t_days_overdue       = days_between( $t_target["target_date"], $t_target["completed_date"] ) * -1;
 						$t_days_overdue_class = $t_days_overdue < 0 ? 'class="negative"' : 'class="positive"';
 

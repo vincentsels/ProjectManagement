@@ -97,4 +97,5 @@
 	$s_plugin_ProjectManagement_overdue = 'Overdue';
 	$s_plugin_ProjectManagement_owner = 'Owner';
 	$s_plugin_ProjectManagement_completed = 'Completed';
+	$s_plugin_ProjectManagement_new_target = 'New target';
 ?>

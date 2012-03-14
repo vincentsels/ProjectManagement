@@ -247,7 +247,7 @@ $t_row_last_month               = db_fetch_array( $t_result_registered_last_mont
 		$t_total = 0;
 		while ( @$row = db_fetch_array( $t_result_registered_week ) ) {
 			$t_total += $row["minutes"];
-			$t_book_date = date( config_get( 'short_date_format' ), $row["book_date"] );
+			$t_book_date = short_date_format( $row["book_date"] );
 			$t_hours     = minutes_to_time( $row["minutes"], false );
 			?>
 
@@ -288,7 +288,7 @@ $t_row_last_month               = db_fetch_array( $t_result_registered_last_mont
 		$t_total = 0;
 		while ( $row = db_fetch_array( $t_result_registered_last_week ) ) {
 			$t_total += $row["minutes"];
-			$t_book_date = date( config_get( 'short_date_format' ), $row["book_date"] );
+			$t_book_date = short_date_format( $row["book_date"] );
 			$t_hours     = minutes_to_time( $row["minutes"], false );
 			?>
 

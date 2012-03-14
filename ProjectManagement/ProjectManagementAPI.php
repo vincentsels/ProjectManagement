@@ -249,6 +249,16 @@ function parse_float( $p_floatstring ) {
 }
 
 /**
+ * Formats the specified $p_date as specified by the short_date_format configuration setting.
+ */
+function format_short_date( $p_date = null ) {
+	if ( is_null( $p_date ) || empty( $p_date ) ) {
+		return null;
+	}
+	return date( config_get( 'short_date_format' ), $p_date );
+}
+
+/**
  * Formats the specified $p_value as defined by the decimal_separator and
  * thousand_separator in the plugin config settings.
  * Optionally specify the amount of decimals to display and round at.
@@ -470,27 +480,50 @@ function days_between( $p_date, $p_refdate = null ) {
  * Updates or inserts the specified target data.
  */
 function target_update( $p_bug_id, $p_work_type, $p_owner_id, $p_target_date, $p_completed_date = null ) {
+	$p_completed_date_formated = $p_completed_date;
 	if ( empty( $p_completed_date ) ) {
-		$p_completed_date = 'NULL';
+		$p_completed_date_formated = 'NULL';
 	}
 
+	$t_work_types = MantisEnum::getAssocArrayIndexedByValues( plugin_config_get( 'work_types' ) );
 	$t_target_table = plugin_table( 'target' );
 
-	$t_query = "SELECT count(1) as count FROM $t_target_table WHERE bug_id = $p_bug_id AND work_type = $p_work_type";
+	$t_query = "SELECT * FROM $t_target_table WHERE bug_id = $p_bug_id AND work_type = $p_work_type";
 	$t_result = db_query_bound( $t_query );
-	$t_array = db_fetch_array( $t_result );
-	$t_exists = $t_array['count'] > 0;
+	$t_exists = false;
+	if ( db_num_rows( $t_result ) > 0 ) {
+		$t_exists = true;
+		$t_old = db_fetch_array( $t_result );
+	}
 
 	if ( $t_exists ) {
 		$t_query = "UPDATE $t_target_table
-					   SET owner_id = $p_owner_id, target_date = $p_target_date, completed_date = $p_completed_date
+					   SET owner_id = $p_owner_id, target_date = $p_target_date, completed_date = $p_completed_date_formated
 					 WHERE bug_id = $p_bug_id
 					   AND work_type = $p_work_type";
 		db_query_bound( $t_query );
+
+		# Log updated record to history
+		if ( $t_old["owner_id"] != $p_owner_id ) {
+			history_log_event_direct( $p_bug_id, plugin_lang_get( 'owner' ) . " ($t_work_types[$p_work_type])",
+				user_get_name( $t_old["owner_id"] ), user_get_name( $p_owner_id ) );
+		}
+		if ( $t_old["target_date"] != $p_target_date ) {
+			history_log_event_direct( $p_bug_id, plugin_lang_get( 'target_date' ) . " ($t_work_types[$p_work_type])",
+				format_short_date( $t_old["target_date"] ), format_short_date( $p_target_date ) );
+		}
+		if ( $t_old["completed_date"] != $p_completed_date ) {
+			history_log_event_direct( $p_bug_id, plugin_lang_get( 'completed' ) . " ($t_work_types[$p_work_type])",
+				format_short_date( $t_old["completed_date"] ), format_short_date( $p_completed_date ) );
+		}
 	} else {
 		$t_query = "INSERT INTO $t_target_table(bug_id, work_type, owner_id, target_date, completed_date)
-	                VALUES($p_bug_id, $p_work_type, $p_owner_id, $p_target_date, $p_completed_date)";
+	                VALUES($p_bug_id, $p_work_type, $p_owner_id, $p_target_date, $p_completed_date_formated)";
 		db_query_bound( $t_query );
+
+		# Log new record to history
+		history_log_event_direct( $p_bug_id, plugin_lang_get( 'new_target' ) . " ($t_work_types[$p_work_type])",
+			null, format_short_date( $p_target_date ) . ' (' . user_get_name( $p_owner_id ) . ')' );
 	}
 }
 
