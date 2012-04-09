@@ -374,7 +374,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 
 				# Calculate difference between remaining and todo
 				if ( isset( $t_work[PLUGIN_PM_TODO][$t_work_type_code] ) ) {
-					$t_work[PLUGIN_PM_DIFF][$t_work_type_code] =
+					@$t_work[PLUGIN_PM_DIFF][$t_work_type_code] =
 						$t_work[PLUGIN_PM_EST][$t_work_type_code]
 							- $t_work[PLUGIN_PM_DONE][$t_work_type_code]
 							- $t_work[PLUGIN_PM_TODO][$t_work_type_code];
