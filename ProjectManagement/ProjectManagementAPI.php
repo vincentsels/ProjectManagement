@@ -458,7 +458,7 @@ function bug_customer_update_or_insert( $p_bug_id, $p_cust_string, $p_type = PLU
 					 WHERE bug_id = $p_bug_id
 					   AND type = $p_type";
 		db_query_bound( $t_query );
-	} else {
+	} else if ( '' !== $p_cust_string ) {
 		$t_query = "INSERT INTO $t_bug_cust_table(bug_id, type, customers)
 	                VALUES($p_bug_id, $p_type, '$p_cust_string')";
 		db_query_bound( $t_query );
