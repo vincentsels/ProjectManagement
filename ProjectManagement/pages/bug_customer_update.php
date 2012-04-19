@@ -10,6 +10,11 @@ $f_data 		 = array();
 $t_customers	 = customer_get_all();
 
 if ( count( $t_customers ) > 0 ) {
+
+	$t_update_paying_cust = gpc_get_int('update_paying_cust', 0);
+	$t_update_approving_cust = gpc_get_int('update_approving_cust', 0);
+	$t_update_integration_dev = gpc_get_int('update_integration_dev', 0);
+
 	# Populate an array with the supplied data
 	foreach ( $f_bug_ids as $t_bug_id ) {
 		foreach ( $t_customers as $t_cust ) {
@@ -24,30 +29,37 @@ if ( count( $t_customers ) > 0 ) {
 	}
 
 	foreach ( $f_data as $t_bug_id => $t_bug_data ) {
-		$t_paying_string = '';
-		if ( count( $t_bug_data[PLUGIN_PM_CUST_PAYING] ) > 0 ) {
-			foreach ( $t_bug_data[PLUGIN_PM_CUST_PAYING] as $t_cust_id => $t_selected ) {
-				if ( $t_selected ) {
-					$t_paying_string .= PLUGIN_PM_CUST_CONCATENATION_CHAR . $t_cust_id;
+		if ( $t_update_paying_cust == 1 ) {
+			$t_paying_string = '';
+			if ( count( $t_bug_data[PLUGIN_PM_CUST_PAYING] ) > 0 ) {
+				foreach ( $t_bug_data[PLUGIN_PM_CUST_PAYING] as $t_cust_id => $t_selected ) {
+					if ( $t_selected ) {
+						$t_paying_string .= PLUGIN_PM_CUST_CONCATENATION_CHAR . $t_cust_id;
+					}
 				}
 			}
-		}
-		$t_approving_string = '';
-		if ( count( $t_bug_data[PLUGIN_PM_CUST_APPROVING] ) > 0 ) {
-			foreach ( $t_bug_data[PLUGIN_PM_CUST_APPROVING] as $t_cust_id => $t_selected ) {
-				if ( $t_selected && $t_customers[$t_cust_id]['can_approve'] == 1 ) {
-					$t_approving_string .= PLUGIN_PM_CUST_CONCATENATION_CHAR . $t_cust_id;
-				}
-			}
-		}
-		$t_integration_custom_dev_string = '';
-		if ( gpc_get_bool( $t_bug_id . '_' . PLUGIN_PM_CUST_INTEGRATION_DEV . '_' . PLUGIN_PM_ALL_CUSTOMERS, false ) ) {
-			$t_integration_custom_dev_string = PLUGIN_PM_CUST_CONCATENATION_CHAR . PLUGIN_PM_ALL_CUSTOMERS;
+			bug_customer_update_or_insert( $t_bug_id, $t_paying_string, PLUGIN_PM_CUST_PAYING );
 		}
 
-		bug_customer_update_or_insert( $t_bug_id, $t_paying_string, PLUGIN_PM_CUST_PAYING );
-		bug_customer_update_or_insert( $t_bug_id, $t_approving_string, PLUGIN_PM_CUST_APPROVING );
-		bug_customer_update_or_insert( $t_bug_id, $t_integration_custom_dev_string, PLUGIN_PM_CUST_INTEGRATION_DEV );
+		if ( $t_update_approving_cust == 1 ) {
+			$t_approving_string = '';
+			if ( count( $t_bug_data[PLUGIN_PM_CUST_APPROVING] ) > 0 ) {
+				foreach ( $t_bug_data[PLUGIN_PM_CUST_APPROVING] as $t_cust_id => $t_selected ) {
+					if ( $t_selected && $t_customers[$t_cust_id]['can_approve'] == 1 ) {
+						$t_approving_string .= PLUGIN_PM_CUST_CONCATENATION_CHAR . $t_cust_id;
+					}
+				}
+			}
+			bug_customer_update_or_insert( $t_bug_id, $t_approving_string, PLUGIN_PM_CUST_APPROVING );
+		}
+
+		if ( $t_update_integration_dev == 1 ) {
+			$t_integration_custom_dev_string = '';
+			if ( gpc_get_bool( $t_bug_id . '_' . PLUGIN_PM_CUST_INTEGRATION_DEV . '_' . PLUGIN_PM_ALL_CUSTOMERS, false ) ) {
+				$t_integration_custom_dev_string = PLUGIN_PM_CUST_CONCATENATION_CHAR . PLUGIN_PM_ALL_CUSTOMERS;
+			}
+			bug_customer_update_or_insert( $t_bug_id, $t_integration_custom_dev_string, PLUGIN_PM_CUST_INTEGRATION_DEV );
+		}
 	}
 
 	form_security_purge( 'plugin_ProjectManagement_bug_customer_update' );

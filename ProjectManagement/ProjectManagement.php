@@ -111,7 +111,8 @@ class ProjectManagementPlugin extends MantisPlugin {
 			'EVENT_UPDATE_BUG'			=> 'update_bug',
 			'EVENT_FILTER_COLUMNS'		=> 'filter_columns',
 			'EVENT_LAYOUT_RESOURCES'	  => 'link_files',
-			'EVENT_UPDATE_BUG_FORM'	   => 'update_bug_form'
+			'EVENT_UPDATE_BUG_FORM'	   => 'update_bug_form',
+			'EVENT_BUG_STATUS_UPDATE_FORM'	   => 'update_bug_form'
 		);
 	}
 
@@ -197,6 +198,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 					error_parameters( plugin_lang_get( 'paying_customers' ) );
 					trigger_error( ERROR_EMPTY_FIELD, ERROR );
 				}
+				bug_customer_update_or_insert( $p_bug_id, $t_paying_string, PLUGIN_PM_CUST_PAYING );
 			}
 
 			if ( access_has_bug_level( plugin_config_get( 'enable_customer_approval_threshold' ), $p_bug_id ) ) {
@@ -208,10 +210,8 @@ class ProjectManagementPlugin extends MantisPlugin {
 						}
 					}
 				}
+				bug_customer_update_or_insert( $p_bug_id, $t_approving_string, PLUGIN_PM_CUST_APPROVING );
 			}
-
-			bug_customer_update_or_insert( $p_bug_id, $t_paying_string, PLUGIN_PM_CUST_PAYING );
-			bug_customer_update_or_insert( $p_bug_id, $t_approving_string, PLUGIN_PM_CUST_APPROVING );
 		}
 
 		if ( $p_bug_data->status >= config_get( 'bug_resolved_status_threshold' ) ) {
@@ -605,6 +605,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 							<?php echo plugin_lang_get( 'paying_customers' ) ?>
 						</td>
 						<td>
+							<input type="hidden" name="update_paying_cust" value="1">
 							<?php print_customer_list( $p_bug_id ); ?>
 						</td>
 					</tr>
@@ -617,6 +618,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 							<?php echo plugin_lang_get( 'approving_customers' ) ?>
 						</td>
 						<td>
+							<input type="hidden" name="update_approving_cust" value="1">
 							<?php print_customer_list( $p_bug_id, PLUGIN_PM_CUST_APPROVING, false ); ?>
 						</td>
 					</tr>
@@ -630,6 +632,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 							<?php echo plugin_lang_get( 'integration_custom_dev' ) ?>
 						</td>
 						<td>
+							<input type="hidden" name="update_integration_dev" value="1">
 							<input type="checkbox"
 							<?php
 								echo ' name="' . $p_bug_id . '_' . PLUGIN_PM_CUST_INTEGRATION_DEV . '_' . PLUGIN_PM_ALL_CUSTOMERS . '"';
