@@ -476,7 +476,7 @@ function bug_customer_update_or_insert( $p_bug_id, $p_cust_string, $p_type = PLU
 	$t_old = db_fetch_array( $t_result );
 	$t_new_as_string = customer_list_to_string( explode( PLUGIN_PM_CUST_CONCATENATION_CHAR, $p_cust_string ) );
 	$t_old_as_string = '';
-	$t_log = true;
+	$t_log = false;
 
 	if ( $t_old !== false ) {
 		$t_old_cust_string = $t_old['customers'];
@@ -489,13 +489,13 @@ function bug_customer_update_or_insert( $p_bug_id, $p_cust_string, $p_type = PLU
 
 			$t_old_as_string = customer_list_to_string(
 				explode( PLUGIN_PM_CUST_CONCATENATION_CHAR, $t_old_cust_string ) );
-		} else {
-			$t_log = false;
+			$t_log = true;
 		}
 	} else if ( '' !== $p_cust_string ) {
 		$t_query = "INSERT INTO $t_bug_cust_table(bug_id, type, customers)
 	                VALUES($p_bug_id, $p_type, '$p_cust_string')";
 		db_query_bound( $t_query );
+		$t_log = true;
 	}
 
 	if ( $t_log ) {
