@@ -439,6 +439,30 @@ function bug_customer_get_selected( $p_bug_id, $p_type ) {
 }
 
 /**
+ * @param $t_selected_cust array an array of the customer id's to convert to string
+ * @return A comma-separated list of the names of the customers in the passed $t_selected_cust array
+ */
+function customer_list_to_string( $t_selected_cust ) {
+	if ( empty( $t_selected_cust ) ) {
+		return '';
+	}
+
+	$t_all_cust             = customer_get_all();
+	$t_selected_cust_string = '';
+	if ( array_search( (string)PLUGIN_PM_ALL_CUSTOMERS, $t_selected_cust, true ) ) {
+		$t_selected_cust_string .= init_cap( 'all' ) . ', ';
+	} else {
+		foreach ( $t_selected_cust as $t_customer_id ) {
+			if ( array_key_exists( $t_customer_id, $t_all_cust ) ) {
+				$t_selected_cust_string .= $t_all_cust[$t_customer_id]['name'] . ', ';
+			}
+		}
+	}
+	$t_selected_cust_string = rtrim( $t_selected_cust_string, ', ' );
+	return $t_selected_cust_string;
+}
+
+/**
  * Updates the list of customers of the specified $p_type for the specified $p_bug_id.
  * @param $p_bug_id
  * @param string $p_cust_string A CUST_CONCATENATION_CHAR seperated list of customer id's
@@ -447,21 +471,43 @@ function bug_customer_get_selected( $p_bug_id, $p_type ) {
 function bug_customer_update_or_insert( $p_bug_id, $p_cust_string, $p_type = PLUGIN_PM_CUST_PAYING) {
 	$t_bug_cust_table = plugin_table( 'bug_customer' );
 
-	$t_query = "SELECT count(1) as count FROM $t_bug_cust_table WHERE bug_id = $p_bug_id AND type = $p_type";
+	$t_query = "SELECT * FROM $t_bug_cust_table WHERE bug_id = $p_bug_id AND type = $p_type";
 	$t_result = db_query_bound( $t_query );
-	$t_array = db_fetch_array( $t_result );
-	$t_exists = $t_array['count'] > 0;
+	$t_old = db_fetch_array( $t_result );
+	$t_new_as_string = customer_list_to_string( explode( PLUGIN_PM_CUST_CONCATENATION_CHAR, $p_cust_string ) );
+	$t_old_as_string = '';
+	$t_log = true;
 
-	if ( $t_exists ) {
-		$t_query = "UPDATE $t_bug_cust_table
-					   SET customers = '$p_cust_string'
-					 WHERE bug_id = $p_bug_id
-					   AND type = $p_type";
-		db_query_bound( $t_query );
+	if ( $t_old !== false ) {
+		$t_old_cust_string = $t_old['customers'];
+		if ( $t_old_cust_string != $p_cust_string ) {
+			$t_query = "UPDATE $t_bug_cust_table
+						   SET customers = '$p_cust_string'
+						 WHERE bug_id = $p_bug_id
+						   AND type = $p_type";
+			db_query_bound( $t_query );
+
+			$t_old_as_string = customer_list_to_string(
+				explode( PLUGIN_PM_CUST_CONCATENATION_CHAR, $t_old_cust_string ) );
+		} else {
+			$t_log = false;
+		}
 	} else if ( '' !== $p_cust_string ) {
 		$t_query = "INSERT INTO $t_bug_cust_table(bug_id, type, customers)
 	                VALUES($p_bug_id, $p_type, '$p_cust_string')";
 		db_query_bound( $t_query );
+	}
+
+	if ( $t_log ) {
+		if ( $p_type == PLUGIN_PM_CUST_PAYING || $p_type == PLUGIN_PM_CUST_APPROVING ) {
+			$t_type_as_string = ( $p_type == PLUGIN_PM_CUST_PAYING ? plugin_lang_get( 'paying_customers' ) :
+				plugin_lang_get( 'approving_customers' ) );
+			history_log_event_direct( $p_bug_id, $t_type_as_string,
+				$t_old_as_string, $t_new_as_string );
+		} else if ( $p_type == PLUGIN_PM_CUST_INTEGRATION_DEV ) {
+			history_log_event_direct( $p_bug_id, plugin_lang_get( 'integration_custom_dev' ),
+				'', ( $p_cust_string === PLUGIN_PM_CUST_CONCATENATION_CHAR . '0' ? lang_get( 'yes' ) : lang_get( 'no' ) ) );
+		}
 	}
 }
 

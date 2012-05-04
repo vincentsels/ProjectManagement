@@ -272,23 +272,13 @@ class ProjectManagementPlugin extends MantisPlugin {
 
 		# Fetch customer payment summary
 		if ( access_has_bug_level( plugin_config_get( 'view_time_reg_summary_threshold' ), $p_bug_id ) ) {
-			$t_selected_cust_string = '';
-			$t_all_cust             = customer_get_all();
 			$t_selected_cust        = bug_customer_get_selected( $p_bug_id, PLUGIN_PM_CUST_PAYING );
 
-			if ( array_search( (string)PLUGIN_PM_ALL_CUSTOMERS, $t_selected_cust, true ) ) {
-				$t_selected_cust_string .= init_cap( 'all' ) . ', ';
-			} else {
-				foreach ( $t_selected_cust as $t_customer_id ) {
-					if ( array_key_exists( $t_customer_id, $t_all_cust ) ) {
-						$t_selected_cust_string .= $t_all_cust[$t_customer_id]['name'] . ', ';
-					}
-				}
-			}
+			$t_selected_cust_string = customer_list_to_string( $t_selected_cust );
 
 			echo '<tr ' . helper_alternate_class() . '>';
 			echo '<td class="category">' . plugin_lang_get( 'paying_customers' ) . '</td>';
-			echo '<td colspan="100%" >' . rtrim( $t_selected_cust_string, ', ' ) . '</td></tr>';
+			echo '<td colspan="100%" >' . $t_selected_cust_string . '</td></tr>';
 		}
 	}
 
