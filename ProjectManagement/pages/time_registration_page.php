@@ -139,47 +139,49 @@ $t_row_last_month               = db_fetch_array( $t_result_registered_last_mont
 			<tr class="spacer"/>
 
 			<?php
-			while ( $row = db_fetch_array( $t_result_recent ) ) {
-				$t_last_update  = date( config_get( 'normal_date_format' ), $row["last_updated"] );
-				$t_project_name = $row["project_name"] . ' - ' . $row["category_name"];
-				$t_done_total   = minutes_to_time( $row["done"], false );
+			if ( !empty( $t_recently_visited ) ) {
+				while ( $row = db_fetch_array( $t_result_recent ) ) {
+					$t_last_update  = date( config_get( 'normal_date_format' ), $row["last_updated"] );
+					$t_project_name = $row["project_name"] . ' - ' . $row["category_name"];
+					$t_done_total   = minutes_to_time( $row["done"], false );
 
-				# choose color based on status
-				$status_color = get_status_color( $row["status"] );
+					# choose color based on status
+					$status_color = get_status_color( $row["status"] );
 
-				?>
+					?>
 
-				<tr bgcolor="<?php echo $status_color ?>">
-					<td>
-						<?php
-						if ( $row["last_updated"] > strtotime( '-8 hours' ) ) {
-							echo '<b>' . $t_last_update . '</b>';
-						} else {
-							echo $t_last_update;
-						}
-						if ( !empty( $row['handler_id'] ) ) {
-							print ' - ' . prepare_user_name( $row['handler_id'] );
-						}
-						?>
-					</td>
-					<td><?php echo $t_project_name ?></td>
-					<td>
-						<?php
-						print_bug_link( $row["bug_id"], plugin_config_get( 'display_detailed_bug_link' ) );
-						echo ': ' . string_shorten( $row["bug_summary"], 70 );
-						?>
-					</td>
-					<td class="right" style="min-width:270px">
-						<?php echo $t_done_total ?>
-						+ <input type="text" size="4" maxlength="7" autocomplete="off"
-								 name= <?php echo '"add_' . $row["bug_id"] . '_' . PLUGIN_PM_DONE . '"' ?>>
-						<select name="work_type_<?php echo $row["bug_id"] ?>">
-							<?php print_plugin_enum_string_option_list( 'work_types', plugin_config_get( 'default_worktype' ) ) ?>
-						</select>
-					</td>
-				</tr>
+					<tr bgcolor="<?php echo $status_color ?>">
+						<td>
+							<?php
+							if ( $row["last_updated"] > strtotime( '-8 hours' ) ) {
+								echo '<b>' . $t_last_update . '</b>';
+							} else {
+								echo $t_last_update;
+							}
+							if ( !empty( $row['handler_id'] ) ) {
+								print ' - ' . prepare_user_name( $row['handler_id'] );
+							}
+							?>
+						</td>
+						<td><?php echo $t_project_name ?></td>
+						<td>
+							<?php
+							print_bug_link( $row["bug_id"], plugin_config_get( 'display_detailed_bug_link' ) );
+							echo ': ' . string_shorten( $row["bug_summary"], 70 );
+							?>
+						</td>
+						<td class="right" style="min-width:270px">
+							<?php echo $t_done_total ?>
+							+ <input type="text" size="4" maxlength="7" autocomplete="off"
+									 name= <?php echo '"add_' . $row["bug_id"] . '_' . PLUGIN_PM_DONE . '"' ?>>
+							<select name="work_type_<?php echo $row["bug_id"] ?>">
+								<?php print_plugin_enum_string_option_list( 'work_types', plugin_config_get( 'default_worktype' ) ) ?>
+							</select>
+						</td>
+					</tr>
 
-				<?php
+					<?php
+				}
 			}
 			?>
 		</table>

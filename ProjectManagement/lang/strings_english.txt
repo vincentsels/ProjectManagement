@@ -71,10 +71,10 @@
 	$s_plugin_ProjectManagement_include_bugs_with_deadline_warning = '<b>Warning:</b> this option has a negative impact on the performance of this page!';
 
 	$s_plugin_ProjectManagement_view_customer_payment_summary_threshold = 'View customer payment summary threshold';
-	$s_plugin_ProjectManagement_enable_customer_payment = 'Enable customer payment threshold';
-	$s_plugin_ProjectManagement_enable_customer_payment_info = 'Allows bugs to be payed by specific customers only.';
-	$s_plugin_ProjectManagement_enable_customer_approval = 'Enable customer approval threshold';
-	$s_plugin_ProjectManagement_enable_customer_approval_info = 'Allows customers to indicate whether or not they approve development on specific bugs.';
+	$s_plugin_ProjectManagement_enable_customer_payment_threshold = 'Enable customer payment threshold';
+	$s_plugin_ProjectManagement_enable_customer_payment_threshold_info = 'Allows bugs to be payed by specific customers only.';
+	$s_plugin_ProjectManagement_enable_customer_approval_threshold = 'Enable customer approval threshold';
+	$s_plugin_ProjectManagement_enable_customer_approval_threshold_info = 'Allows customers to indicate whether or not they approve development on specific bugs.';
 	$s_plugin_ProjectManagement_view_billing_threshold = 'View billing threshold';
 
 	$s_plugin_ProjectManagement_default_owner = 'Default target owner for types of work';
@@ -100,4 +100,6 @@
 	$s_plugin_ProjectManagement_owner = 'Owner';
 	$s_plugin_ProjectManagement_completed = 'Completed';
 	$s_plugin_ProjectManagement_new_target = 'New target';
+
+	$s_plugin_ProjectManagement_project_without_versions = 'In order to view this page, you must select a project which contains versions.';
 ?>

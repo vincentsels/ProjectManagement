@@ -100,4 +100,6 @@
 	$s_plugin_ProjectManagement_owner = 'Eigenaar';
 	$s_plugin_ProjectManagement_completed = 'Opgeleverd';
 	$s_plugin_ProjectManagement_new_target = 'Nieuw target';
+
+	$s_plugin_ProjectManagement_project_without_versions = 'Om deze pagina te bekijken dient u een project met versies te selecteren.';
 ?>
