@@ -112,7 +112,9 @@ class ProjectManagementPlugin extends MantisPlugin {
 			'EVENT_FILTER_COLUMNS'		=> 'filter_columns',
 			'EVENT_LAYOUT_RESOURCES'	  => 'link_files',
 			'EVENT_UPDATE_BUG_FORM'	   => 'update_bug_form',
-			'EVENT_BUG_STATUS_UPDATE_FORM'	   => 'update_bug_form'
+			'EVENT_BUG_STATUS_UPDATE_FORM'	   => 'update_bug_form',
+			'EVENT_ACCOUNT_PREF_UPDATE_FORM' => 'view_resource',
+			'EVENT_ACCOUNT_PREF_UPDATE' => 'update_resource'
 		);
 	}
 
@@ -160,6 +162,54 @@ class ProjectManagementPlugin extends MantisPlugin {
 
 	function bug_set_recently_visited( $p_event, $p_bug_data, $p_bug_id ) {
 		recently_visited_bug_add( $p_bug_id );
+	}
+
+	function view_resource( $p_event, $p_user_id ) {
+		if ( access_has_global_level(  plugin_config_get( 'view_resource_management_threshold' ), null ) ) {
+			# Retrieve the data for this user
+			$t_user_table     = db_get_table( 'mantis_user_table' );
+			$t_resource_table = plugin_table( 'resource' );
+
+			$t_query      = "SELECT u.id, u.username, u.realname, u.access_level, r.hours_per_week, r.hourly_rate, r.color
+                   		       FROM $t_user_table u
+        			LEFT OUTER JOIN $t_resource_table r ON u.id = r.user_id
+                  			  WHERE u.id = $p_user_id";
+			$t_result     = db_query_bound( $t_query );
+			$t_row	      = db_fetch_array( $t_result );
+			?>
+			<tr><td class="form-title" colspan="2"><?php echo plugin_lang_get( "resource_management" ) ?></td></tr>
+			<tr <?php echo helper_alternate_class() ?>>
+				<td  class="category"><?php echo plugin_lang_get( 'hours_per_week' ) ?></td>
+				<td><input type="text" size="3" maxlength="2" name="hours_per_week_<?php echo $p_user_id?>"
+						   value="<?php echo $t_row['hours_per_week'] ?>"></td>
+			</tr>
+			<tr <?php echo helper_alternate_class() ?>>
+				<td  class="category"><?php echo plugin_lang_get( 'hourly_rate' ) ?></td>
+				<td><input type="text" size="3" maxlength="6" name="hourly_rate_<?php echo $p_user_id?>"
+						   value="<?php echo $t_row['hourly_rate'] ?>"></td>
+			</tr>
+			<tr <?php echo helper_alternate_class() ?>>
+				<td  class="category"><?php echo plugin_lang_get( 'color' ) ?></td>
+				<td>
+					<select name="color_<?php echo $p_user_id?>">
+						<?php print_color_option_list( $t_row['color'] ) ?>
+					</select>
+				</td>
+			</tr>
+			<?php
+		}
+	}
+
+	function update_resource( $p_event, $p_user_id ) {
+		if ( access_has_global_level(  plugin_config_get( 'view_resource_management_threshold' ), null ) ) {
+			$f_hourly_rate    = parse_float( gpc_get_string( 'hourly_rate_' . $p_user_id, null ) );
+			$f_hours_per_week = gpc_get_int( 'hours_per_week_' . $p_user_id, null );
+			$f_color          = gpc_get_int( 'color_' . $p_user_id, null );
+
+			if ( !empty( $f_hourly_rate ) || !empty( $f_hours_per_week ) || !empty( $f_color ) ) {
+				resource_insert_or_update( $p_user_id, $f_hourly_rate, $f_hours_per_week, $f_color );
+			}
+		}
 	}
 
 	/**
