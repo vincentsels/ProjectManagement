@@ -7,6 +7,13 @@
 
 Project Management is a plugin for the open source [MantisBT](http://www.mantisbt.org) tool (also check out its [Github](https://github.com/mantisbt) page). This plugin attempts to add basic project management features such as estimations, timetracking, project follow-up, and resource management to the existing bugtracking functionality.
 
+## Important notice - compatibility issues
+
+Version 1.1 and up of this plugin will not run on an unmodified Mantis installation. In order for the plugin to run,
+two modifications have to be made. For more information, check [this Mantis issue](http://www.mantisbt.org/bugs/view.php?id=14329).
+If I find the time, I'll try to come up with a workaround for this problem and get the plugin to run on a default Mantis installation again.
+(or feel free to fork this repo and come up with a solution! ;) )
+
 ## Features
 
 ### Advanced time registration
@@ -35,14 +42,10 @@ Project Management is a plugin for the open source [MantisBT](http://www.mantisb
   * A visual representation of how much work a certain project / category is compared to the rest of the work for that version
   * A visual representation of how far the developer(s) have progressed, based on their estimations when supplied.
   * Optionally assign individual colors to developers.
-* See when a certain developer will finish his or her work on a certain project *(work in progress)*.
-* Switch between a per-project view or a per-resource view *(work in progress)*
 
 ### Resource management
 
 * For each user, optionally specify the amount of hours per week and hourly cost, default type of work,...
-
-## Upcoming features
 
 ### Customer management
 
@@ -51,11 +54,14 @@ Project Management is a plugin for the open source [MantisBT](http://www.mantisb
 * Divide the total billable cost among all participating customers, optionally in proportion to the customer size.
 * Allow certain customers to be able to approve of tickets simply as a notion, or in order to be able to assign them.
 
-### Prioritizing features
+## Upcoming features
 
-* Give issues a weight, based on configurable parameters.
-* Set dependencies for tickets.
-* Based on these and/or other parameters, view the order in which tickets should be handled.
+### Per-resource Gantt chart
+
+* In addition to the amount of hours per week, also add support to enter non-working days per resource.
+* A Gantt chart that lists all work items per resource, shows the progress and expected completion date.
+* Play around with expected 'availability' of each resource, expressed as a percentage of their available time,
+to discover a realistic date of when this developer's work will be finished.
 
 ### Resource overviews
 
