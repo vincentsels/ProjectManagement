@@ -170,47 +170,52 @@ class ProjectManagementPlugin extends MantisPlugin {
 		if ( access_has_bug_level( plugin_config_get( 'enable_customer_payment_threshold' ), $p_bug_id ) ||
 			access_has_bug_level( plugin_config_get( 'enable_customer_approval_threshold' ), $p_bug_id )
 		) {
-			$t_customers = customer_get_all();
-			$t_data      = array();
-			foreach ( $t_customers as $t_cust ) {
-				$t_data[PLUGIN_PM_CUST_PAYING][$t_cust['id']]    =
-					gpc_get_bool( $p_bug_id . '_' . PLUGIN_PM_CUST_PAYING . '_' . $t_cust['id'], false );
-				$t_data[PLUGIN_PM_CUST_APPROVING][$t_cust['id']] =
-					gpc_get_bool( $p_bug_id . '_' . PLUGIN_PM_CUST_APPROVING . '_' . $t_cust['id'], false );
-			}
-			# Add possible 'all customers'
-			$t_data[PLUGIN_PM_CUST_PAYING][PLUGIN_PM_ALL_CUSTOMERS] =
-				gpc_get_bool( $p_bug_id . '_' . PLUGIN_PM_CUST_PAYING . '_' . PLUGIN_PM_ALL_CUSTOMERS, false );
+			# We need to check whether the page that triggered this event
+			# supplied customer data. The 'assign to' button doesn't, for instance.
+			$t_bug_customer_data_supplied = gpc_get_bool( 'bug_customer_supplied', false );
+			if ( $t_bug_customer_data_supplied ) {
+				$t_customers = customer_get_all();
+				$t_data      = array();
+				foreach ( $t_customers as $t_cust ) {
+					$t_data[PLUGIN_PM_CUST_PAYING][$t_cust['id']]    =
+						gpc_get_bool( $p_bug_id . '_' . PLUGIN_PM_CUST_PAYING . '_' . $t_cust['id'], false );
+					$t_data[PLUGIN_PM_CUST_APPROVING][$t_cust['id']] =
+						gpc_get_bool( $p_bug_id . '_' . PLUGIN_PM_CUST_APPROVING . '_' . $t_cust['id'], false );
+				}
+				# Add possible 'all customers'
+				$t_data[PLUGIN_PM_CUST_PAYING][PLUGIN_PM_ALL_CUSTOMERS] =
+					gpc_get_bool( $p_bug_id . '_' . PLUGIN_PM_CUST_PAYING . '_' . PLUGIN_PM_ALL_CUSTOMERS, false );
 
-			if ( access_has_bug_level( plugin_config_get( 'enable_customer_payment_threshold' ), $p_bug_id ) ) {
-				# In case customer payment is enabled, check to see whether at least one paying customer was selected
-				# Populate an array with the supplied data
-				$t_paying_string = '';
-				if ( count( $t_data[PLUGIN_PM_CUST_PAYING] ) > 0 ) {
-					foreach ( $t_data[PLUGIN_PM_CUST_PAYING] as $t_cust_id => $t_selected ) {
-						if ( $t_selected ) {
-							$t_paying_string .= PLUGIN_PM_CUST_CONCATENATION_CHAR . $t_cust_id;
+				if ( access_has_bug_level( plugin_config_get( 'enable_customer_payment_threshold' ), $p_bug_id ) ) {
+					# In case customer payment is enabled, check to see whether at least one paying customer was selected
+					# Populate an array with the supplied data
+					$t_paying_string = '';
+					if ( count( $t_data[PLUGIN_PM_CUST_PAYING] ) > 0 ) {
+						foreach ( $t_data[PLUGIN_PM_CUST_PAYING] as $t_cust_id => $t_selected ) {
+							if ( $t_selected ) {
+								$t_paying_string .= PLUGIN_PM_CUST_CONCATENATION_CHAR . $t_cust_id;
+							}
 						}
 					}
+					if ( empty( $t_paying_string ) ) {
+						# No customers selected, at least one is required.
+						error_parameters( plugin_lang_get( 'paying_customers' ) );
+						trigger_error( ERROR_EMPTY_FIELD, ERROR );
+					}
+					bug_customer_update_or_insert( $p_bug_id, $t_paying_string, PLUGIN_PM_CUST_PAYING );
 				}
-				if ( empty( $t_paying_string ) ) {
-					# No customers selected, at least one is required.
-					error_parameters( plugin_lang_get( 'paying_customers' ) );
-					trigger_error( ERROR_EMPTY_FIELD, ERROR );
-				}
-				bug_customer_update_or_insert( $p_bug_id, $t_paying_string, PLUGIN_PM_CUST_PAYING );
-			}
 
-			if ( access_has_bug_level( plugin_config_get( 'enable_customer_approval_threshold' ), $p_bug_id ) ) {
-				$t_approving_string = '';
-				if ( count( $t_data[PLUGIN_PM_CUST_APPROVING] ) > 0 ) {
-					foreach ( $t_data[PLUGIN_PM_CUST_APPROVING] as $t_cust_id => $t_selected ) {
-						if ( $t_selected && $t_customers[$t_cust_id]['can_approve'] == 1 ) {
-							$t_approving_string .= PLUGIN_PM_CUST_CONCATENATION_CHAR . $t_cust_id;
+				if ( access_has_bug_level( plugin_config_get( 'enable_customer_approval_threshold' ), $p_bug_id ) ) {
+					$t_approving_string = '';
+					if ( count( $t_data[PLUGIN_PM_CUST_APPROVING] ) > 0 ) {
+						foreach ( $t_data[PLUGIN_PM_CUST_APPROVING] as $t_cust_id => $t_selected ) {
+							if ( $t_selected && $t_customers[$t_cust_id]['can_approve'] == 1 ) {
+								$t_approving_string .= PLUGIN_PM_CUST_CONCATENATION_CHAR . $t_cust_id;
+							}
 						}
 					}
+					bug_customer_update_or_insert( $p_bug_id, $t_approving_string, PLUGIN_PM_CUST_APPROVING );
 				}
-				bug_customer_update_or_insert( $p_bug_id, $t_approving_string, PLUGIN_PM_CUST_APPROVING );
 			}
 		}
 
@@ -573,6 +578,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 
 			# Rather strange way to pass an array of bug id's with only the selected bug_id in it.
 			printf( "<input type=\"hidden\" name=\"bug_ids[]\" value=\"%d\" />", $p_bug_id );
+			echo '<input type="hidden" name="bug_customer_supplied" value="1">';
 			?>
 
 			<table class="width100" cellspacing="1">
@@ -834,6 +840,9 @@ class ProjectManagementPlugin extends MantisPlugin {
 
 	function update_bug_form( $p_event, $p_bug_id ) {
 		if ( access_has_bug_level( plugin_config_get( 'enable_customer_payment_threshold' ), $p_bug_id ) ) {
+
+			echo '<input type="hidden" name="bug_customer_supplied" value="1">';
+
 			?>
 		<tr <?php echo helper_alternate_class() ?>>
 			<td class="category">
