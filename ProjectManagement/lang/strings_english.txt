@@ -44,7 +44,7 @@
 	$s_plugin_ProjectManagement_edit_estimates_threshold_info = 'Once a starting estimation was supplied for a certain ticket and type of work, it can no longer by modified unless with this permission.';
 	
 	$s_plugin_ProjectManagement_include_bookdate_threshold = 'Include bookdate threshold';
-	$s_plugin_ProjectManagement_include_bookdate_threshold_info = 'Allows users with this security profile or higher to include a different book date when registring hours worked.';
+	$s_plugin_ProjectManagement_include_bookdate_threshold_info = 'Allows users with this security profile or higher to include a different book date when registering hours worked.';
 		
 	$s_plugin_ProjectManagement_work_type_thresholds = 'Thresholds for types of work';
 	$s_plugin_ProjectManagement_work_type_thresholds_info = 'Users with an access level lower than the one specified can\'t see or modify the specified type of work.<br><b>Syntax</b>: array ( val => ACCLEVEL[, val2 => ACCLEVEL2,...] )<br><b>Example</b>: array ( 20 => REPORTER, 50 => DEVELOPER )';

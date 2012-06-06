@@ -65,8 +65,11 @@ if ( $t_project_without_versions ) {
 		$t_release_date_previous_array  = db_fetch_array( $t_result_release_date_previous );
 		$t_release_date_previous        = $t_release_date_previous_array ? $t_release_date_previous_array['date_order'] : time();
 
-		# due date is a required field, a value of 1 means no due date
-		$t_query .= " OR b.due_date BETWEEN $t_release_date_previous AND $t_release_date_target ";
+		# It must have been possible to determine both dates in order for this clause to work
+		if ( !empty( $t_release_date_target ) && !empty( $t_release_date_previous ) ) {
+			# due date is a required field, a value of 1 means no due date
+			$t_query .= " OR b.due_date BETWEEN $t_release_date_previous AND $t_release_date_target ";
+		}
 	}
 
 	$t_query .= ")";
