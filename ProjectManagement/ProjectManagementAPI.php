@@ -581,13 +581,13 @@ function resource_insert_or_update( $p_user_id, $p_hourly_rate, $p_hours_per_wee
 						      FROM $t_resource_table
 							 WHERE user_id = $p_user_id";
 	$t_result_old_row = db_query_bound( $t_query_old_row );
-	$t_old_row;
+	$t_old_row = null;
 
 	if ( db_num_rows( $t_result_old_row ) == 1 ) {
 		$t_old_row = db_fetch_array( $t_result_old_row );
 	}
 
-	if ( !isset( $t_old_row ) ) {
+	if ( is_null( $t_old_row ) ) {
 		$t_query_insert = "INSERT INTO $t_resource_table(user_id, hourly_rate, hours_per_week, color)
 			VALUES ($p_user_id, $p_hourly_rate, $p_hours_per_week, $p_color)";
 		db_query_bound( $t_query_insert );
@@ -612,6 +612,13 @@ function resource_insert_or_update( $p_user_id, $p_hourly_rate, $p_hours_per_wee
 			implode( ', ', $t_query_update_set_clause ) .
 			$t_query_update_where_clause );
 	}
+}
+
+function resource_unavailability_period_add( $p_user_id, $p_start_date, $p_end_date, $p_type, $p_note ) {
+	$t_res_unavailable_tab = plugin_table( 'resource_unavailable' );
+	$t_query_insert = "INSERT INTO $t_res_unavailable_tab(user_id, start_date, end_date, type, note)
+		VALUES ($p_user_id, $p_start_date, $p_end_date, $p_type, '$p_note')";
+	db_query_bound( $t_query_insert );
 }
 
 ?>

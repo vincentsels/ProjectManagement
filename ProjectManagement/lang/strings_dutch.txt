@@ -102,4 +102,14 @@
 	$s_plugin_ProjectManagement_new_target = 'Nieuw target';
 
 	$s_plugin_ProjectManagement_project_without_versions = 'Om deze pagina te bekijken dient u een project met versies te selecteren.';
+
+	$s_plugin_ProjectManagement_unavailability = 'Onbeschikbaarheid';
+	$s_plugin_ProjectManagement_unavailability_add_new = 'Nieuwe periode van onbeschikbaarheid toevoegen';
+	$s_plugin_ProjectManagement_unavailability_overview = 'Overzicht van periodes van onbeschikbaarheid';
+	$s_plugin_ProjectManagement_unavailability_remove = 'Periode van onbeschikbaarheid verwijderen';
+	$s_plugin_ProjectManagement_unavailability_period = 'Periode';
+	$s_plugin_ProjectManagement_unavailability_type = 'Type';
+	$s_plugin_ProjectManagement_unavailability_note = 'Notitie';
+
+	$s_plugin_ProjectManagement_error_enddate_before_startdate = 'Einddatum moet na startdatum liggen.';
 ?>

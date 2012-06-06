@@ -7,7 +7,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 		$this->description = 'Project management plugin that adds advanced functionality for timetracking, estimations, reporting,...';
 		$this->page        = 'config_page';
 
-		$this->version  = '1.2.0';
+		$this->version  = '1.3.0';
 		$this->requires = array(
 			'MantisCore' => '1.2.0'
 		);
@@ -62,6 +62,13 @@ class ProjectManagementPlugin extends MantisPlugin {
 						work_type          I2      NOTNULL DEFAULT 50,
 						target_date        I	   NOTNULL UNSIGNED,
 						completed_date     I	   UNSIGNED
+						" ) ),
+			array( 'CreateTableSQL', array( plugin_table( 'resource_unavailable' ), "
+						user_id            I       NOTNULL UNSIGNED PRIMARY,
+						start_date  	   I	   NOTNULL UNSIGNED PRIMARY,
+						end_date  	  	   I	   NOTNULL UNSIGNED,
+						type			   I2	   NOTNULL UNSIGNED DEFAULT 10,
+						note	           C(64)
 						" ) )
 		);
 	}
@@ -97,7 +104,9 @@ class ProjectManagementPlugin extends MantisPlugin {
 			'default_owner'							  => array( 20 => REPORTER,
 																   50 => DEVELOPER,
 																   80 => REPORTER ),
-			'edit_targets_threshold'					 => DEVELOPER
+			'edit_targets_threshold'					 => DEVELOPER,
+			'unavailability_types'	                     => '10:unspecified,20:unavailable,30:out of office,40:appointment,50:private appointment,60:vacation,70:administration,80:service desk,90:other',
+			'default_unavailability_type'				 => 10
 		);
 	}
 
@@ -165,6 +174,44 @@ class ProjectManagementPlugin extends MantisPlugin {
 	}
 
 	function view_resource( $p_event, $p_user_id ) {
+		# Periods of unavailability
+		?>
+		<tr><td class="form-title" colspan="2"><?php echo plugin_lang_get( "unavailability" ) ?></td></tr>
+		<tr <?php echo helper_alternate_class() ?>>
+			<td  class="category"><?php echo plugin_lang_get( 'unavailability_add_new' ) ?></td>
+			<td>
+				<?php echo plugin_lang_get( 'unavailability_period' ) ?>:
+				<input type="text" size="8" maxlength="10" autocomplete="off" id="period_start" name="period_start">
+				<?php
+				date_print_calendar( 'period_start_cal' );
+				date_finish_calendar( 'period_start', 'period_start_cal' );
+				?>-
+				<input type="text" size="8" maxlength="10" autocomplete="off" id="period_end" name="period_end">
+				<?php
+				date_print_calendar( 'period_end_cal' );
+				date_finish_calendar( 'period_end', 'period_end_cal' );
+				?><br />
+				<?php echo plugin_lang_get( 'unavailability_type' ) ?>:
+				<select name="unavailability_type">
+					<?php print_plugin_enum_string_option_list( 'unavailability_types', plugin_config_get( 'default_unavailability_type' ) ) ?>
+				</select><br />
+				<?php echo plugin_lang_get( 'unavailability_note' ) ?>:
+				<input type="text" size="20" maxlength="64" autocomplete="off" id="unavailability_note" name="unavailability_note">
+			</td>
+		</tr>
+		<tr <?php echo helper_alternate_class() ?>>
+			<td  class="category"><?php echo plugin_lang_get( 'unavailability_overview' ) ?></td>
+			<td>
+				<form name="unavailability_remove" method="post" action="<?php echo plugin_page( 'resource_unavailable_remove' ) ?>">
+					<select name="unavailability_remove">
+						<?php print_plugin_enum_string_option_list( 'unavailability_types', plugin_config_get( 'default_unavailability_type' ) ) ?>
+					</select>
+					<input type="submit" value="<?php echo plugin_lang_get('unavailability_remove') ?>">
+				</form>
+			</td>
+		</tr>
+		<br />
+		<?php
 		if ( access_has_global_level(  plugin_config_get( 'view_resource_management_threshold' ), null ) ) {
 			# Retrieve the data for this user
 			$t_user_table     = db_get_table( 'mantis_user_table' );
@@ -177,25 +224,25 @@ class ProjectManagementPlugin extends MantisPlugin {
 			$t_result     = db_query_bound( $t_query );
 			$t_row	      = db_fetch_array( $t_result );
 			?>
-			<tr><td class="form-title" colspan="2"><?php echo plugin_lang_get( "resource_management" ) ?></td></tr>
-			<tr <?php echo helper_alternate_class() ?>>
-				<td  class="category"><?php echo plugin_lang_get( 'hours_per_week' ) ?></td>
-				<td><input type="text" size="3" maxlength="2" name="hours_per_week_<?php echo $p_user_id?>"
-						   value="<?php echo $t_row['hours_per_week'] ?>"></td>
-			</tr>
-			<tr <?php echo helper_alternate_class() ?>>
-				<td  class="category"><?php echo plugin_lang_get( 'hourly_rate' ) ?></td>
-				<td><input type="text" size="3" maxlength="6" name="hourly_rate_<?php echo $p_user_id?>"
-						   value="<?php echo $t_row['hourly_rate'] ?>"></td>
-			</tr>
-			<tr <?php echo helper_alternate_class() ?>>
-				<td  class="category"><?php echo plugin_lang_get( 'color' ) ?></td>
-				<td>
-					<select name="color_<?php echo $p_user_id?>">
-						<?php print_color_option_list( $t_row['color'] ) ?>
-					</select>
-				</td>
-			</tr>
+		<tr><td class="form-title" colspan="2"><?php echo plugin_lang_get( "resource_management" ) ?></td></tr>
+		<tr <?php echo helper_alternate_class() ?>>
+			<td  class="category" width="25%"><?php echo plugin_lang_get( 'hours_per_week' ) ?></td>
+			<td><input type="text" size="3" maxlength="2" name="hours_per_week_<?php echo $p_user_id?>"
+					   value="<?php echo $t_row['hours_per_week'] ?>"></td>
+		</tr>
+		<tr <?php echo helper_alternate_class() ?>>
+			<td  class="category"><?php echo plugin_lang_get( 'hourly_rate' ) ?></td>
+			<td><input type="text" size="3" maxlength="6" name="hourly_rate_<?php echo $p_user_id?>"
+					   value="<?php echo $t_row['hourly_rate'] ?>"></td>
+		</tr>
+		<tr <?php echo helper_alternate_class() ?>>
+			<td  class="category"><?php echo plugin_lang_get( 'color' ) ?></td>
+			<td>
+				<select name="color_<?php echo $p_user_id?>">
+					<?php print_color_option_list( $t_row['color'] ) ?>
+				</select>
+			</td>
+		</tr>
 			<?php
 		}
 	}
@@ -209,6 +256,31 @@ class ProjectManagementPlugin extends MantisPlugin {
 			if ( !empty( $f_hourly_rate ) || !empty( $f_hours_per_week ) || !empty( $f_color ) ) {
 				resource_insert_or_update( $p_user_id, $f_hourly_rate, $f_hours_per_week, $f_color );
 			}
+		}
+
+		# Check for new period of unavailability
+		$f_unavailable_start = strtotime( str_replace( '/', '-', gpc_get_string( 'period_start', false ) ) );
+		$f_unavailable_end = strtotime( str_replace( '/', '-', gpc_get_string( 'period_end', false ) ) );
+		$f_unavailable_type = gpc_get_int( 'unavailability_type', null );
+		$f_unavailable_note = gpc_get_string( 'unavailability_note', null );
+
+		if ( $f_unavailable_start ) {
+			# A period has been entered
+			if ( empty( $f_unavailable_end ) ) {
+				# Assume a period of one day
+				$f_unavailable_end = $f_unavailable_start;
+			} else if ( $f_unavailable_end < $f_unavailable_start ) {
+				trigger_error( plugin_lang_get( 'error_enddate_before_startdate' ), E_USER_ERROR );
+			}
+
+			# Availability type is required
+			if ( is_null( $f_unavailable_type ) ) {
+				error_parameters( plugin_lang_get( 'unavailability_type' ) );
+				trigger_error( ERROR_EMPTY_FIELD, ERROR );
+			}
+
+			resource_unavailability_period_add( $p_user_id, $f_unavailable_start, $f_unavailable_end,
+				$f_unavailable_type, $f_unavailable_note );
 		}
 	}
 

@@ -102,4 +102,14 @@
 	$s_plugin_ProjectManagement_new_target = 'New target';
 
 	$s_plugin_ProjectManagement_project_without_versions = 'In order to view this page, you must select a project which contains versions.';
+
+	$s_plugin_ProjectManagement_unavailability = 'Unavailability';
+	$s_plugin_ProjectManagement_unavailability_add_new = 'Add new period of unavailability';
+	$s_plugin_ProjectManagement_unavailability_overview = 'Overview of periods of unavailability';
+	$s_plugin_ProjectManagement_unavailability_remove = 'Remove period of unavailability';
+	$s_plugin_ProjectManagement_unavailability_period = 'Period';
+	$s_plugin_ProjectManagement_unavailability_type = 'Type';
+	$s_plugin_ProjectManagement_unavailability_note = 'Note';
+
+	$s_plugin_ProjectManagement_error_enddate_before_startdate = 'Enddate must be later than startdate.';
 ?>
