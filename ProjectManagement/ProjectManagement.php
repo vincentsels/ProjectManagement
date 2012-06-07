@@ -174,7 +174,6 @@ class ProjectManagementPlugin extends MantisPlugin {
 	}
 
 	function view_resource( $p_event, $p_user_id ) {
-		# Periods of unavailability
 		?>
 		<tr><td class="form-title" colspan="2"><?php echo plugin_lang_get( "unavailability" ) ?></td></tr>
 		<tr <?php echo helper_alternate_class() ?>>
@@ -196,24 +195,25 @@ class ProjectManagementPlugin extends MantisPlugin {
 					<?php print_plugin_enum_string_option_list( 'unavailability_types', plugin_config_get( 'default_unavailability_type' ) ) ?>
 				</select><br />
 				<?php echo plugin_lang_get( 'unavailability_note' ) ?>:
-				<input type="text" size="20" maxlength="64" autocomplete="off" id="unavailability_note" name="unavailability_note">
+				<input type="text" size="30" maxlength="64" autocomplete="off" id="unavailability_note" name="unavailability_note">
+				<br />
+				<input type="submit" name="add_clicked" value="<?php echo plugin_lang_get('unavailability_add_new') ?>">
 			</td>
 		</tr>
 		<tr <?php echo helper_alternate_class() ?>>
 			<td  class="category"><?php echo plugin_lang_get( 'unavailability_overview' ) ?></td>
 			<td>
-				<form name="unavailability_remove" method="post" action="<?php echo plugin_page( 'resource_unavailable_remove' ) ?>">
-					<select name="unavailability_remove">
-						<?php print_plugin_enum_string_option_list( 'unavailability_types', plugin_config_get( 'default_unavailability_type' ) ) ?>
-					</select>
-					<input type="submit" value="<?php echo plugin_lang_get('unavailability_remove') ?>">
-				</form>
+				<select name="unavailability_remove">
+					<?php print_resource_unavailability_list( $p_user_id ) ?>
+				</select>
+				<input type="hidden" name="user_id" value="<?php echo $p_user_id ?>">
+				<br />
+				<input type="submit" name="remove_clicked" value="<?php echo plugin_lang_get('unavailability_remove') ?>">
 			</td>
 		</tr>
 		<br />
 		<?php
 		if ( access_has_global_level(  plugin_config_get( 'view_resource_management_threshold' ), null ) ) {
-			# Retrieve the data for this user
 			$t_user_table     = db_get_table( 'mantis_user_table' );
 			$t_resource_table = plugin_table( 'resource' );
 
@@ -248,39 +248,70 @@ class ProjectManagementPlugin extends MantisPlugin {
 	}
 
 	function update_resource( $p_event, $p_user_id ) {
-		if ( access_has_global_level(  plugin_config_get( 'view_resource_management_threshold' ), null ) ) {
-			$f_hourly_rate    = parse_float( gpc_get_string( 'hourly_rate_' . $p_user_id, null ) );
-			$f_hours_per_week = gpc_get_int( 'hours_per_week_' . $p_user_id, null );
-			$f_color          = gpc_get_int( 'color_' . $p_user_id, null );
+		# First determine whether the 'remove period'
+		$f_remove_period_clicked = isset( $_GET['remove_clicked'] );
+		if ( $f_remove_period_clicked ) {
+			$f_user_id = gpc_get_int( 'user_id', null );
+			$f_start_date = strtotime( str_replace( '/', '-', gpc_get_string( 'unavailability_remove', date( 'd/m/Y' ) ) ) );
 
-			if ( !empty( $f_hourly_rate ) || !empty( $f_hours_per_week ) || !empty( $f_color ) ) {
-				resource_insert_or_update( $p_user_id, $f_hourly_rate, $f_hours_per_week, $f_color );
-			}
-		}
-
-		# Check for new period of unavailability
-		$f_unavailable_start = strtotime( str_replace( '/', '-', gpc_get_string( 'period_start', false ) ) );
-		$f_unavailable_end = strtotime( str_replace( '/', '-', gpc_get_string( 'period_end', false ) ) );
-		$f_unavailable_type = gpc_get_int( 'unavailability_type', null );
-		$f_unavailable_note = gpc_get_string( 'unavailability_note', null );
-
-		if ( $f_unavailable_start ) {
-			# A period has been entered
-			if ( empty( $f_unavailable_end ) ) {
-				# Assume a period of one day
-				$f_unavailable_end = $f_unavailable_start;
-			} else if ( $f_unavailable_end < $f_unavailable_start ) {
-				trigger_error( plugin_lang_get( 'error_enddate_before_startdate' ), E_USER_ERROR );
-			}
-
-			# Availability type is required
-			if ( is_null( $f_unavailable_type ) ) {
-				error_parameters( plugin_lang_get( 'unavailability_type' ) );
+			if ( is_null( $f_start_date ) ) {
+				error_parameters( plugin_lang_get( 'unavailability_period' ) );
 				trigger_error( ERROR_EMPTY_FIELD, ERROR );
 			}
 
-			resource_unavailability_period_add( $p_user_id, $f_unavailable_start, $f_unavailable_end,
-				$f_unavailable_type, $f_unavailable_note );
+			$t_from_preferences_page = false;
+			if ( is_null( $f_user_id ) ) {
+				$t_from_preferences_page = true;
+			}
+
+			$t_table = plugin_table( 'resource_unavailable' );
+			$t_query = "DELETE FROM $t_table WHERE user_id = $f_user_id AND start_date = $f_start_date";
+			db_query_bound( $t_query );
+
+			log_event( LOG_FILTERING, $t_query );
+
+			if ( $t_from_preferences_page ) {
+				print_successful_redirect( 'account_prefs_page.php' );
+			} else {
+				print_successful_redirect( 'manage_user_edit_page.php?user_id=' . $f_user_id );
+			}
+		} else {
+			# Either the regular 'update' or the 'add period' button was clicked.
+			# Either way, execute the regular logic.
+			if ( access_has_global_level(  plugin_config_get( 'view_resource_management_threshold' ), null ) ) {
+				$f_hourly_rate    = parse_float( gpc_get_string( 'hourly_rate_' . $p_user_id, null ) );
+				$f_hours_per_week = gpc_get_int( 'hours_per_week_' . $p_user_id, null );
+				$f_color          = gpc_get_int( 'color_' . $p_user_id, null );
+
+				if ( !empty( $f_hourly_rate ) || !empty( $f_hours_per_week ) || !empty( $f_color ) ) {
+					resource_insert_or_update( $p_user_id, $f_hourly_rate, $f_hours_per_week, $f_color );
+				}
+			}
+
+			# Check for new period of unavailability
+			$f_unavailable_start = strtotime( str_replace( '/', '-', gpc_get_string( 'period_start', false ) ) );
+			$f_unavailable_end = strtotime( str_replace( '/', '-', gpc_get_string( 'period_end', false ) ) );
+			$f_unavailable_type = gpc_get_int( 'unavailability_type', null );
+			$f_unavailable_note = gpc_get_string( 'unavailability_note', null );
+
+			if ( $f_unavailable_start ) {
+				# A period has been entered
+				if ( empty( $f_unavailable_end ) ) {
+					# Assume a period of one day
+					$f_unavailable_end = $f_unavailable_start;
+				} else if ( $f_unavailable_end < $f_unavailable_start ) {
+					trigger_error( plugin_lang_get( 'error_enddate_before_startdate' ), E_USER_ERROR );
+				}
+
+				# Availability type is required
+				if ( is_null( $f_unavailable_type ) ) {
+					error_parameters( plugin_lang_get( 'unavailability_type' ) );
+					trigger_error( ERROR_EMPTY_FIELD, ERROR );
+				}
+
+				resource_unavailability_period_add( $p_user_id, $f_unavailable_start, $f_unavailable_end,
+					$f_unavailable_type, $f_unavailable_note );
+			}
 		}
 	}
 

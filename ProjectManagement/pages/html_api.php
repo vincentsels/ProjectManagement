@@ -154,4 +154,28 @@ function print_customer_list( $p_bug_id = null, $p_type = PLUGIN_PM_CUST_PAYING,
 	}
 }
 
+function print_resource_unavailability_list( $p_user_id ) {
+	$t_table  = plugin_table( 'resource_unavailable' );
+	$t_query  = "SELECT start_date, end_date, type, note
+				   FROM $t_table
+				  WHERE user_id = $p_user_id";
+	$t_result = db_query_bound( $t_query );
+
+	# First print an empty entry to avoid accidental deletion!
+	echo '<option value="" selected="selected"></option>';
+
+	$t_config_var_value = plugin_config_get( 'unavailability_types' );
+	$t_enum_values      = MantisEnum::getAssocArrayIndexedByValues( $t_config_var_value );
+	while ( $t_row = db_fetch_array( $t_result ) ) {
+		$t_period_string =
+			date( config_get( 'short_date_format' ), $t_row["start_date"] ) . ' - ' .
+			date( config_get( 'short_date_format' ), $t_row["end_date"] ) . ': ' .
+			$t_enum_values[$t_row["type"]];
+		if ( !empty( $t_row['note'] ) ) {
+			$t_period_string .= ' (' . $t_row['note'] . ')';
+		}
+		echo '<option value="' . $t_row['start_date'] . '">' . $t_period_string . '</option>';
+	}
+}
+
 ?>
