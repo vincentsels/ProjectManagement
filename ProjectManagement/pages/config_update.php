@@ -21,7 +21,7 @@ maybe_set_option( 'enable_time_registration_threshold', gpc_get_int( 'enable_tim
 maybe_set_option( 'view_registration_worksheet_threshold', gpc_get_int( 'view_registration_worksheet_threshold' ) );
 maybe_set_option( 'view_registration_report_threshold', gpc_get_int( 'view_registration_report_threshold' ) );
 maybe_set_option( 'view_resource_management_threshold', gpc_get_int( 'view_resource_management_threshold' ) );
-maybe_set_option( 'view_resource_allocation_threshold', gpc_get_int( 'view_resource_allocation_threshold' ) );
+maybe_set_option( 'view_project_progress_threshold', gpc_get_int( 'view_project_progress_threshold' ) );
 maybe_set_option( 'admin_threshold', gpc_get_int( 'admin_threshold' ) );
 maybe_set_option( 'decimal_separator', gpc_get_string( 'decimal_separator' ) );
 maybe_set_option( 'thousand_separator', gpc_get_string( 'thousand_separator' ) );

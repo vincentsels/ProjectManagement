@@ -89,9 +89,9 @@ print_pm_config_menu( 'config_page' );
 			</td>
 		</tr>
 		<tr <?php echo helper_alternate_class() ?>>
-			<td class="category"><?php echo plugin_lang_get( 'view_resource_allocation_threshold' ) ?></td>
+			<td class="category"><?php echo plugin_lang_get( 'view_project_progress_threshold' ) ?></td>
 			<td><select
-				name="view_resource_allocation_threshold"><?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'view_resource_allocation_threshold' ) ) ?></select>
+				name="view_project_progress_threshold"><?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'view_project_progress_threshold' ) ) ?></select>
 			</td>
 		</tr>
 		<tr <?php echo helper_alternate_class() ?>>

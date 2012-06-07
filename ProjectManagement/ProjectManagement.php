@@ -83,7 +83,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 			'view_registration_worksheet_threshold'	  => DEVELOPER,
 			'view_registration_report_threshold'		 => DEVELOPER,
 			'view_resource_management_threshold'		 => MANAGER,
-			'view_resource_allocation_threshold'		 => DEVELOPER,
+			'view_project_progress_threshold'		 => DEVELOPER,
 			'admin_threshold'							=> ADMINISTRATOR,
 			'work_type_thresholds'					   => array( 50 => DEVELOPER ),
 			'default_worktype'						   => 50,
@@ -161,7 +161,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 			$t_reports_page = plugin_page( 'time_registration_page', false );
 		} else if ( access_has_global_level( plugin_config_get( 'view_resource_management_threshold' ) ) ) {
 			$t_reports_page = plugin_page( 'time_registration_page', false );
-		} else if ( access_has_global_level( plugin_config_get( 'view_resource_allocation_threshold' ) ) ) {
+		} else if ( access_has_global_level( plugin_config_get( 'view_project_progress_threshold' ) ) ) {
 			$t_reports_page = plugin_page( 'time_registration_page', false );
 		}
 		if ( isset( $t_reports_page ) ) {

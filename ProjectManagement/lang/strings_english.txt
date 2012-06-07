@@ -17,7 +17,7 @@
 	$s_plugin_ProjectManagement_time_registration = 'Time registration';
 	$s_plugin_ProjectManagement_time_registration_worksheet = 'Time registration worksheet';
 	$s_plugin_ProjectManagement_time_registration_overview = 'Time registration overview';
-	$s_plugin_ProjectManagement_resource_allocation = 'Resource allocation';
+	$s_plugin_ProjectManagement_project_progress = 'Project progress';
 	$s_plugin_ProjectManagement_resource_management = 'Resource management';
 	$s_plugin_ProjectManagement_period = 'Period';
 	$s_plugin_ProjectManagement_hours = 'Hours';
@@ -60,7 +60,7 @@
 	$s_plugin_ProjectManagement_view_time_registration_worksheet_threshold = 'View time registration worksheet threshold';
 	$s_plugin_ProjectManagement_view_report_registration_threshold = 'View time registration report threshold';
 	$s_plugin_ProjectManagement_view_resource_management_threshold = 'View resource management threshold';
-	$s_plugin_ProjectManagement_view_resource_allocation_threshold = 'View resource allocation threshold';
+	$s_plugin_ProjectManagement_view_project_progress_threshold = 'View resource allocation threshold';
 	$s_plugin_ProjectManagement_admin_threshold = 'Plugin administrator threshold';
 	
 	$s_plugin_ProjectManagement_decimal_separator = 'Decimal separator';

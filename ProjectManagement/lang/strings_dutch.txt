@@ -17,7 +17,7 @@
 	$s_plugin_ProjectManagement_time_registration = 'Tijdsregistratie';
 	$s_plugin_ProjectManagement_time_registration_worksheet = 'Tijdsregistratie werkblad';
 	$s_plugin_ProjectManagement_time_registration_overview = 'Tijdsregistratie overzicht';
-	$s_plugin_ProjectManagement_resource_allocation = 'Verdeling resources';
+	$s_plugin_ProjectManagement_project_progress = 'Opvolging projecten';
 	$s_plugin_ProjectManagement_resource_management = 'Beheer resources';
 	$s_plugin_ProjectManagement_period = 'Periode';
 	$s_plugin_ProjectManagement_hours = 'Uren';
@@ -60,7 +60,7 @@
 	$s_plugin_ProjectManagement_view_time_registration_worksheet_threshold = 'Drempel voor tijdsregistratie via worksheet';
 	$s_plugin_ProjectManagement_view_report_registration_threshold = 'Drempel voor tijdsregistratie rapportering';
 	$s_plugin_ProjectManagement_view_resource_management_threshold = 'Drempel voor beheer resources';
-	$s_plugin_ProjectManagement_view_resource_allocation_threshold = 'Drempel voor bekijken resource verdeling';
+	$s_plugin_ProjectManagement_view_project_progress_threshold = 'Drempel voor bekijken resource verdeling';
 	$s_plugin_ProjectManagement_admin_threshold = 'Drempel voor plugin admin';
 	
 	$s_plugin_ProjectManagement_decimal_separator = 'Decimaal scheidingsteken';

@@ -1,11 +1,11 @@
 <?php
 
-access_ensure_global_level( plugin_config_get( 'view_resource_allocation_threshold' ) );
+access_ensure_global_level( plugin_config_get( 'view_project_progress_threshold' ) );
 
 html_page_top1( plugin_lang_get( 'title' ) );
 html_page_top2();
 
-print_pm_reports_menu( 'resource_allocation_page' );
+print_pm_reports_menu( 'project_progress_page' );
 
 $f_target_version = gpc_get_string( 'target_version', null );
 $f_user_id        = gpc_get_int( 'user_id', ALL_USERS );
@@ -178,8 +178,8 @@ if ( $t_project_without_versions ) {
 		<table class="width100">
 			<tr>
 				<td class="center">
-					<form name="resource_allocation" method="post"
-						  action="<?php echo plugin_page( 'resource_allocation_page' ) ?>">
+					<form name="project_progress" method="post"
+						  action="<?php echo plugin_page( 'report_project_progress_page' ) ?>">
 						<?php echo lang_get( 'target_version' ), ': ' ?>
 						<select
 							name="target_version"><?php print_version_option_list( $f_target_version, null, VERSION_FUTURE, false, true ) ?></select>
