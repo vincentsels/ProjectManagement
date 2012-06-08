@@ -64,8 +64,9 @@ class ProjectManagementPlugin extends MantisPlugin {
 						completed_date     I	   UNSIGNED
 						" ) ),
 			array( 'CreateTableSQL', array( plugin_table( 'resource_unavailable' ), "
-						user_id            I       NOTNULL UNSIGNED PRIMARY,
-						start_date  	   I	   NOTNULL UNSIGNED PRIMARY,
+						id           	   I       NOTNULL UNSIGNED AUTOINCREMENT PRIMARY,
+						user_id            I       NOTNULL UNSIGNED,
+						start_date  	   I	   NOTNULL UNSIGNED,
 						end_date  	  	   I	   NOTNULL UNSIGNED,
 						type			   I2	   NOTNULL UNSIGNED DEFAULT 10,
 						note	           C(64)
@@ -206,7 +207,6 @@ class ProjectManagementPlugin extends MantisPlugin {
 				<select name="unavailability_remove">
 					<?php print_resource_unavailability_list( $p_user_id ) ?>
 				</select>
-				<input type="hidden" name="user_id" value="<?php echo $p_user_id ?>">
 				<br />
 				<input type="submit" name="remove_clicked" value="<?php echo plugin_lang_get('unavailability_remove') ?>">
 			</td>
@@ -248,33 +248,14 @@ class ProjectManagementPlugin extends MantisPlugin {
 	}
 
 	function update_resource( $p_event, $p_user_id ) {
-		# First determine whether the 'remove period'
-		$f_remove_period_clicked = isset( $_GET['remove_clicked'] );
+		# First determine whether the 'remove period' was clicked
+		$f_remove_period_clicked = isset( $_POST['remove_clicked'] );
 		if ( $f_remove_period_clicked ) {
-			$f_user_id = gpc_get_int( 'user_id', null );
-			$f_start_date = strtotime( str_replace( '/', '-', gpc_get_string( 'unavailability_remove', date( 'd/m/Y' ) ) ) );
-
-			if ( is_null( $f_start_date ) ) {
-				error_parameters( plugin_lang_get( 'unavailability_period' ) );
-				trigger_error( ERROR_EMPTY_FIELD, ERROR );
-			}
-
-			$t_from_preferences_page = false;
-			if ( is_null( $f_user_id ) ) {
-				$t_from_preferences_page = true;
-			}
+			$f_id = gpc_get_int( 'unavailability_remove', null );
 
 			$t_table = plugin_table( 'resource_unavailable' );
-			$t_query = "DELETE FROM $t_table WHERE user_id = $f_user_id AND start_date = $f_start_date";
+			$t_query = "DELETE FROM $t_table WHERE id = $f_id";
 			db_query_bound( $t_query );
-
-			log_event( LOG_FILTERING, $t_query );
-
-			if ( $t_from_preferences_page ) {
-				print_successful_redirect( 'account_prefs_page.php' );
-			} else {
-				print_successful_redirect( 'manage_user_edit_page.php?user_id=' . $f_user_id );
-			}
 		} else {
 			# Either the regular 'update' or the 'add period' button was clicked.
 			# Either way, execute the regular logic.

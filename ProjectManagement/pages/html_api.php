@@ -156,7 +156,7 @@ function print_customer_list( $p_bug_id = null, $p_type = PLUGIN_PM_CUST_PAYING,
 
 function print_resource_unavailability_list( $p_user_id ) {
 	$t_table  = plugin_table( 'resource_unavailable' );
-	$t_query  = "SELECT start_date, end_date, type, note
+	$t_query  = "SELECT id, start_date, end_date, type, note
 				   FROM $t_table
 				  WHERE user_id = $p_user_id";
 	$t_result = db_query_bound( $t_query );
@@ -174,7 +174,7 @@ function print_resource_unavailability_list( $p_user_id ) {
 		if ( !empty( $t_row['note'] ) ) {
 			$t_period_string .= ' (' . $t_row['note'] . ')';
 		}
-		echo '<option value="' . $t_row['start_date'] . '">' . $t_period_string . '</option>';
+		echo '<option value="' . $t_row['id'] . '">' . $t_period_string . '</option>';
 	}
 }
 
