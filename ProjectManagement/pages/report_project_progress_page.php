@@ -32,55 +32,7 @@ if ( is_null( $f_target_version ) ) {
 if ( $t_project_without_versions ) {
 	echo plugin_lang_get( 'project_without_versions' );
 } else {
-	$t_bug_table             = db_get_table( 'mantis_bug_table' );
-	$t_project_table         = db_get_table( 'mantis_project_table' );
-	$t_category_table        = db_get_table( 'mantis_category_table' );
-	$t_hierarchy_table       = db_get_table( 'mantis_project_hierarchy_table' );
-	$t_project_version_table = db_get_table( 'mantis_project_version_table' );
-	$t_work_table            = plugin_table( 'work' );
-
-	$t_query = "SELECT pp.name as parent_project, pc.name as project_name, c.name as category_name, b.id, b.handler_id, w.work_type, w.minutes_type, sum(w.minutes) as minutes
-				  FROM $t_bug_table b
-				  JOIN $t_project_table pc ON b.project_id = pc.id
-				  JOIN $t_category_table c ON b.category_id = c.id
-				  LEFT OUTER JOIN $t_hierarchy_table h ON pc.id = h.child_id
-				  LEFT OUTER JOIN $t_project_table pp ON h.parent_id = pp.id
-				  LEFT OUTER JOIN $t_work_table w ON b.id = w.bug_id
-				 WHERE (b.target_version = '$f_target_version'";
-
-	if ( ON == plugin_config_get( 'include_bugs_with_deadline' ) ) {
-		# First get the release date of the currently targeted version
-		$t_query_release_date_target  = "SELECT date_order
-										   FROM $t_project_version_table v
-										  WHERE v.version = '$f_target_version'";
-		$t_result_release_date_target = db_query_bound( $t_query_release_date_target );
-		$t_release_date_target_array  = db_fetch_array( $t_result_release_date_target );
-		$t_release_date_target        = $t_release_date_target_array ? $t_release_date_target_array['date_order'] : time();
-
-		# Next get the release date of the previous version
-		$t_query_release_date_previous  = "SELECT max(date_order) as date_order
-											 FROM $t_project_version_table v
-											WHERE v.date_order < '$t_release_date_target'";
-		$t_result_release_date_previous = db_query_bound( $t_query_release_date_previous );
-		$t_release_date_previous_array  = db_fetch_array( $t_result_release_date_previous );
-		$t_release_date_previous        = $t_release_date_previous_array ? $t_release_date_previous_array['date_order'] : time();
-
-		# It must have been possible to determine both dates in order for this clause to work
-		if ( !empty( $t_release_date_target ) && !empty( $t_release_date_previous ) ) {
-			# due date is a required field, a value of 1 means no due date
-			$t_query .= " OR b.due_date BETWEEN $t_release_date_previous AND $t_release_date_target ";
-		}
-	}
-
-	$t_query .= ")";
-
-	if ( $f_user_id != ALL_USERS ) {
-		$t_query .= " AND b.handler_id = $f_user_id";
-	}
-
-	$t_query .= " GROUP BY pp.name, pc.name, c.name, b.id, b.handler_id, w.work_type, w.minutes_type";
-
-	$t_result = db_query_bound( $t_query );
+	$t_result = get_all_tasks( $f_target_version, $f_user_id );
 
 	$t_all_projects = array(); # Array containing all projects
 

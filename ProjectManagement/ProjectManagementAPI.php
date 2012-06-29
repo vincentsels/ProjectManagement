@@ -621,4 +621,67 @@ function resource_unavailability_period_add( $p_user_id, $p_start_date, $p_end_d
 	db_query_bound( $t_query_insert );
 }
 
+
+/**
+ * @param $f_target_version string Required. Specify a the target version to get the tasks for.
+ * @param int $f_user_id Optionally specify a single user to get the tasks for.
+ * @return ADORecordSet|bool
+ */
+function get_all_tasks( $f_target_version, $f_user_id = ALL_USERS ) {
+	$t_bug_table             = db_get_table( 'mantis_bug_table' );
+	$t_project_table         = db_get_table( 'mantis_project_table' );
+	$t_category_table        = db_get_table( 'mantis_category_table' );
+	$t_hierarchy_table       = db_get_table( 'mantis_project_hierarchy_table' );
+	$t_project_version_table = db_get_table( 'mantis_project_version_table' );
+	$t_work_table            = plugin_table( 'work' );
+
+	$t_query = "SELECT pp.id as parent_project_id, pp.name as parent_project,
+					   pc.id as project_id, pc.name as project_name, c.d as category_id, c.name as category_name,
+					   b.sponsorship_total as weight, b.due_date,
+					   b.id, b.handler_id, w.work_type, w.minutes_type, sum(w.minutes) as minutes
+				  FROM $t_bug_table b
+				  JOIN $t_project_table pc ON b.project_id = pc.id
+				  JOIN $t_category_table c ON b.category_id = c.id
+				  LEFT OUTER JOIN $t_hierarchy_table h ON pc.id = h.child_id
+				  LEFT OUTER JOIN $t_project_table pp ON h.parent_id = pp.id
+				  LEFT OUTER JOIN $t_work_table w ON b.id = w.bug_id
+				 WHERE (b.target_version = '$f_target_version'";
+
+	if ( ON == plugin_config_get( 'include_bugs_with_deadline' ) ) {
+		# First get the release date of the currently targeted version
+		$t_query_release_date_target  = "SELECT date_order
+										   FROM $t_project_version_table v
+										  WHERE v.version = '$f_target_version'";
+		$t_result_release_date_target = db_query_bound( $t_query_release_date_target );
+		$t_release_date_target_array  = db_fetch_array( $t_result_release_date_target );
+		$t_release_date_target        = $t_release_date_target_array ? $t_release_date_target_array['date_order'] : time();
+
+		# Next get the release date of the previous version
+		$t_query_release_date_previous  = "SELECT max(date_order) as date_order
+											 FROM $t_project_version_table v
+											WHERE v.date_order < '$t_release_date_target'";
+		$t_result_release_date_previous = db_query_bound( $t_query_release_date_previous );
+		$t_release_date_previous_array  = db_fetch_array( $t_result_release_date_previous );
+		$t_release_date_previous        = $t_release_date_previous_array ? $t_release_date_previous_array['date_order'] : time();
+
+		# It must have been possible to determine both dates in order for this clause to work
+		if ( !empty( $t_release_date_target ) && !empty( $t_release_date_previous ) ) {
+			# due date is a required field, a value of 1 means no due date
+			$t_query .= " OR b.due_date BETWEEN $t_release_date_previous AND $t_release_date_target ";
+		}
+	}
+
+	$t_query .= ")";
+
+	if ( $f_user_id != ALL_USERS ) {
+		$t_query .= " AND b.handler_id = $f_user_id";
+	}
+
+	$t_query .= " GROUP BY pp.name, pc.name, c.name, b.id, b.handler_id, w.work_type, w.minutes_type
+				  ORDER BY handler_id, CASE WHEN b.due_date = 1 THEN 9999999999 ELSE b.due_date END, weight DESC";
+
+	$t_result = db_query_bound( $t_query );
+	return $t_result;
+}
+
 ?>
