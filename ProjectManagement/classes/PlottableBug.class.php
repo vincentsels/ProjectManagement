@@ -11,19 +11,15 @@ class PlottableBug extends PlottableTask {
 	private $previous_bug;
 	private $handler;
 
-	public function __construct( $p_id, $p_weight, $p_target_date, $p_previous_bug, $p_handler ) {
+	public function __construct( $p_id, $p_weight, $p_due_date, $p_previous_bug, $p_handler ) {
 		parent::__construct();
 		$this->work_data = array();
 		$this->type = PlottableTaskTypes::BUG;
 		$this->id = $p_id;
 		$this->weight = $p_weight;
-		$this->target_date = $p_target_date;
+		$this->due_date = $p_due_date;
 		$this->previous_bug = $p_previous_bug;
 		$this->handler = $p_handler;
-	}
-
-	public function plot() {
-		// TODO: Implement plot() method.
 	}
 
 	protected function calculate_data_specific( $p_reference_date ) {
@@ -32,8 +28,10 @@ class PlottableBug extends PlottableTask {
 
 		$t_worktypes = MantisEnum::getAssocArrayIndexedByValues( plugin_config_get( 'work_types' ) );
 
-		foreach ( $this->work_data[PLUGIN_PM_DONE] as $t_value ) {
-			@$this->done += $t_value;
+		if ( isset( $this->work_data[PLUGIN_PM_DONE] ) ) {
+			foreach ( $this->work_data[PLUGIN_PM_DONE] as $t_value ) {
+				@$this->done += $t_value;
+			}
 		}
 
 		$this->todo = 0;
@@ -68,9 +66,12 @@ class PlottableBug extends PlottableTask {
 
 		# First retrieve the amount of hours this resource works per day
 		# Assumes 5 days a week. Could be enhanced to be configurable per user, project,...
-		$t_hours_per_day = ProjectManagementCache::$resource_cache[$this->handler->id] / 5;
-		$t_seconds_for_bug = $this->est / $t_hours_per_day * 24 * 60 * 60;
-		# Todo: include logic for non-working days
-		$this->task_end = $this->task_start + $t_seconds_for_bug;
+		$t_workdays_per_week = 7;
+		$t_hours_per_day = ProjectManagementCache::$resource_cache[$this->handler->id] / $t_workdays_per_week;
+		if ( $t_hours_per_day > 0 ) {
+			$t_seconds_for_bug = $this->est / $t_hours_per_day * 24 * 60;
+			# Todo: include logic for non-working days
+			$this->task_end = $this->task_start + $t_seconds_for_bug;
+		}
 	}
 }

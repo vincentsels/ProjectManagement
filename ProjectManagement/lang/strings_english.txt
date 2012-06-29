@@ -18,6 +18,7 @@
 	$s_plugin_ProjectManagement_time_registration_worksheet = 'Time registration worksheet';
 	$s_plugin_ProjectManagement_time_registration_overview = 'Time registration overview';
 	$s_plugin_ProjectManagement_project_progress = 'Project progress';
+	$s_plugin_ProjectManagement_resource_progress = 'Resource progress';
 	$s_plugin_ProjectManagement_resource_management = 'Resource management';
 	$s_plugin_ProjectManagement_period = 'Period';
 	$s_plugin_ProjectManagement_hours = 'Hours';

@@ -636,7 +636,7 @@ function get_all_tasks( $f_target_version, $f_user_id = ALL_USERS ) {
 	$t_work_table            = plugin_table( 'work' );
 
 	$t_query = "SELECT pp.id as parent_project_id, pp.name as parent_project,
-					   pc.id as project_id, pc.name as project_name, c.d as category_id, c.name as category_name,
+					   pc.id as project_id, pc.name as project_name, c.id as category_id, c.name as category_name,
 					   b.sponsorship_total as weight, b.due_date,
 					   b.id, b.handler_id, w.work_type, w.minutes_type, sum(w.minutes) as minutes
 				  FROM $t_bug_table b

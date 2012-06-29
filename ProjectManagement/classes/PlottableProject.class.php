@@ -7,12 +7,4 @@ class PlottableProject extends PlottableTask {
 		$this->id = $p_id;
 		$this->name = $p_name;
 	}
-
-	public function plot() {
-		// TODO: Implement plot() method.
-	}
-
-	protected function calculate_data_specific( $p_reference_date ) {
-		// TODO: Implement calculate_data_specific() method.
-	}
 }

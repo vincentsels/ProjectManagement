@@ -1,6 +1,6 @@
 <?php
 
-access_ensure_global_level( plugin_config_get( 'view_resource_progress_threshold' ) );
+access_ensure_global_level( plugin_config_get( 'view_project_progress_threshold' ) );
 
 html_page_top1( plugin_lang_get( 'title' ) );
 html_page_top2();
@@ -42,6 +42,9 @@ if ( $t_project_without_versions ) {
 	$t_previous_bug = null;
 	$t_previous_handler_id = null;
 	while ( $row = db_fetch_array( $t_result ) ) {
+		if ( $row['handler_id'] == 0) {
+			continue;
+		}
 		# Check whether this user already exists and if not, create it
 		if ( array_key_exists( $row['handler_id'], $t_all_users ) ) {
 			$t_user = $t_all_users[$row['handler_id']];
@@ -70,7 +73,7 @@ if ( $t_project_without_versions ) {
 		if ( array_key_exists( $row['id'], $t_category->children ) ) {
 			$t_bug = $t_category->children[$row['id']];
 		} else {
-			$t_bug = new PlottableBug( $row['id'], $row['weight'], $row['target_date'], $t_previous_bug, $t_user );
+			$t_bug = new PlottableBug( $row['id'], $row['weight'], $row['due_date'], $t_previous_bug, $t_user );
 			$t_category->children[$row['id']] = $t_bug;
 		}
 
@@ -92,6 +95,11 @@ if ( $t_project_without_versions ) {
 	# Step 4: calculate the bug data
 	ProjectManagementCache::CacheResourceData();
 	foreach ( $t_all_users as $user ) {
-		$user->calculate_data();
+		$user->calculate_data( 1331852400 );
+	}
+
+	# Step 5: plot everything
+	foreach ( $t_all_users as $user ) {
+		$user->plot();
 	}
 }

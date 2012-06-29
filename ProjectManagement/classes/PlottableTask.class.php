@@ -12,18 +12,26 @@ abstract class PlottableTask {
 	protected $id;
 	protected $name;
 	protected $weight;
-	protected $target_date;
+	protected $due_date;
 
 	public $children;
 
-	public $task_start;
-	public $task_end;
+	protected $task_start;
+	protected $task_end;
 
 	public function __construct( ) {
 		$this->children = array();
 	}
 
-	public abstract function plot();
+	public function plot() {
+		$t_start = format_short_date( $this->task_start );
+		$t_finish = format_short_date( $this->task_end );
+		echo $t_start . ' - ' . $t_finish . ': [' . $this->type . '] ' . $this->id . ' - ' . $this->name . '<br />';
+
+		foreach ( $this->children as $child ) {
+			$child->plot();
+		}
+	}
 
 	public function calculate_data( $p_reference_date ) {
 		foreach ( $this->children as $child ) {

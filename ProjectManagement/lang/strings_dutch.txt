@@ -18,6 +18,7 @@
 	$s_plugin_ProjectManagement_time_registration_worksheet = 'Tijdsregistratie werkblad';
 	$s_plugin_ProjectManagement_time_registration_overview = 'Tijdsregistratie overzicht';
 	$s_plugin_ProjectManagement_project_progress = 'Opvolging projecten';
+	$s_plugin_ProjectManagement_resource_progress = 'Opvolging resources';
 	$s_plugin_ProjectManagement_resource_management = 'Beheer resources';
 	$s_plugin_ProjectManagement_period = 'Periode';
 	$s_plugin_ProjectManagement_hours = 'Uren';
