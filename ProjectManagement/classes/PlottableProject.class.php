@@ -8,7 +8,7 @@ class PlottableProject extends PlottableTask {
 		$this->name = $p_name;
 	}
 
-	public function plot_specific( $p_min_date, $p_max_date ) {
+	public function plot_specific_start( $p_unique_id, $p_min_date, $p_max_date ) {
 		$t_start = format_short_date( $this->task_start );
 		$t_finish = format_short_date( $this->task_end );
 		if ( $this->id == PLUGIN_PM_PROJ_ID_UNPLANNED || $this->id == PLUGIN_PM_PROJ_ID_NONWORKING ) {

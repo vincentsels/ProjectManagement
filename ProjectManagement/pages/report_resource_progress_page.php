@@ -171,10 +171,10 @@ if ( $t_project_without_versions ) {
 		$t_previous_handler_id = $row['handler_id'];
 	}
 
-	# Step 3: re-organize sub projects
+	# Re-organize sub projects
 	# TODO
 
-	# Step 4: calculate the bug data first, per user, in the correct order
+	# Calculate the bug data first, per user, in the correct order
 	ProjectManagementCache::CacheResourceData();
 	foreach ( $t_all_bugs_ordered as $user ) {
 		foreach ( $user as $bug ) {
@@ -187,9 +187,10 @@ if ( $t_project_without_versions ) {
 		$user->calculate_data( $t_release_date_previous );
 	}
 
-	# Step 8: get all non-working days and assign to special project
+	# Get all non-working days and assign to special project
+	# TODO
 
-	# Step 9: plot everything
+	# Plot everything
 	foreach ( $t_all_users as $user ) {
 		$user->plot();
 	}

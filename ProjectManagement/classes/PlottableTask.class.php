@@ -33,14 +33,19 @@ abstract class PlottableTask {
 			$p_max_date = $this->task_end;
 		}
 
-		$this->plot_specific( $p_min_date, $p_max_date );
+		$t_unique_id = $this->type . '' . $this->id;
 
+		$this->plot_specific_start( $t_unique_id, $p_min_date, $p_max_date );
 		foreach ( $this->children as $child ) {
 			$child->plot( $p_min_date, $p_max_date );
 		}
+		$this->plot_specific_end( $t_unique_id );
 	}
 
-	protected abstract function plot_specific( $p_min_date, $p_max_date );
+	protected abstract function plot_specific_start( $p_unique_id, $p_min_date, $p_max_date );
+	protected function plot_specific_end( $p_unique_id ) {
+		# Standard behaviour does nothing
+	}
 
 	public function calculate_data( $p_reference_date ) {
 		foreach ( $this->children as $child ) {
