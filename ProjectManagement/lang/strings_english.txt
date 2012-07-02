@@ -112,5 +112,8 @@
 	$s_plugin_ProjectManagement_unavailability_type = 'Type';
 	$s_plugin_ProjectManagement_unavailability_note = 'Note';
 
+	$s_plugin_ProjectManagement_unplanned = 'Unplanned';
+	$s_plugin_ProjectManagement_unavailable = 'Unavailable';
+
 	$s_plugin_ProjectManagement_error_enddate_before_startdate = 'Enddate must be later than startdate.';
 ?>

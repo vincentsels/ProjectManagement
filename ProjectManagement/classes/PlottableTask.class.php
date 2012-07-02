@@ -25,15 +25,22 @@ abstract class PlottableTask {
 		$this->children = array();
 	}
 
-	public function plot() {
-		$t_start = format_short_date( $this->task_start );
-		$t_finish = format_short_date( $this->task_end );
-		echo $t_start . ' - ' . $t_finish . ': [' . $this->type . '] ' . $this->id . ' - ' . $this->name . '<br />';
+	public function plot( $p_min_date = null, $p_max_date = null ) {
+		if ( is_null( $p_min_date ) ) {
+			$p_min_date = $this->task_start;
+		}
+		if ( is_null( $p_max_date ) ) {
+			$p_max_date = $this->task_end;
+		}
+
+		$this->plot_specific( $p_min_date, $p_max_date );
 
 		foreach ( $this->children as $child ) {
-			$child->plot();
+			$child->plot( $p_min_date, $p_max_date );
 		}
 	}
+
+	protected abstract function plot_specific( $p_min_date, $p_max_date );
 
 	public function calculate_data( $p_reference_date ) {
 		foreach ( $this->children as $child ) {

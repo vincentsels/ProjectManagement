@@ -78,13 +78,9 @@ class PlottableBug extends PlottableTask {
 		}
 	}
 
-	public function plot() {
+	public function plot_specific( $p_min_date, $p_max_date ) {
 		$t_start = format_short_date( $this->task_start );
 		$t_finish = format_short_date( $this->task_end );
 		echo '---' . $t_start . ' - ' . $t_finish . ': [Bug] ' . $this->id . ' - ' . bug_format_summary( $this->id, SUMMARY_CAPTION ) . '<br />';
-
-		foreach ( $this->children as $child ) {
-			$child->plot();
-		}
 	}
 }

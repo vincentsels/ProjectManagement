@@ -25,6 +25,9 @@ define( 'PLUGIN_PM_ALL_CUSTOMERS', 0 );
 
 define( 'PLUGIN_PM_CUST_CONCATENATION_CHAR', '|' );
 
+define( 'PLUGIN_PM_PROJ_ID_UNPLANNED', -1 );
+define( 'PLUGIN_PM_PROJ_ID_NONWORKING', -2 );
+
 # Enums
 
 class Action {
