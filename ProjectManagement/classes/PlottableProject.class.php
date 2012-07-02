@@ -16,6 +16,8 @@ class PlottableProject extends PlottableTask {
 		} else {
 			$t_project_name = project_get_name( $this->id );
 		}
-		echo '<b>-' . $t_start . ' - ' . $t_finish . ': [Project] ' . $this->id . ' - ' . $t_project_name . '</b><br />';
+		?>
+		<tr class="row-category"><td width=""><?php echo $t_project_name ?></td><td><?php echo $t_start . ' - ' . $t_finish ?></td></tr>
+		<?php
 	}
 }

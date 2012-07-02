@@ -11,6 +11,8 @@ class PlottableCategory extends PlottableTask {
 	public function plot_specific_start( $p_unique_id, $p_min_date, $p_max_date ) {
 		$t_start = format_short_date( $this->task_start );
 		$t_finish = format_short_date( $this->task_end );
-		echo '--' . $t_start . ' - ' . $t_finish . ': [Category] ' . $this->id . ' - ' . category_get_name( $this->id ) . '<br />';
+		?>
+	<tr class="row-category2"><td><?php echo category_get_name( $this->id ) ?></td><td><?php echo $t_start . ' - ' . $t_finish ?></td></tr>
+	<?php
 	}
 }

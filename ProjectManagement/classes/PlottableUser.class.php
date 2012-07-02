@@ -8,8 +8,17 @@ class PlottableUser extends PlottableTask {
 	}
 
 	public function plot_specific_start( $p_unique_id, $p_min_date, $p_max_date ) {
-		$t_start = format_short_date( $this->task_start );
-		$t_finish = format_short_date( $this->task_end );
-		echo '<br /><b>' . $t_start . ' - ' . $t_finish . ': [User] ' . $this->id . ' - ' . user_get_realname( $this->id ) . '</b><br />';
+		?>
+	<table class="width100" cellspacing="1">
+		<tr>
+			<td class="form-title" colspan="2"> <?php echo user_get_realname( $this->id ) ?></td>
+		</tr>
+		<?php
+	}
+
+	public function plot_specific_end( $p_unique_id ) {
+		?>
+	</table><br />
+		<?php
 	}
 }

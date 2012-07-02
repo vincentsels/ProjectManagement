@@ -94,7 +94,7 @@ span.category {
     background: #c8c8e8;
 }
 
-span.progress, span.bar {
+span.progress, span.bar, span.filler {
     display: inline-block;
     height: 14px;
     vertical-align: top;
@@ -132,4 +132,12 @@ td.target-date-overdue {
 
 td.target-date-notice {
     background-color: #ffcb52;
+}
+
+tr.progress-row {
+    line-height: 14px;
+}
+
+tr.progress-row td {
+    padding: 1px;
 }
