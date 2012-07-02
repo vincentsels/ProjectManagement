@@ -256,7 +256,7 @@ function format_short_date( $p_date = null ) {
 	if ( is_null( $p_date ) || empty( $p_date ) ) {
 		return null;
 	}
-	return date( config_get( 'short_date_format' ), $p_date );
+	return date( config_get( 'normal_date_format' ), $p_date );
 }
 
 /**
@@ -625,9 +625,11 @@ function resource_unavailability_period_add( $p_user_id, $p_start_date, $p_end_d
 /**
  * @param $f_target_version string Required. Specify a the target version to get the tasks for.
  * @param int $f_user_id Optionally specify a single user to get the tasks for.
+ * @param int $p_include_bugs_with_deadline Whether or not to include bugs which have a deadline in the
+ * release cycle period. Use the include_bugs_with_deadline config setting.
  * @return ADORecordSet|bool
  */
-function get_all_tasks( $f_target_version, $f_user_id = ALL_USERS ) {
+function get_all_tasks( $f_target_version, $f_user_id = ALL_USERS, $p_include_bugs_with_deadline = ON ) {
 	$t_bug_table             = db_get_table( 'mantis_bug_table' );
 	$t_project_table         = db_get_table( 'mantis_project_table' );
 	$t_category_table        = db_get_table( 'mantis_category_table' );
@@ -647,7 +649,7 @@ function get_all_tasks( $f_target_version, $f_user_id = ALL_USERS ) {
 				  LEFT OUTER JOIN $t_work_table w ON b.id = w.bug_id
 				 WHERE (b.target_version = '$f_target_version'";
 
-	if ( ON == plugin_config_get( 'include_bugs_with_deadline' ) ) {
+	if ( ON == $p_include_bugs_with_deadline ) {
 		# First get the release date of the currently targeted version
 		$t_query_release_date_target  = "SELECT date_order
 										   FROM $t_project_version_table v
@@ -678,7 +680,7 @@ function get_all_tasks( $f_target_version, $f_user_id = ALL_USERS ) {
 	}
 
 	$t_query .= " GROUP BY pp.name, pc.name, c.name, b.id, b.handler_id, w.work_type, w.minutes_type
-				  ORDER BY handler_id, CASE WHEN b.due_date = 1 THEN 9999999999 ELSE b.due_date END, weight DESC";
+				  ORDER BY handler_id, CASE WHEN b.due_date = 1 THEN 9999999999 ELSE b.due_date END, weight DESC, id";
 
 	$t_result = db_query_bound( $t_query );
 	return $t_result;

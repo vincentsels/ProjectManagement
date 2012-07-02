@@ -32,7 +32,7 @@ if ( is_null( $f_target_version ) ) {
 if ( $t_project_without_versions ) {
 	echo plugin_lang_get( 'project_without_versions' );
 } else {
-	$t_result = get_all_tasks( $f_target_version, $f_user_id );
+	$t_result = get_all_tasks( $f_target_version, $f_user_id, plugin_config_get( 'include_bugs_with_deadline' ) );
 
 	$t_all_projects = array(); # Array containing all projects
 

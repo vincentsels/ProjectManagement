@@ -20,6 +20,7 @@ class PlottableBug extends PlottableTask {
 		$this->due_date = $p_due_date;
 		$this->previous_bug = $p_previous_bug;
 		$this->handler = $p_handler;
+		$this->calculated = false;
 	}
 
 	protected function calculate_data_specific( $p_reference_date ) {
@@ -60,8 +61,10 @@ class PlottableBug extends PlottableTask {
 
 		if ( is_null( $this->previous_bug ) ) {
 			$this->task_start = $p_reference_date;
+			$this->name = 'previous_bug is null';
 		} else {
 			$this->task_start = $this->previous_bug->task_end;
+			$this->name = 'previous_bug id = ' . $this->previous_bug->id . ' and task_end is ' . $this->previous_bug->task_end;
 		}
 
 		# First retrieve the amount of hours this resource works per day
@@ -72,6 +75,16 @@ class PlottableBug extends PlottableTask {
 			$t_seconds_for_bug = $this->est / $t_hours_per_day * 24 * 60;
 			# Todo: include logic for non-working days
 			$this->task_end = $this->task_start + $t_seconds_for_bug;
+		}
+	}
+
+	public function plot() {
+		$t_start = format_short_date( $this->task_start );
+		$t_finish = format_short_date( $this->task_end );
+		echo '---' . $t_start . ' - ' . $t_finish . ': [Bug] ' . $this->id . ' - ' . bug_format_summary( $this->id, SUMMARY_CAPTION ) . '<br />';
+
+		foreach ( $this->children as $child ) {
+			$child->plot();
 		}
 	}
 }

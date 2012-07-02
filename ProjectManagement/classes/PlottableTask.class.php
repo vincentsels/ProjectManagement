@@ -19,6 +19,8 @@ abstract class PlottableTask {
 	protected $task_start;
 	protected $task_end;
 
+	private $calculated = false;
+
 	public function __construct( ) {
 		$this->children = array();
 	}
@@ -36,12 +38,28 @@ abstract class PlottableTask {
 	public function calculate_data( $p_reference_date ) {
 		foreach ( $this->children as $child ) {
 			$child->calculate_data( $p_reference_date );
-			$child->calculate_data_specific( $p_reference_date );
 		}
+		if ( $this->calculated ) {
+			return;
+		}
+		$this->calculate_data_specific( $p_reference_date );
+		$this->calculated = true;
 	}
 
 	protected function calculate_data_specific( $p_reference_date ) {
-		# TODO: implement default calculation
+		# Find the minimum start date and maximum end date of all children
+		$t_min_start_date = 99999999999;
+		$t_max_end_date = 1;
+		foreach ( $this->children as $child ) {
+			if ( $child->task_start < $t_min_start_date ) {
+				$t_min_start_date = $child->task_start;
+			}
+			if ( $child->task_end > $t_max_end_date ) {
+				$t_max_end_date = $child->task_end;
+			}
+		}
+		$this->task_start = $t_min_start_date;
+		$this->task_end = $t_max_end_date;
 	}
 
 	public function remove_empty_children() {

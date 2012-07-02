@@ -34,10 +34,29 @@ if ( $t_project_without_versions ) {
 } else {
 
 	# Step 1: Fetch all relevant bugs
-	$t_result = get_all_tasks( $f_target_version, $f_user_id );
+	$t_result = get_all_tasks( $f_target_version, $f_user_id, OFF );
+
+	# Release dates of previous and current version
+	$t_project_version_table = 'mantis_project_version_table';
+	$t_query_release_date_target  = "SELECT date_order
+										   FROM $t_project_version_table v
+										  WHERE v.version = '$f_target_version'";
+	$t_result_release_date_target = db_query_bound( $t_query_release_date_target );
+	$t_release_date_target_array  = db_fetch_array( $t_result_release_date_target );
+	$t_release_date_target        = $t_release_date_target_array ? $t_release_date_target_array['date_order'] : time();
+
+	# Next get the release date of the previous version
+	$t_query_release_date_previous  = "SELECT max(date_order) as date_order
+											 FROM $t_project_version_table v
+											WHERE v.date_order < '$t_release_date_target'";
+	$t_result_release_date_previous = db_query_bound( $t_query_release_date_previous );
+	$t_release_date_previous_array  = db_fetch_array( $t_result_release_date_previous );
+	$t_release_date_previous        = $t_release_date_previous_array ? $t_release_date_previous_array['date_order'] : time();
+
 
 	# Step 2: Create the objects
 	$t_all_users = array();
+	$t_all_bugs_ordered = array();
 
 	$t_previous_bug = null;
 	$t_previous_handler_id = null;
@@ -51,6 +70,7 @@ if ( $t_project_without_versions ) {
 		} else {
 			$t_user = new PlottableUser( $row['handler_id'] );
 			$t_all_users[$row['handler_id']] = $t_user;
+			$t_previous_bug = null;
 		}
 
 		# Check whether this project already exists and if not, create it
@@ -74,28 +94,29 @@ if ( $t_project_without_versions ) {
 			$t_bug = $t_category->children[$row['id']];
 		} else {
 			$t_bug = new PlottableBug( $row['id'], $row['weight'], $row['due_date'], $t_previous_bug, $t_user );
+			$t_all_bugs_ordered[] = $t_bug;
 			$t_category->children[$row['id']] = $t_bug;
 		}
 
 		# Set the work data for this bug
 		$t_bug->work_data[$row['minutes_type']][$row['work_type']] = $row['minutes'];
 
-		if ( !is_null( $t_previous_bug ) && $row['handler_id'] != $t_previous_handler_id ) {
-			# Check to see if we changed user
-			$t_previous_bug = null;
-		} else {
-			$t_previous_bug = $t_bug;
-			$t_previous_handler_id = $row['handler_id'];
-		}
+		$t_previous_bug = $t_bug;
+		$t_previous_handler_id = $row['handler_id'];
 	}
 
 	# Step 3: re-organize sub projects
 	# TODO
 
-	# Step 4: calculate the bug data
+	# Step 4: calculate the bug data first in the correct order
 	ProjectManagementCache::CacheResourceData();
+	foreach ( $t_all_bugs_ordered as $bug ) {
+		$bug->calculate_data( $t_release_date_previous );
+	}
+
+	# Next, calculate all other tasks
 	foreach ( $t_all_users as $user ) {
-		$user->calculate_data( 1331852400 );
+		$user->calculate_data( $t_release_date_previous );
 	}
 
 	# Step 5: plot everything
