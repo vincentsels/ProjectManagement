@@ -59,6 +59,7 @@ if ( $t_project_without_versions ) {
 	$t_project_table         = db_get_table( 'mantis_project_table' );
 	$t_category_table        = db_get_table( 'mantis_category_table' );
 	$t_work_table            = plugin_table( 'work' );
+	$t_res_unav_table        = plugin_table( 'resource_unavailable' );
 	$t_done				 	 = PLUGIN_PM_DONE;
 
 	$t_query = "SELECT pc.id as project_id, pc.name as project_name, c.id as category_id, c.name as category_name,
@@ -71,6 +72,14 @@ if ( $t_project_without_versions ) {
 			 	   AND w.minutes_type = $t_done
 			 	   AND b.handler_id <> 0
 			 	   AND b.target_version <> '$f_target_version'
+			 	   AND NOT EXISTS
+			 	   (
+			 	   SELECT 1
+			 	     FROM $t_res_unav_table u
+			 	    WHERE u.user_id = w.user_id
+			 	      AND w.book_date between u.start_date and u.end_date
+			 	      AND u.include_work = 0
+			 	   )
 				 GROUP BY pc.id, pc.name, c.id, c.name, b.id, b.handler_id
 				 ORDER BY b.handler_id, b.date_submitted";
 	$t_result = db_query_bound( $t_query );

@@ -69,6 +69,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 						start_date  	   I	   NOTNULL UNSIGNED,
 						end_date  	  	   I	   NOTNULL UNSIGNED,
 						type			   I2	   NOTNULL UNSIGNED DEFAULT 10,
+						include_work	   L       NOTNULL DEFAULT 0,
 						note	           C(64)
 						" ) )
 		);
@@ -107,7 +108,8 @@ class ProjectManagementPlugin extends MantisPlugin {
 																   80 => REPORTER ),
 			'edit_targets_threshold'					 => DEVELOPER,
 			'unavailability_types'	                     => '10:unspecified,20:unavailable,30:out of office,40:appointment,50:private appointment,60:vacation,70:administration,80:service desk,90:other',
-			'default_unavailability_type'				 => 10
+			'default_unavailability_type'				 => 10,
+			'ignore_work_during_unavailability_periods' => array(60, 80)
 		);
 	}
 
@@ -290,14 +292,22 @@ class ProjectManagementPlugin extends MantisPlugin {
 					trigger_error( plugin_lang_get( 'error_enddate_before_startdate' ), E_USER_ERROR );
 				}
 
+				# Passed arguments are always timestamps of whole dates, at midnight
+				# Periods should start at midnight but end one second before midnight
+				$t_day = 60 * 60 * 24;
+				$f_unavailable_end = $f_unavailable_end + $t_day - 1;
+
 				# Availability type is required
 				if ( is_null( $f_unavailable_type ) ) {
 					error_parameters( plugin_lang_get( 'unavailability_type' ) );
 					trigger_error( ERROR_EMPTY_FIELD, ERROR );
 				}
 
+				$t_include_work = ( is_array( plugin_config_get( 'ignore_work_during_unavailability_periods' ) ) &&
+					in_array( $f_unavailable_type, plugin_config_get( 'ignore_work_during_unavailability_periods' ) ) ) ? 0 : 1;
+
 				resource_unavailability_period_add( $p_user_id, $f_unavailable_start, $f_unavailable_end,
-					$f_unavailable_type, $f_unavailable_note );
+					$f_unavailable_type, $t_include_work, $f_unavailable_note );
 			}
 		}
 	}

@@ -617,10 +617,11 @@ function resource_insert_or_update( $p_user_id, $p_hourly_rate, $p_hours_per_wee
 	}
 }
 
-function resource_unavailability_period_add( $p_user_id, $p_start_date, $p_end_date, $p_type, $p_note ) {
+function resource_unavailability_period_add( $p_user_id, $p_start_date, $p_end_date,
+											 $p_type, $p_include_work, $p_note ) {
 	$t_res_unavailable_tab = plugin_table( 'resource_unavailable' );
-	$t_query_insert = "INSERT INTO $t_res_unavailable_tab(user_id, start_date, end_date, type, note)
-		VALUES ($p_user_id, $p_start_date, $p_end_date, $p_type, '$p_note')";
+	$t_query_insert = "INSERT INTO $t_res_unavailable_tab(user_id, start_date, end_date, type, include_work, note)
+		VALUES ($p_user_id, $p_start_date, $p_end_date, $p_type, $p_include_work, '$p_note')";
 	db_query_bound( $t_query_insert );
 }
 
