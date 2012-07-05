@@ -27,9 +27,9 @@ class PlottableProject extends PlottableTask {
 	<tr class="progress-row row-category">
 		<td width="15%" style="text-align:left;">
 			<?php
-				print_expand_icon_start( $p_unique_id );
-				echo $t_project_name;
-				print_expand_icon_end();
+			print_expand_icon_start( $p_unique_id );
+			echo $t_project_name;
+			print_expand_icon_end();
 			?>
 		</td>
 		<td width="85%" style="text-align:left;">

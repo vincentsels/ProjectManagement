@@ -11,14 +11,25 @@ class PlottableUser extends PlottableTask {
 		?>
 	<table class="width100" cellspacing="1">
 		<tr>
-			<td class="form-title" colspan="2"> <?php echo user_get_realname( $this->id ) ?></td>
+			<td class="form-title" colspan="2">
+				<?php
+				print_expand_icon_start( $p_unique_id );
+				echo user_get_realname( $this->id );
+				print_expand_icon_end();
+				?>
+			</td>
 		</tr>
 		<?php
+		echo '<tr><td colspan="2">';
+		print_expandable_div_start( $p_unique_id );
+		echo '<table class="width100" cellspacing="1">';
 	}
 
 	public function plot_specific_end( $p_unique_id ) {
 		?>
-	</table><br />
+		</table>
+		<?php print_expandable_div_end(); ?>
+		</td></tr></table><br />
 		<?php
 	}
 }
