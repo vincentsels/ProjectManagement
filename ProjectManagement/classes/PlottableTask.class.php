@@ -16,6 +16,9 @@ abstract class PlottableTask {
 
 	public $children;
 
+	protected $est;
+	protected $done;
+	protected $overdue;
 	protected $task_start;
 	protected $task_end;
 
@@ -23,6 +26,9 @@ abstract class PlottableTask {
 
 	public function __construct( ) {
 		$this->children = array();
+		$this->est = 0;
+		$this->done = 0;
+		$this->overdue = 0;
 	}
 
 	public function plot( $p_min_date = null, $p_max_date = null ) {
@@ -69,6 +75,11 @@ abstract class PlottableTask {
 			if ( $child->task_end > $t_max_end_date ) {
 				$t_max_end_date = $child->task_end;
 			}
+
+			# The data of each task is the sum of the data of all its children
+			$this->est += $child->est;
+			$this->done += $child->done;
+			$this->overdue += $child->overdue;
 		}
 		$this->task_start = $t_min_start_date;
 		$this->task_end = $t_max_end_date;

@@ -3,11 +3,7 @@
 class PlottableBug extends PlottableTask {
 	public $work_data;
 
-	private $est;
-	private $done;
 	private $todo;
-	private $overdue;
-
 	private $previous_bug;
 	private $handler;
 
@@ -81,12 +77,24 @@ class PlottableBug extends PlottableTask {
 	public function plot_specific_start( $p_unique_id, $p_min_date, $p_max_date ) {
 		$t_total_width = $p_max_date - $p_min_date;
 		$t_before = ( $this->task_start - $p_min_date ) / $t_total_width * 99;
-		$t_width = ( $this->task_end - $this->task_start ) / $t_total_width * 99;
-		$t_after = ( $p_max_date - $this->task_end ) / $t_total_width * 100;
+		$t_task_width = ( $this->task_end - $this->task_start ) / $t_total_width * 99;
+		if ( $this->est > 0 ) {
+			$t_original_work_width = ( $this->done - $this->overdue ) / $this->est * 100;
+			$t_total_work_width    = $this->done / $this->est * 100;
+			$t_extra_work_width    = $this->overdue / $this->est * 50;
+		} else {
+			$t_original_work_width = 0;
+			$t_total_work_width    = 0;
+			$t_extra_work_width    = 0;
+		}
 
 		$t_start = format_short_date( $this->task_start );
 		$t_finish = format_short_date( $this->task_end );
 		$t_info = '<a href="#" class="invisible" title="' . $t_start . ' - ' . $t_finish . '">';
+		$t_progress_info = minutes_to_time( $this->done, false ) . '&nbsp;/&nbsp;' . minutes_to_time( $this->est, false );
+		$t_progress_text = '<a href="#" class="invisible" title="' . $t_progress_info . '">' . number_format( $t_total_work_width, 1 ) . '%</a>';
+		$t_overdue_text = '<a href="#" title="' . minutes_to_time( $this->overdue ) . '&nbsp;/&nbsp;' . minutes_to_time( $this->done ) . '"></a>';
+
 		?>
 	<tr class="progress-row row-2">
 		<td width="15%">
@@ -94,10 +102,18 @@ class PlottableBug extends PlottableTask {
 		</td>
 		<td width="85%">
 			<div class="resource-section">
-			<span class="filler" style="width:<?php echo $t_before ?>%"></span>
-			<span class="progress" style="width:<?php echo $t_width ?>%">
-				<?php echo $t_info ?>
-				<span class="bar" style="width:<?php echo $t_after ?>%"></span>
+			<span class="filler" style="width: <?php echo $t_before ?>%"></span>
+			<span class="progress" style="width: <?php echo $t_task_width ?>%">
+				<span class="bar" style="width: <?php echo $t_original_work_width ?>%">
+					<?php echo $t_progress_text ?>
+				</span>
+				<?php
+				if ( $t_extra_work_width > 0 ) {
+					echo '<span class="bar overdue" style="background-color:';
+					print_overdue_color();
+					echo ' width: ' . $t_extra_work_width . '%">' . $t_overdue_text . '</a></span>';
+				}
+				?>
 			</span>
 			</div>
 		</td>

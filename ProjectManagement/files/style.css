@@ -98,6 +98,8 @@ span.progress, span.bar, span.filler {
     display: inline-block;
     height: 14px;
     vertical-align: top;
+    border-spacing: 0px;
+    border-collapse: collapse;
 }
 
 span.progress {
