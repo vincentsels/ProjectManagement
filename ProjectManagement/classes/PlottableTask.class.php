@@ -33,7 +33,7 @@ abstract class PlottableTask {
 			$p_max_date = $this->task_end;
 		}
 
-		$t_unique_id = $this->type . '' . $this->id;
+		$t_unique_id = uniqid($this->type . '' . $this->id);
 
 		$this->plot_specific_start( $t_unique_id, $p_min_date, $p_max_date );
 		foreach ( $this->children as $child ) {
