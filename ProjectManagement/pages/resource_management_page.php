@@ -10,7 +10,8 @@ print_pm_reports_menu( 'resource_management_page' );
 $t_user_table     = db_get_table( 'mantis_user_table' );
 $t_resource_table = plugin_table( 'resource' );
 
-$t_query      = "SELECT u.id, u.username, u.realname, u.access_level, r.hours_per_week, r.hourly_rate, r.color
+$t_query      = "SELECT u.id, u.username, u.realname, u.access_level, r.hours_per_week,
+						r.hourly_rate, r.color, r.deployability
                    FROM $t_user_table u
         LEFT OUTER JOIN $t_resource_table r ON u.id = r.user_id
                   WHERE u.enabled = 1
@@ -34,6 +35,7 @@ $t_access_levels = get_translated_assoc_array_for_enum( 'access_levels' );
 			<td><?php echo plugin_lang_get( 'hours_per_week' ) ?></td>
 			<td><?php echo plugin_lang_get( 'hourly_rate' ) ?></td>
 			<td><?php echo plugin_lang_get( 'color' ) ?></td>
+			<td><?php echo plugin_lang_get( 'deployability' ) ?></td>
 			<td><?php echo plugin_lang_get( 'clear' ) ?></td>
 		</tr>
 
@@ -56,6 +58,10 @@ $t_access_levels = get_translated_assoc_array_for_enum( 'access_levels' );
 					<select name="color_<?php echo $t_row['id'] ?>">
 						<?php print_color_option_list( $t_row['color'] ) ?>
 					</select>
+				</td>
+				<td>
+					<input type="text" size="3" maxlength="3" name="deployability_<?php echo $t_row['id']?>"
+						   value="<?php echo $t_row['deployability'] ?>"> %
 				</td>
 				<td>
 					<input type="checkbox"

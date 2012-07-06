@@ -71,8 +71,9 @@ class ProjectManagementPlugin extends MantisPlugin {
 						type			   I2	   NOTNULL UNSIGNED DEFAULT 10,
 						include_work	   L       NOTNULL DEFAULT 0,
 						note	           C(64)
-						" ) )
-		);
+						" ) ),
+			array( 'AddColumnSQL', array( plugin_table( 'resource' ), 'deployability I NOTNULL UNSIGNED DEFAULT 80' ) )
+			);
 	}
 
 	function config() {
@@ -225,7 +226,8 @@ class ProjectManagementPlugin extends MantisPlugin {
 			$t_user_table     = db_get_table( 'mantis_user_table' );
 			$t_resource_table = plugin_table( 'resource' );
 
-			$t_query      = "SELECT u.id, u.username, u.realname, u.access_level, r.hours_per_week, r.hourly_rate, r.color
+			$t_query      = "SELECT u.id, u.username, u.realname, u.access_level, r.hours_per_week,
+									r.hourly_rate, r.color, r.deployability
                    		       FROM $t_user_table u
         			LEFT OUTER JOIN $t_resource_table r ON u.id = r.user_id
                   			  WHERE u.id = $p_user_id";
@@ -251,6 +253,11 @@ class ProjectManagementPlugin extends MantisPlugin {
 				</select>
 			</td>
 		</tr>
+		<tr <?php echo helper_alternate_class() ?>>
+			<td  class="category"><?php echo plugin_lang_get( 'deployability' ) ?></td>
+			<td><input type="text" size="3" maxlength="3" name="deployability_<?php echo $p_user_id?>"
+					   value="<?php echo $t_row['deployability'] ?>"></td>
+		</tr>
 			<?php
 		}
 	}
@@ -271,9 +278,12 @@ class ProjectManagementPlugin extends MantisPlugin {
 				$f_hourly_rate    = parse_float( gpc_get_string( 'hourly_rate_' . $p_user_id, null ) );
 				$f_hours_per_week = gpc_get_int( 'hours_per_week_' . $p_user_id, null );
 				$f_color          = gpc_get_int( 'color_' . $p_user_id, null );
+				$f_deployability  = gpc_get_int( 'deployability_' . $p_user_id, null );
 
-				if ( !empty( $f_hourly_rate ) || !empty( $f_hours_per_week ) || !empty( $f_color ) ) {
-					resource_insert_or_update( $p_user_id, $f_hourly_rate, $f_hours_per_week, $f_color );
+				if ( !empty( $f_hourly_rate ) || !empty( $f_hours_per_week ) ||
+					!empty( $f_color  ) || !empty( $f_deployability  ) ) {
+					resource_insert_or_update( $p_user_id, $f_hourly_rate, $f_hours_per_week,
+						$f_color, $f_deployability );
 				}
 			}
 

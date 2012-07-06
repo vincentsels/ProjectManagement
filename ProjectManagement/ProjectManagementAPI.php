@@ -577,10 +577,10 @@ function target_update( $p_bug_id, $p_work_type, $p_owner_id, $p_target_date, $p
 	}
 }
 
-function resource_insert_or_update( $p_user_id, $p_hourly_rate, $p_hours_per_week, $p_color ) {
+function resource_insert_or_update( $p_user_id, $p_hourly_rate, $p_hours_per_week, $p_color, $p_deployability ) {
 	$t_resource_table = plugin_table( 'resource' );
 
-	$t_query_old_row  = "SELECT user_id, hourly_rate, hours_per_week, color
+	$t_query_old_row  = "SELECT user_id, hourly_rate, hours_per_week, color, deployability
 						      FROM $t_resource_table
 							 WHERE user_id = $p_user_id";
 	$t_result_old_row = db_query_bound( $t_query_old_row );
@@ -591,8 +591,8 @@ function resource_insert_or_update( $p_user_id, $p_hourly_rate, $p_hours_per_wee
 	}
 
 	if ( is_null( $t_old_row ) ) {
-		$t_query_insert = "INSERT INTO $t_resource_table(user_id, hourly_rate, hours_per_week, color)
-			VALUES ($p_user_id, $p_hourly_rate, $p_hours_per_week, $p_color)";
+		$t_query_insert = "INSERT INTO $t_resource_table(user_id, hourly_rate, hours_per_week, color, deployability)
+			VALUES ($p_user_id, $p_hourly_rate, $p_hours_per_week, $p_color, $p_deployability)";
 		db_query_bound( $t_query_insert );
 	}
 	else
@@ -609,6 +609,9 @@ function resource_insert_or_update( $p_user_id, $p_hourly_rate, $p_hours_per_wee
 		}
 		if ( !empty( $p_color ) && $p_color != $t_query_old_row['color'] ) {
 			$t_query_update_set_clause[] = "color = $p_color";
+		}
+		if ( !empty( $p_deployability ) && $p_deployability != $t_query_old_row['deployability'] ) {
+			$t_query_update_set_clause[] = "deployability = $p_deployability";
 		}
 
 		db_query_bound( $t_query_update_update_clause .
