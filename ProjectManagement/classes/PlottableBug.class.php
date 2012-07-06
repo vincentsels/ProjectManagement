@@ -78,6 +78,7 @@ class PlottableBug extends PlottableTask {
 		$t_total_width = $p_max_date - $p_min_date;
 		$t_before = ( $this->task_start - $p_min_date ) / $t_total_width * 99;
 		$t_task_width = ( $this->task_end - $this->task_start ) / $t_total_width * 99;
+
 		if ( $this->est > 0 ) {
 			$t_original_work_width = ( $this->done - $this->overdue ) / $this->est * 100;
 			$t_total_work_width    = $this->done / $this->est * 100;
@@ -110,7 +111,7 @@ class PlottableBug extends PlottableTask {
 				if ( $t_extra_work_width > 0 ) {
 					echo '<span class="bar overdue" style="background-color:';
 					print_overdue_color();
-					echo ' width: ' . $t_extra_work_width . '%">' . $t_overdue_text . '</a></span>';
+					echo ' width: ' . $t_extra_work_width . '%">' . $t_overdue_text . '</span>';
 				}
 				?>
 			</span>

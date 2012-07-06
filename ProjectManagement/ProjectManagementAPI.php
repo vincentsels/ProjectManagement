@@ -259,7 +259,7 @@ function format_short_date( $p_date = null ) {
 	if ( is_null( $p_date ) || empty( $p_date ) ) {
 		return null;
 	}
-	return date( config_get( 'normal_date_format' ), $p_date );
+	return date( config_get( 'short_date_format' ), $p_date );
 }
 
 /**
