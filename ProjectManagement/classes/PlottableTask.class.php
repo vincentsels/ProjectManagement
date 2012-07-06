@@ -21,14 +21,16 @@ abstract class PlottableTask {
 	protected $overdue;
 	protected $task_start;
 	protected $task_end;
+	protected $handler_id;
 
 	private $calculated = false;
 
-	public function __construct( ) {
+	public function __construct( $p_handler_id ) {
 		$this->children = array();
 		$this->est = 0;
 		$this->done = 0;
 		$this->overdue = 0;
+		$this->handler_id = $p_handler_id;
 	}
 
 	public function plot( $p_min_date = null, $p_max_date = null ) {

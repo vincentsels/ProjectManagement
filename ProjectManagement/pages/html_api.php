@@ -126,6 +126,40 @@ function print_overdue_color() {
 	echo "rgba(255, 0, 0, 0.5);";
 }
 
+/*
+ * Prints the opening span tag for the work bar.
+ * Note the closing span must still be printed.
+ */
+function print_progress_span( $p_handler_id, $p_width ) {
+	global $g_resource_colors;
+	echo '<span class="progress" style="background-color:';
+	print_background_color( $g_resource_colors[$p_handler_id], PLUGIN_PM_LIGHT );
+	echo ' border-color: ';
+	print_background_color( $g_resource_colors[$p_handler_id], PLUGIN_PM_DARK );
+	echo ' width: ' . $p_width . '%">';
+}
+
+/*
+ * Prints the opening span tag for the progress bar within the work bar.
+ * Note the closing span must still be printed.
+ */
+function print_progressbar_span( $p_handler_id, $p_width ) {
+	global $g_resource_colors;
+	echo '<span class="bar" style="background-color:';
+	print_background_color( $g_resource_colors[$p_handler_id], PLUGIN_PM_DARK );
+	echo ' width: ' . $p_width . '%">';
+}
+
+/*
+ * Prints the opening span tag for the overdue part in a work bar.
+ * Note the closing span must still be printed.
+ */
+function print_overdue_span( $p_width ) {
+	echo '<span class="bar overdue" style="background-color:';
+	print_overdue_color();
+	echo ' width: ' . $p_width . '%">';
+}
+
 /**
  * Prints a color selection option list with 15 available colors.
  * @param int $p_val the value to select.

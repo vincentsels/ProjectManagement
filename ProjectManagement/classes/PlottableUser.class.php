@@ -1,10 +1,10 @@
 <?php
 
 class PlottableUser extends PlottableTask {
-	public function __construct( $p_id ) {
-		parent::__construct();
+	public function __construct( $p_handler_id ) {
+		parent::__construct( $p_handler_id );
 		$this->type = PlottableTaskTypes::USER;
-		$this->id = $p_id;
+		$this->id = $p_handler_id;
 	}
 
 	public function plot_specific_start( $p_unique_id, $p_min_date, $p_max_date ) {
@@ -17,6 +17,9 @@ class PlottableUser extends PlottableTask {
 				echo user_get_realname( $this->id );
 				print_expand_icon_end();
 				?>
+				<span class="floatright">
+					<?php echo plugin_lang_get( 'finished' ) . ': ' . format_short_date( $this->task_end ) ?>
+				</span>
 			</td>
 		</tr>
 		<?php

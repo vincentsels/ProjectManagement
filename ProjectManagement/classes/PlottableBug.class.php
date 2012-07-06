@@ -5,17 +5,15 @@ class PlottableBug extends PlottableTask {
 
 	private $todo;
 	private $previous_bug;
-	private $handler;
 
-	public function __construct( $p_id, $p_weight, $p_due_date, $p_previous_bug, $p_handler ) {
-		parent::__construct();
+	public function __construct( $p_handler_id, $p_id, $p_weight, $p_due_date, $p_previous_bug ) {
+		parent::__construct( $p_handler_id );
 		$this->work_data = array();
 		$this->type = PlottableTaskTypes::BUG;
 		$this->id = $p_id;
 		$this->weight = $p_weight;
 		$this->due_date = $p_due_date;
 		$this->previous_bug = $p_previous_bug;
-		$this->handler = $p_handler;
 		$this->calculated = false;
 	}
 
@@ -66,7 +64,7 @@ class PlottableBug extends PlottableTask {
 		# First retrieve the amount of hours this resource works per day
 		# Assumes 5 days a week. Could be enhanced to be configurable per user, project,...
 		$t_workdays_per_week = 7;
-		$t_hours_per_day = ProjectManagementCache::$resource_cache[$this->handler->id] / $t_workdays_per_week;
+		$t_hours_per_day = ProjectManagementCache::$resource_cache[$this->handler_id] / $t_workdays_per_week;
 		if ( $t_hours_per_day > 0 ) {
 			$t_seconds_for_bug = $this->est / $t_hours_per_day * 24 * 60;
 			# Todo: include logic for non-working days
@@ -104,14 +102,13 @@ class PlottableBug extends PlottableTask {
 		<td width="85%">
 			<div class="resource-section">
 			<span class="filler" style="width: <?php echo $t_before ?>%"></span>
-			<span class="progress" style="width: <?php echo $t_task_width ?>%">
-				<span class="bar" style="width: <?php echo $t_original_work_width ?>%">
+			<?php print_progress_span( $this->handler_id, $t_task_width )  ?>
+				<?php print_progressbar_span( $this->handler_id, $t_original_work_width )  ?>
 					<?php echo $t_progress_text ?>
 				</span><?php
 				if ( $t_extra_work_width > 0 ) {
-					echo '<span class="bar overdue" style="background-color:';
-					print_overdue_color();
-					echo ' width: ' . $t_extra_work_width . '%">' . $t_overdue_text . '</span>';
+					print_overdue_span( $t_extra_work_width );
+					echo $t_overdue_text . '</span>';
 				}
 				?>
 			</span>

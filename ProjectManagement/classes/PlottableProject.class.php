@@ -1,8 +1,8 @@
 <?php
 
 class PlottableProject extends PlottableTask {
-	public function __construct( $p_id, $p_name ) {
-		parent::__construct();
+	public function __construct( $p_handler_id, $p_id, $p_name ) {
+		parent::__construct( $p_handler_id );
 		$this->type = PlottableTaskTypes::PROJECT;
 		$this->id = $p_id;
 		$this->name = $p_name;
@@ -42,17 +42,16 @@ class PlottableProject extends PlottableTask {
 		<td width="85%" style="text-align:left;">
 			<div class="resource-section">
 				<span class="filler" style="width: <?php echo $t_before ?>%"></span>
-			<span class="progress" style="width: <?php echo $t_task_width ?>%">
-				<span class="bar" style="width: <?php echo $t_original_work_width ?>%">
-					<?php echo $t_text ?>
-				</span><?php
-				if ( $t_extra_work_width > 0 ) {
-					echo '<span class="bar overdue" style="background-color:';
-					print_overdue_color();
-					echo ' width: ' . $t_extra_work_width . '%">' . $t_text . '</span>';
-				}
-				?>
-			</span>
+				<?php print_progress_span( $this->handler_id, $t_task_width )  ?>
+					<?php print_progressbar_span( $this->handler_id, $t_original_work_width )  ?>
+						<?php echo $t_text ?>
+					</span><?php
+					if ( $t_extra_work_width > 0 ) {
+						print_overdue_span( $t_extra_work_width );
+						echo $t_text . '</span>';
+					}
+					?>
+				</span>
 			</div>
 		</td>
 	</tr>

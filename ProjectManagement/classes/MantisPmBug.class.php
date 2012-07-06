@@ -58,8 +58,6 @@ class MantisPmBug {
 	}
 
 	public function print_bug( $p_total_value = -1 ) {
-		global $g_resource_colors;
-
 		echo '<div class="bug">';
 		$t_alternate_class = helper_alternate_class();
 
@@ -100,18 +98,12 @@ class MantisPmBug {
 		echo '</span>';
 
 		echo '<span class="resource-progress-section">';
-		echo '<span class="progress" style="background-color:';
-		print_background_color( $g_resource_colors[$this->handler_id], PLUGIN_PM_LIGHT );
-		echo ' border-color: ';
-		print_background_color( $g_resource_colors[$this->handler_id], PLUGIN_PM_DARK );
-		echo ' width: ' . $t_total_width . '%">';
-		echo '<span class="bar" style="background-color:';
-		print_background_color( $g_resource_colors[$this->handler_id], PLUGIN_PM_DARK );
-		echo ' width: ' . $t_original_work_width . '%">' . $t_progress_text . '</span>';
+		print_progress_span( $this->handler_id, $t_total_width );
+		print_progressbar_span( $this->handler_id, $t_original_work_width );
+		echo $t_progress_text . '</span>';
 		if ( $t_extra_work_width > 0 ) {
-			echo '<span class="bar overdue" style="background-color:';
-			print_overdue_color();
-			echo ' width: ' . $t_extra_work_width . '%">' . $t_overdue_text . '</a></span>';
+			print_overdue_span( $t_extra_work_width );
+			echo $t_overdue_text . '</a></span>';
 		}
 		echo '</span>';
 		echo '</span>'; # End of resource progress section

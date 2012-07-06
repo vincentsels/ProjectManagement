@@ -54,8 +54,6 @@ class MantisPmProject {
 	}
 
 	public function print_project( $p_total_value = -1 ) {
-		global $g_resource_colors;
-
 		if ( $p_total_value == 0 ) {
 			$p_total_value = -1;
 		}
@@ -101,18 +99,12 @@ class MantisPmProject {
 			echo '<span class="resource-name-section title-section">' . prepare_resource_name( $t_handler_id ) . '</span>';
 
 			echo '<span class="resource-progress-section">';
-			echo '<span class="progress" style="background-color:';
-			print_background_color( $g_resource_colors[$t_handler_id], PLUGIN_PM_LIGHT );
-			echo ' border-color: ';
-			print_background_color( $g_resource_colors[$t_handler_id], PLUGIN_PM_DARK );
-			echo ' width: ' . $t_total_width . '%">';
-			echo '<span class="bar" style="background-color:';
-			print_background_color( $g_resource_colors[$t_handler_id], PLUGIN_PM_DARK );
-			echo ' width: ' . $t_original_work_width . '%">' . $t_progress_text . '</span>';
+			print_progress_span( $t_handler_id, $t_total_width );
+			print_progressbar_span( $t_handler_id, $t_original_work_width );
+			echo $t_progress_text . '</span>';
 			if ( $t_extra_work_width > 0 ) {
-				echo '<span class="bar overdue" style="background-color:';
-				print_overdue_color();
-				echo ' width: ' . $t_extra_work_width . '%">' . $t_overdue_text . '</span>';
+				print_overdue_span( $t_extra_work_width );
+				echo $t_overdue_text . '</span>';
 			}
 			echo '</span>';
 			echo '</span>'; # End of resource progress section

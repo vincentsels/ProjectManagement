@@ -114,6 +114,7 @@
 
 	$s_plugin_ProjectManagement_unplanned = 'Unplanned';
 	$s_plugin_ProjectManagement_unavailable = 'Unavailable';
+	$s_plugin_ProjectManagement_finished = 'Finished';
 
 	$s_plugin_ProjectManagement_error_enddate_before_startdate = 'Enddate must be later than startdate.';
 ?>

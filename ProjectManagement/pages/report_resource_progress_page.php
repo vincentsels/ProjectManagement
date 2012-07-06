@@ -105,12 +105,14 @@ if ( $t_project_without_versions ) {
 		if ( array_key_exists( PLUGIN_PM_PROJ_ID_UNPLANNED, $t_user->children ) ) {
 			$t_project = $t_user->children[PLUGIN_PM_PROJ_ID_UNPLANNED];
 		} else {
-			$t_project = new PlottableProject( PLUGIN_PM_PROJ_ID_UNPLANNED, plugin_lang_get( 'unplanned' ) );
+			$t_project = new PlottableProject( $row['handler_id'],
+				PLUGIN_PM_PROJ_ID_UNPLANNED, plugin_lang_get( 'unplanned' ) );
 			$t_user->children[PLUGIN_PM_PROJ_ID_UNPLANNED] = $t_project;
 		}
 
 		# Assign the bug to this project
-		$t_bug = new PlottableBug( $row['id'], null, null, $t_previous_bug, $t_user );
+		$t_bug = new PlottableBug( $row['handler_id'],
+			$row['id'], null, null, $t_previous_bug, $t_user );
 		$t_bug->work_data[PLUGIN_PM_DONE][$t_default_worktype] = $row['minutes'];
 
 		$t_project->children[$row['id']] = $t_bug;
@@ -152,7 +154,8 @@ if ( $t_project_without_versions ) {
 		if ( array_key_exists( $row['project_id'], $t_user->children ) ) {
 			$t_project = $t_user->children[$row['project_id']];
 		} else {
-			$t_project = new PlottableProject( $row['project_id'], $row['project_name'] );
+			$t_project = new PlottableProject( $row['handler_id'],
+				$row['project_id'], $row['project_name'] );
 			$t_user->children[$row['project_id']] = $t_project;
 		}
 
@@ -160,7 +163,8 @@ if ( $t_project_without_versions ) {
 		if ( array_key_exists( $row['category_id'], $t_project->children ) ) {
 			$t_category = $t_project->children[$row['category_id']];
 		} else {
-			$t_category = new PlottableCategory( $row['category_id'], $row['category_name'] );
+			$t_category = new PlottableCategory( $row['handler_id'],
+				$row['category_id'], $row['category_name'] );
 			$t_project->children[$row['category_id']] = $t_category;
 		}
 
@@ -168,7 +172,8 @@ if ( $t_project_without_versions ) {
 		if ( array_key_exists( $row['id'], $t_category->children ) ) {
 			$t_bug = $t_category->children[$row['id']];
 		} else {
-			$t_bug = new PlottableBug( $row['id'], $row['weight'], $row['due_date'], $t_previous_bug, $t_user );
+			$t_bug = new PlottableBug( $row['handler_id'], $row['id'],
+				$row['weight'], $row['due_date'], $t_previous_bug, $t_user );
 			$t_all_bugs_ordered[$row['handler_id']][] = $t_bug;
 			$t_category->children[$row['id']] = $t_bug;
 		}
@@ -200,6 +205,7 @@ if ( $t_project_without_versions ) {
 	# TODO
 
 	# Plot everything
+	resource_cache_colors();
 	foreach ( $t_all_users as $user ) {
 		$user->plot();
 	}

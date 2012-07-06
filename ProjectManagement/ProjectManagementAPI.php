@@ -625,6 +625,21 @@ function resource_unavailability_period_add( $p_user_id, $p_start_date, $p_end_d
 	db_query_bound( $t_query_insert );
 }
 
+function resource_cache_colors() {
+	# Cache resource colors so they can be used in the printing
+	global $g_resource_colors;
+
+	$t_resource_table = plugin_table( 'resource' );
+	$t_color_query    = "SELECT user_id, color FROM $t_resource_table WHERE color IS NOT NULL";
+	$t_color_result   = db_query_bound( $t_color_query );
+
+	while ( $t_row = db_fetch_array( $t_color_result ) ) {
+		$g_resource_colors[$t_row['user_id']] = $t_row['color'];
+	}
+	# Add default
+	$g_resource_colors[NO_USER] = 120;
+}
+
 
 /**
  * @param $f_target_version string Required. Specify a the target version to get the tasks for.
