@@ -143,7 +143,6 @@ class ProjectManagementPlugin extends MantisPlugin {
 		require_once( 'classes/PlottableProject.class.php' );
 		require_once( 'classes/PlottableCategory.class.php' );
 		require_once( 'classes/PlottableBug.class.php' );
-		require_once( 'classes/ProjectManagementCache.class.php' );
 	}
 
 	function link_files() {

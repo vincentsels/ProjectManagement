@@ -111,7 +111,7 @@ if ( $t_project_without_versions ) {
 		}
 	}
 
-	resource_cache_colors();
+	resource_cache_data();
 
 	?>
 

@@ -131,11 +131,11 @@ function print_overdue_color() {
  * Note the closing span must still be printed.
  */
 function print_progress_span( $p_handler_id, $p_width ) {
-	global $g_resource_colors;
+	global $g_resources;
 	echo '<span class="progress" style="background-color:';
-	print_background_color( $g_resource_colors[$p_handler_id], PLUGIN_PM_LIGHT );
+	print_background_color( $g_resources[$p_handler_id]['color'], PLUGIN_PM_LIGHT );
 	echo ' border-color: ';
-	print_background_color( $g_resource_colors[$p_handler_id], PLUGIN_PM_DARK );
+	print_background_color( $g_resources[$p_handler_id]['color'], PLUGIN_PM_DARK );
 	echo ' width: ' . $p_width . '%">';
 }
 
@@ -144,9 +144,9 @@ function print_progress_span( $p_handler_id, $p_width ) {
  * Note the closing span must still be printed.
  */
 function print_progressbar_span( $p_handler_id, $p_width ) {
-	global $g_resource_colors;
+	global $g_resources;
 	echo '<span class="bar" style="background-color:';
-	print_background_color( $g_resource_colors[$p_handler_id], PLUGIN_PM_DARK );
+	print_background_color( $g_resources[$p_handler_id]['color'], PLUGIN_PM_DARK );
 	echo ' width: ' . $p_width . '%">';
 }
 

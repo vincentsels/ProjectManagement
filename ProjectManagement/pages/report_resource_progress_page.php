@@ -105,8 +105,8 @@ if ( $t_project_without_versions ) {
 		if ( array_key_exists( PLUGIN_PM_PROJ_ID_UNPLANNED, $t_user->children ) ) {
 			$t_project = $t_user->children[PLUGIN_PM_PROJ_ID_UNPLANNED];
 		} else {
-			$t_project = new PlottableProject( $row['handler_id'],
-				PLUGIN_PM_PROJ_ID_UNPLANNED, plugin_lang_get( 'unplanned' ) );
+			$t_project = new PlottableNotPlannedProject( $row['handler_id'],
+				$t_release_date_previous, $t_release_date_target );
 			$t_user->children[PLUGIN_PM_PROJ_ID_UNPLANNED] = $t_project;
 		}
 
@@ -120,6 +120,21 @@ if ( $t_project_without_versions ) {
 
 		$t_previous_bug = $t_bug;
 		$t_previous_handler_id = $row['handler_id'];
+	}
+
+	# Calculate the bug data first, per user, in the correct order
+	resource_cache_data();
+	foreach ( $t_all_bugs_ordered as $user ) {
+		foreach ( $user as $bug ) {
+			$bug->calculate_data( $t_release_date_previous );
+		}
+	}
+
+	# Next, calculate all other (groups of) tasks
+	foreach ( $t_all_users as $user ) {
+		foreach ( $user->children as $project ) {
+			$project->calculate_data( $t_release_date_previous );
+		}
 	}
 
 	# Fetch all relevant bugs
@@ -144,7 +159,7 @@ if ( $t_project_without_versions ) {
 			# Try to get the latest 'unplanned' bug
 			if ( array_key_exists( PLUGIN_PM_PROJ_ID_UNPLANNED, $t_user->children ) &&
 				count( $t_user->children[PLUGIN_PM_PROJ_ID_UNPLANNED] ) > 0 ) {
-				$t_previous_bug = end(array_values($t_user->children[PLUGIN_PM_PROJ_ID_UNPLANNED]->children));
+				$t_previous_bug = end( array_values( $t_user->children[PLUGIN_PM_PROJ_ID_UNPLANNED]->children ) );
 			} else {
 				$t_previous_bug = null;
 			}
@@ -189,7 +204,7 @@ if ( $t_project_without_versions ) {
 	# TODO
 
 	# Calculate the bug data first, per user, in the correct order
-	ProjectManagementCache::CacheResourceData();
+	resource_cache_data();
 	foreach ( $t_all_bugs_ordered as $user ) {
 		foreach ( $user as $bug ) {
 			$bug->calculate_data( $t_release_date_previous );
@@ -205,7 +220,6 @@ if ( $t_project_without_versions ) {
 	# TODO
 
 	# Plot everything
-	resource_cache_colors();
 	foreach ( $t_all_users as $user ) {
 		$user->plot();
 	}

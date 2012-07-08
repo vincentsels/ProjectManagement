@@ -18,6 +18,7 @@ class PlottableBug extends PlottableTask {
 	}
 
 	protected function calculate_data_specific( $p_reference_date ) {
+		global $g_resources;
 
 		# Step 1: Calculate the est, done, work and overdue
 
@@ -62,9 +63,8 @@ class PlottableBug extends PlottableTask {
 		}
 
 		# First retrieve the amount of hours this resource works per day
-		# Assumes 5 days a week. Could be enhanced to be configurable per user, project,...
 		$t_workdays_per_week = 7;
-		$t_hours_per_day = ProjectManagementCache::$resource_cache[$this->handler_id] / $t_workdays_per_week;
+		$t_hours_per_day = $g_resources[$this->handler_id]['hours_per_week'] / $t_workdays_per_week;
 		if ( $t_hours_per_day > 0 ) {
 			$t_seconds_for_bug = $this->est / $t_hours_per_day * 24 * 60;
 			# Todo: include logic for non-working days

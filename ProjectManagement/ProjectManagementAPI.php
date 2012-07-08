@@ -28,6 +28,8 @@ define( 'PLUGIN_PM_CUST_CONCATENATION_CHAR', '|' );
 define( 'PLUGIN_PM_PROJ_ID_UNPLANNED', -1 );
 define( 'PLUGIN_PM_PROJ_ID_NONWORKING', -2 );
 
+define( 'PLUGIN_PM_DUMMY_BUG', 999999 );
+
 # Enums
 
 class Action {
@@ -628,19 +630,21 @@ function resource_unavailability_period_add( $p_user_id, $p_start_date, $p_end_d
 	db_query_bound( $t_query_insert );
 }
 
-function resource_cache_colors() {
-	# Cache resource colors so they can be used in the printing
-	global $g_resource_colors;
+function resource_cache_data() {
+	global $g_resources;
 
 	$t_resource_table = plugin_table( 'resource' );
-	$t_color_query    = "SELECT user_id, color FROM $t_resource_table WHERE color IS NOT NULL";
-	$t_color_result   = db_query_bound( $t_color_query );
+	$t_query    = "SELECT user_id, color, deployability, hours_per_week FROM $t_resource_table";
+	$t_result   = db_query_bound( $t_query );
 
-	while ( $t_row = db_fetch_array( $t_color_result ) ) {
-		$g_resource_colors[$t_row['user_id']] = $t_row['color'];
+	while ( $t_row = db_fetch_array( $t_result ) ) {
+		$g_resources[$t_row['user_id']] = $t_row;
 	}
 	# Add default
-	$g_resource_colors[NO_USER] = 120;
+	$g_resources[NO_USER]['user_id'] = NO_USER;
+	$g_resources[NO_USER]['color'] = 120;
+	$g_resources[NO_USER]['deployability'] = 100;
+	$g_resources[NO_USER]['hours_per_week'] = 0;
 }
 
 

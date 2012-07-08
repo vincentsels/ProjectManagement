@@ -67,3 +67,74 @@ class PlottableProject extends PlottableTask {
 		echo '</td></tr>';
 	}
 }
+
+class PlottableNotPlannedProject extends PlottableProject {
+	private $period_start;
+	private $period_end;
+
+	public function __construct( $p_handler_id, $p_period_start, $p_period_end ) {
+		parent::__construct( $p_handler_id,
+			PLUGIN_PM_PROJ_ID_UNPLANNED,
+			plugin_lang_get( 'unplanned' ) );
+
+		$this->type = PlottableTaskTypes::PROJECT;
+		$this->task_start = $p_period_start; # Plot not-planned work first
+		$this->period_start = $p_period_start;
+		$this->period_end = $p_period_end;
+	}
+
+	protected function calculate_data_specific( $p_reference_date ) {
+		global $g_resources;
+
+		foreach ( $this->children as $child ) {
+			# We're only interested in the hours done
+			$this->done += $child->done;
+		}
+
+		# In order to calculate the estimated 'not plannable' work, use the
+		# deployability of the resource.
+		$t_deployability = $g_resources[$this->handler_id]['deployability'];
+		$t_hours_per_week = $g_resources[$this->handler_id]['hours_per_week'];
+
+		if ( $t_deployability === 0 || $t_hours_per_week === 0 ) {
+			# This resource doesn't work. Issue a warning.
+			trigger_error('Warning: user ' . user_get_name( $this->handler_id ) . ' does not have ' .
+			'working hours per week or deployability set. Deadlines could not be estimated.');
+			$this->est = $this->done;
+			$this->overdue = $this->done;
+		} else {
+			# Estimated work for this resource is the total
+			$this->est = $this->minutes_none_deployability( $this->period_start, $this->period_end,
+				$t_deployability, $t_hours_per_week );
+			$this->est = max( $this->est, $this->done );
+
+			$t_hours_per_day = $t_hours_per_week / 7;
+			if ( $t_hours_per_day > 0 ) {
+				$t_seconds_for_bug = $this->est / $t_hours_per_day * 24 * 60;
+				# Todo: include logic for non-working days
+				$this->task_end = $this->task_start + $t_seconds_for_bug;
+			}
+
+			# Calculate overdue
+			$t_est_till_today = $this->minutes_none_deployability( $this->period_start, min( time(), $this->period_end ),
+				$t_deployability, $t_hours_per_week );
+			$this->overdue = max( 0, $this->done - $t_est_till_today );
+
+			# In case we still got time left, add a dummy bug to fill up the remaining space
+			if ( $this->est - $this->done > 0 ) {
+				$t_dummy = new PlottableBug( $this->handler_id, PLUGIN_PM_DUMMY_BUG, 0, null,
+					end( array_values( $this->children ) ) );
+				$t_dummy->work_data[PLUGIN_PM_EST][plugin_config_get( 'default_worktype' )] = $this->est - $this->done;
+				$t_dummy->work_data[PLUGIN_PM_DONE][plugin_config_get( 'default_worktype' )] = 0;
+				$t_dummy->calculate_data( $p_reference_date );
+				$this->children[PLUGIN_PM_DUMMY_BUG] = $t_dummy;
+			}
+		}
+	}
+
+	private function minutes_none_deployability( $p_start_date, $p_end_date, $p_deployability, $p_hours_per_week ) {
+		$t_days_between = ( $p_end_date - $p_start_date ) / ( 60 * 60 * 24 );
+		$t_hours_per_day = $p_hours_per_week / 7;
+		return $t_days_between * $t_hours_per_day * 60 * ( 100 - $p_deployability ) / 100;
+	}
+}
