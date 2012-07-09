@@ -143,3 +143,10 @@ tr.progress-row {
 tr.progress-row td {
     padding: 1px;
 }
+
+.description-info {
+    float: left;
+    position: absolute;
+    opacity: 0.2;
+    filter:alpha(opacity=20); /* For IE8 and earlier */
+}

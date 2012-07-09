@@ -73,6 +73,10 @@ class PlottableBug extends PlottableTask {
 	}
 
 	public function plot_specific_start( $p_unique_id, $p_min_date, $p_max_date ) {
+		if ( $this->id == PLUGIN_PM_DUMMY_BUG ) {
+			return; # Don't show the dummy bug!
+		}
+
 		$t_total_width = $p_max_date - $p_min_date;
 		$t_before = ( $this->task_start - $p_min_date ) / $t_total_width * 99;
 		$t_task_width = ( $this->task_end - $this->task_start ) / $t_total_width * 99;
@@ -87,17 +91,17 @@ class PlottableBug extends PlottableTask {
 			$t_extra_work_width    = 0;
 		}
 
-		$t_start = format_short_date( $this->task_start );
-		$t_finish = format_short_date( $this->task_end );
-		$t_info = '<a href="#" class="invisible" title="' . $t_start . ' - ' . $t_finish . '">';
 		$t_progress_info = minutes_to_time( $this->done, false ) . '&nbsp;/&nbsp;' . minutes_to_time( $this->est, false );
+		$t_overdue_info = minutes_to_time( $this->overdue ) . '&nbsp;/&nbsp;' . minutes_to_time( $this->done );
 		$t_progress_text = '<a href="#" class="invisible" title="' . $t_progress_info . '">' . number_format( $t_total_work_width, 1 ) . '%</a>';
-		$t_overdue_text = '<a href="#" title="' . minutes_to_time( $this->overdue ) . '&nbsp;/&nbsp;' . minutes_to_time( $this->done ) . '"></a>';
+		$t_overdue_text = '<a href="#" class="invisible" title="' . $t_overdue_info . '"></a>';
+		$t_description = '<span class="description-info">: ' . bug_get_field( $this->id, 'summary' ) . '</span>';
 
 		?>
 	<tr class="progress-row row-2">
 		<td width="15%">
-			<?php echo $this->id ?>
+			<?php print_bug_link( $this->id ) ?>
+			<?php echo $t_description ?>
 		</td>
 		<td width="85%">
 			<div class="resource-section">

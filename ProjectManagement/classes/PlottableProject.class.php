@@ -15,15 +15,19 @@ class PlottableProject extends PlottableTask {
 
 		if ( $this->est > 0 ) {
 			$t_original_work_width = ( $this->done - $this->overdue ) / $this->est * 100;
+			$t_total_work_width    = $this->done / $this->est * 100;
 			$t_extra_work_width    = $this->overdue / $this->est * 100;
 		} else {
 			$t_original_work_width = 0;
+			$t_total_work_width    = 0;
 			$t_extra_work_width    = 0;
 		}
 
 		$t_start = format_short_date( $this->task_start );
 		$t_finish = format_short_date( $this->task_end );
-		$t_text = '<a href="#" class="invisible" title="' . $t_start . ' - ' . $t_finish . '"></a>';
+		$t_text = '<a href="#" class="invisible" title="' . $t_start . ' - ' . $t_finish . '">' .
+			number_format( $t_total_work_width, 1 ) . '%</a>';
+		$t_overdue_text = '<a href="#" class="invisible" title="' . $t_start . ' - ' . $t_finish . '"></a>';
 
 		if ( $this->id == PLUGIN_PM_PROJ_ID_UNPLANNED || $this->id == PLUGIN_PM_PROJ_ID_NONWORKING ) {
 			$t_project_name = $this->name;
@@ -48,7 +52,7 @@ class PlottableProject extends PlottableTask {
 					</span><?php
 					if ( $t_extra_work_width > 0 ) {
 						print_overdue_span( $t_extra_work_width );
-						echo $t_text . '</span>';
+						echo $t_overdue_text . '</span>';
 					}
 					?>
 				</span>
