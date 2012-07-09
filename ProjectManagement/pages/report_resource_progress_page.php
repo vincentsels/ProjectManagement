@@ -7,13 +7,15 @@ html_page_top2();
 
 print_pm_reports_menu( 'resource_progress_page' );
 
+$f_from_version   = gpc_get_string( 'from_version', null );
 $f_target_version = gpc_get_string( 'target_version', null );
+$f_from_date	  = gpc_get_string( 'from_date', null );
+$f_till_date	  = gpc_get_string( 'till_date', null );
 $f_user_id        = gpc_get_int( 'user_id', ALL_USERS );
 
 $t_project_without_versions = false;
 
-if ( is_null( $f_target_version ) ) {
-
+if ( is_null( $f_till_date ) && is_null( $f_target_version ) ) {
 	# When no version number is specified and 'all projects' is selected, the system can
 	# not determine the desired version number. Display this as an information message.
 	if ( helper_get_current_project() == ALL_PROJECTS ) {
@@ -33,22 +35,53 @@ if ( $t_project_without_versions ) {
 	echo plugin_lang_get( 'project_without_versions' );
 } else {
 
-	# Release dates of previous and current version
-	$t_project_version_table = 'mantis_project_version_table';
-	$t_query_release_date_target  = "SELECT date_order
-										   FROM $t_project_version_table v
-										  WHERE v.version = '$f_target_version'";
-	$t_result_release_date_target = db_query_bound( $t_query_release_date_target );
-	$t_release_date_target_array  = db_fetch_array( $t_result_release_date_target );
-	$t_release_date_target        = $t_release_date_target_array ? $t_release_date_target_array['date_order'] : time();
+	if ( !is_null( $f_till_date ) ) {
+		$t_release_date_target = $f_till_date;
+	} else {
+		# Release dates of previous and current version
+		$t_release_date_target = version_get_field( version_get_id( $f_target_version ), 'date_order' );
+	}
 
-	# Next get the release date of the previous version
-	$t_query_release_date_previous  = "SELECT max(date_order) as date_order
-											 FROM $t_project_version_table v
-											WHERE v.date_order < '$t_release_date_target'";
-	$t_result_release_date_previous = db_query_bound( $t_query_release_date_previous );
-	$t_release_date_previous_array  = db_fetch_array( $t_result_release_date_previous );
-	$t_release_date_previous        = $t_release_date_previous_array ? $t_release_date_previous_array['date_order'] : time();
+	if ( !is_null( $f_from_date ) ) {
+		$t_release_date_previous = $f_from_date;
+	} else if ( !is_null( $f_from_version ) ) {
+		$t_release_date_previous = version_get_field( version_get_id( $f_from_version ), 'date_order' );
+	} else {
+		# Assume the version prior to the target version
+		$t_project_version_table = db_get_table( 'mantis_project_version_table' );
+		$t_query_release_date_previous  = "SELECT max(date_order) as date_order
+										 FROM $t_project_version_table v
+										WHERE v.date_order < '$t_release_date_target'";
+		$t_result_release_date_previous = db_query_bound( $t_query_release_date_previous );
+		$t_release_date_previous_array  = db_fetch_array( $t_result_release_date_previous );
+		$t_release_date_previous        = $t_release_date_previous_array ? $t_release_date_previous_array['date_order'] : time();
+	}
+
+	?>
+
+<div class="center">
+	<table class="width100">
+		<tr>
+			<td class="center">
+				<form name="project_progress" method="post"
+					  action="<?php echo plugin_page( 'report_resource_progress_page' ) ?>">
+					<?php echo lang_get( 'target_version' ), ': ' ?>
+					<select
+						name="target_version"><?php print_version_option_list( $f_target_version, null, VERSION_FUTURE, false, true ) ?></select>
+					<?php echo '<p />', lang_get( 'username' ), ': ' ?>
+					<select name="user_id">
+						<option value="0" selected="selected"></option>
+						<?php print_user_option_list( $f_user_id ) ?>
+					</select>
+					<input name="submit" type="submit" value="<?php echo lang_get( 'update' ) ?>">
+				</form>
+			</td>
+		</tr>
+	</table>
+</div>
+<br/>
+
+	<?php
 
 	# Create the objects
 	$t_all_users = array();
