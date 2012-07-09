@@ -6,7 +6,7 @@ $t_work_types = MantisEnum::getAssocArrayIndexedByValues( plugin_config_get( 'wo
 
 $f_bug_ids       = gpc_get_int_array( 'bug_ids' );
 $f_redirect_page = gpc_get_string( 'redirect_page', null );
-$f_book_date     = strtotime( str_replace( '/', '-', gpc_get_string( 'book_date', date( 'd/m/Y' ) ) ) );
+$f_book_date     = strtotime_safe( gpc_get_string( 'book_date', date( config_get( 'short_date_format' ) ) ) );
 $f_data			 = array();
 
 $t_table = plugin_table( 'work' );

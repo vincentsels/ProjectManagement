@@ -209,10 +209,13 @@ function get_actual_work_todo( $p_work_types ) {
  * Returns the first day of the current month, or when specified,
  * the current month added (or substracted) with $p_add_months months.
  * @param int $p_add_months Optional. The amount of months to add or substract from the current month.
- * @param string $p_format Optional. The format of the date to return. Default is 'd/m/Y'.
+ * @param string $p_format Optional. The format of the date to return.
  * @return string the first day of the month, formated as $p_format.
  */
-function first_day_of_month( $p_add_months = 0, $p_format = 'd/m/Y' ) {
+function first_day_of_month( $p_add_months = 0, $p_format = null ) {
+	if ( $p_format == null ) {
+		$p_format = config_get( 'short_date_format' );
+	}
 	return date( $p_format, mktime( 0, 0, 0, date( 'm' ) + $p_add_months, 1 ) );
 }
 
@@ -220,10 +223,13 @@ function first_day_of_month( $p_add_months = 0, $p_format = 'd/m/Y' ) {
  * Returns the last day of the current month, or when specified,
  * the current month added (or substracted) with $p_add_months months.
  * @param int $p_add_months Optional. The amount of months to add or substract from the current month.
- * @param string $p_format Optional. The format of the date to return. Default is 'd/m/Y'.
+ * @param string $p_format Optional. The format of the date to return.
  * @return string the last day of the month, formated as $p_format.
  */
-function last_day_of_month( $p_add_months = 0, $p_format = 'd/m/Y' ) {
+function last_day_of_month( $p_add_months = 0, $p_format = null ) {
+	if ( $p_format == null ) {
+		$p_format = config_get( 'short_date_format' );
+	}
 	return date( $p_format, mktime( 0, 0, 0, date( 'm' ) + $p_add_months + 1, 0 ) );
 }
 
@@ -710,6 +716,31 @@ function get_all_tasks( $f_target_version, $f_user_id = ALL_USERS, $p_include_bu
 
 	$t_result = db_query_bound( $t_query );
 	return $t_result;
+}
+
+if ( !function_exists( 'strtotime_safe' ) ) {
+	/**
+	 * Fixes 0013332: Due date not saved successfully when date-format is set to 'd/m/Y'
+	 * The normal strtotime can't handle the format d/m/Y, since it will interpret
+	 * it as m/d/Y. To determine whether this is the case, this function looks
+	 * at the short_date_format setting.
+	 * Also, if the passed argument is null and parameter $p_allow_null is false (default),
+	 * date_get_null() is returned.
+	 * @param string $p_date
+	 * @param bool $p_allow_null
+	 * @return number
+	 */
+	function strtotime_safe( $p_date, $p_allow_null = false ) {
+		if( !$p_allow_null && ( $p_date == null || is_blank ( $p_date ) || date_is_null( $p_date ) ) ) {
+			return date_get_null();
+		}
+
+		if ( config_get( 'short_date_format' ) == 'd/m/Y' ) {
+			return strtotime( str_replace( '/', '-', $p_date ) );
+		} else {
+			return strtotime( $p_date );
+		}
+	}
 }
 
 ?>

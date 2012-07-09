@@ -20,9 +20,8 @@ $t_category_table     = db_get_table( 'mantis_category_table' );
 
 $t_const_done = PLUGIN_PM_DONE;
 $t_const_paying = PLUGIN_PM_CUST_PAYING;
-# TODO: repalce with strtotime_safe
-$t_startdate  = strtotime( str_replace( '/', '-', $f_period_start ) );
-$t_enddate    = strtotime( str_replace( '/', '-', $f_period_end ) );
+$t_startdate  = strtotime_safe( $f_period_start );
+$t_enddate    = strtotime_safe( $f_period_end );
 $t_query      = "SELECT p.name as project_name, c.name as category_name, u.username,
 						b.id as bug_id, b.summary as bug_summary,
 						sum(w.minutes) as minutes, max(r.hourly_rate) as hourly_rate,

@@ -23,8 +23,8 @@ $t_category_table = db_get_table( 'mantis_category_table' );
 $t_work_types     = MantisEnum::getAssocArrayIndexedByValues( plugin_config_get( 'work_types' ) );
 
 $t_const_done = PLUGIN_PM_DONE;
-$t_startdate  = strtotime( str_replace( '/', '-', $f_period_start ) );
-$t_enddate    = strtotime( str_replace( '/', '-', $f_period_end ) );
+$t_startdate  = strtotime_safe( $f_period_start );
+$t_enddate    = strtotime_safe( $f_period_end );
 $t_query      = "SELECT w.user_id, u.username, w.book_date, b.project_id, p.name as project_name,
 						 c.id as category_id, c.name as category_name, b.id as bug_id, b.summary as bug_summary,
 						 w.work_type, w.minutes, r.hourly_rate
@@ -145,7 +145,7 @@ $t_per_category  = array();
 		$t_category_name  = $row["category_name"];
 		$t_category_link  = $t_plugin_page . '&category_id=' . $row["category_id"];
 		$t_bug_summary    = $row["bug_summary"];
-		$t_book_date      = date( 'd/m/Y', $row["book_date"] );
+		$t_book_date      = date( config_get( 'short_date_format' ), $row["book_date"] );
 		$t_work_type      = MantisEnum::getLabel( plugin_config_get( "work_types" ), $row["work_type"] );
 		$t_work_type_link = $t_plugin_page . '&work_type=' . $row["work_type"];
 		$t_hours          = format( $row["minutes"] / 60 );

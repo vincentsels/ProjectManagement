@@ -295,8 +295,8 @@ class ProjectManagementPlugin extends MantisPlugin {
 			}
 
 			# Check for new period of unavailability
-			$f_unavailable_start = strtotime( str_replace( '/', '-', gpc_get_string( 'period_start', false ) ) );
-			$f_unavailable_end = strtotime( str_replace( '/', '-', gpc_get_string( 'period_end', false ) ) );
+			$f_unavailable_start = strtotime_safe( gpc_get_string( 'period_start', false ) );
+			$f_unavailable_end = strtotime_safe( gpc_get_string( 'period_end', false ) );
 			$f_unavailable_type = gpc_get_int( 'unavailability_type', null );
 			$f_unavailable_note = gpc_get_string( 'unavailability_note', null );
 
@@ -702,7 +702,8 @@ class ProjectManagementPlugin extends MantisPlugin {
 					<?php
 					if ( access_has_bug_level( plugin_config_get( 'include_bookdate_threshold' ), $p_bug_id ) ) {
 						echo plugin_lang_get( 'book_date' ) . ': ';
-						echo '<input type="text" size="8" maxlength="10" autocomplete="off" id="book_date" name="book_date" value="' . date( 'd/m/Y' ) . '">';
+						echo '<input type="text" size="8" maxlength="10" autocomplete="off" id="book_date" name="book_date" value="' .
+							date( config_get( 'short_date_format' ) ) . '">';
 						date_print_calendar( 'book_date_cal' );
 						date_finish_calendar( 'book_date', 'book_date_cal' );
 					}

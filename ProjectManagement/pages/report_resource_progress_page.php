@@ -37,7 +37,7 @@ if ( $t_project_without_versions ) {
 	$t_release_date_target = version_get_field( version_get_id( $f_target_version ), 'date_order' );
 
 	if ( !empty( $f_from_date ) ) {
-		$t_release_date_previous = strtotime( str_replace( '/', '-', $f_from_date ) );
+		$t_release_date_previous = strtotime_safe( $f_from_date );
 	} else if ( !empty( $f_from_version ) ) {
 		$t_release_date_previous = version_get_field( version_get_id( $f_from_version ), 'date_order' );
 	} else {

@@ -112,7 +112,8 @@ $t_row_last_month               = db_fetch_array( $t_result_registered_last_mont
 		<?php
 						if ( access_has_global_level( plugin_config_get( 'include_bookdate_threshold' ) ) ) {
 							echo plugin_lang_get( 'book_date' ) . ': ';
-							echo '<input type="text" size="8" maxlength="10" autocomplete="off" id="book_date" name="book_date" value="' . date( 'd/m/Y' ) . '"> ';
+							echo '<input type="text" size="8" maxlength="10" autocomplete="off" id="book_date" name="book_date" value="' .
+								date( config_get( 'short_date_format' ) ) . '"> ';
 							date_print_calendar( 'book_date_cal' );
 							date_finish_calendar( 'book_date', 'book_date_cal' );
 						}
