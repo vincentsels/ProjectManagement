@@ -7,13 +7,6 @@
 
 Project Management is a plugin for the open source [MantisBT](http://www.mantisbt.org) tool (also check out its [Github](https://github.com/mantisbt) page). This plugin attempts to add basic project management features such as estimations, timetracking, project follow-up, and resource management to the existing bugtracking functionality.
 
-## Important notice - compatibility issues
-
-Version 1.1 and up of this plugin will not run on an unmodified Mantis installation. In order for the plugin to run,
-two modifications have to be made. For more information, check [this Mantis issue](http://www.mantisbt.org/bugs/view.php?id=14329).
-If I find the time, I'll try to come up with a workaround for this problem and get the plugin to run on a default Mantis installation again.
-(or feel free to fork this repo and come up with a solution! ;) )
-
 ## Features
 
 ### Advanced time registration
@@ -70,3 +63,11 @@ to discover a realistic date of when this developer's work will be finished.
 ## Credits
 
 A lot of credit goes to Mantis plugin-guru jreese ([http://noswap.com](http://noswap.com/)), whose plugins supplied a great source of examples and inspiration.
+
+## Important notice - compatibility issues
+
+Starting from version 1.1, one small feature will not work with the base installation of Mantis:
+* When 'paying customer' is set as a required field, you will be able to leave it blank when changing a bug's status.
+In order to be able to use this feature, two small modifications have to be made to the basic Mantis installation,
+as explained in [this Mantis issue](http://www.mantisbt.org/bugs/view.php?id=14329). This is necessary until the Mantis team decides
+to include the event in their core, if they deem it appropriate.

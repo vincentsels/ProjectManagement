@@ -114,6 +114,14 @@ class ProjectManagementPlugin extends MantisPlugin {
 		);
 	}
 
+	function events() {
+		# Note: I added this event only so that the error message
+		# would stop from showing until Mantis adds this event in the
+		# change status page, as mentioned in this Mantis ticket:
+		# http://www.mantisbt.org/bugs/view.php?id=14329
+		return array( 'EVENT_BUG_STATUS_UPDATE_FORM' => EVENT_TYPE_EXECUTE );
+	}
+
 	function hooks() {
 		return array(
 			'EVENT_VIEW_BUG_DETAILS'	  => 'view_bug_pm_summary',
