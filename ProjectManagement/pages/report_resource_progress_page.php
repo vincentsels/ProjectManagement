@@ -7,15 +7,14 @@ html_page_top2();
 
 print_pm_reports_menu( 'resource_progress_page' );
 
-$f_from_version   = gpc_get_string( 'from_version', null );
 $f_target_version = gpc_get_string( 'target_version', null );
+$f_from_version   = gpc_get_string( 'from_version', null );
 $f_from_date	  = gpc_get_string( 'from_date', null );
-$f_till_date	  = gpc_get_string( 'till_date', null );
 $f_user_id        = gpc_get_int( 'user_id', ALL_USERS );
 
 $t_project_without_versions = false;
 
-if ( is_null( $f_till_date ) && is_null( $f_target_version ) ) {
+if ( empty( $f_target_version ) ) {
 	# When no version number is specified and 'all projects' is selected, the system can
 	# not determine the desired version number. Display this as an information message.
 	if ( helper_get_current_project() == ALL_PROJECTS ) {
@@ -34,17 +33,12 @@ if ( is_null( $f_till_date ) && is_null( $f_target_version ) ) {
 if ( $t_project_without_versions ) {
 	echo plugin_lang_get( 'project_without_versions' );
 } else {
+	# Release dates of previous and current version
+	$t_release_date_target = version_get_field( version_get_id( $f_target_version ), 'date_order' );
 
-	if ( !is_null( $f_till_date ) ) {
-		$t_release_date_target = $f_till_date;
-	} else {
-		# Release dates of previous and current version
-		$t_release_date_target = version_get_field( version_get_id( $f_target_version ), 'date_order' );
-	}
-
-	if ( !is_null( $f_from_date ) ) {
-		$t_release_date_previous = $f_from_date;
-	} else if ( !is_null( $f_from_version ) ) {
+	if ( !empty( $f_from_date ) ) {
+		$t_release_date_previous = strtotime( str_replace( '/', '-', $f_from_date ) );
+	} else if ( !empty( $f_from_version ) ) {
 		$t_release_date_previous = version_get_field( version_get_id( $f_from_version ), 'date_order' );
 	} else {
 		# Assume the version prior to the target version
@@ -60,24 +54,42 @@ if ( $t_project_without_versions ) {
 	?>
 
 <div class="center">
-	<table class="width100">
-		<tr>
-			<td class="center">
-				<form name="project_progress" method="post"
-					  action="<?php echo plugin_page( 'report_resource_progress_page' ) ?>">
-					<?php echo lang_get( 'target_version' ), ': ' ?>
-					<select
-						name="target_version"><?php print_version_option_list( $f_target_version, null, VERSION_FUTURE, false, true ) ?></select>
-					<?php echo '<p />', lang_get( 'username' ), ': ' ?>
+	<form name="project_progress" method="post"
+		  action="<?php echo plugin_page( 'report_resource_progress_page' ) ?>">
+		<table class="width100" cellspacing="1">
+			<tr <?php echo helper_alternate_class() ?>>
+				<td class="category"><?php echo plugin_lang_get( 'select_target_version' ), ': ' ?></td>
+				<td colspan="3">
+					<select name="target_version"><?php print_version_option_list( $f_target_version, null, VERSION_FUTURE, false, true ) ?></select>
+				</td>
+			</tr>
+			<tr <?php echo helper_alternate_class() ?>>
+				<td class="category"><?php echo plugin_lang_get( 'select_from_version' ), ': ' ?></td>
+				<td>
+					<select name="from_version"><?php print_version_option_list( $f_from_version, null, VERSION_ALL, true, true ) ?></select>
+				</td>
+				<td class="category"><?php echo plugin_lang_get( 'select_from_date' ), ': ' ?></td>
+				<td>
+					<input type="text" size="8" maxlength="10" autocomplete="off" id="from_date" name="from_date">
+					<?php
+					date_print_calendar( 'from_date_cal' );
+					date_finish_calendar( 'from_date', 'from_date_cal' );
+					?>
+				</td>
+			</tr>
+			<tr <?php echo helper_alternate_class() ?>>
+				<td class="category"><?php echo lang_get( 'username' ), ': ' ?></td>
+				<td colspan="3">
 					<select name="user_id">
 						<option value="0" selected="selected"></option>
 						<?php print_user_option_list( $f_user_id ) ?>
 					</select>
-					<input name="submit" type="submit" value="<?php echo lang_get( 'update' ) ?>">
-				</form>
-			</td>
-		</tr>
-	</table>
+				</td>
+			</tr>
+				<td colspan="4" class="center"><input name="submit" type="submit" value="<?php echo lang_get( 'update' ) ?>"></td>
+			</tr>
+		</table>
+	</form>
 </div>
 <br/>
 
@@ -93,7 +105,8 @@ if ( $t_project_without_versions ) {
 	$t_category_table        = db_get_table( 'mantis_category_table' );
 	$t_work_table            = plugin_table( 'work' );
 	$t_res_unav_table        = plugin_table( 'resource_unavailable' );
-	$t_done				 	 = PLUGIN_PM_DONE;
+	$t_const_done		 	 = PLUGIN_PM_DONE;
+	$t_const_all_users		 = ALL_USERS;
 
 	$t_query = "SELECT pc.id as project_id, pc.name as project_name, c.id as category_id, c.name as category_name,
 					   b.id, b.handler_id, sum(w.minutes) as minutes
@@ -102,9 +115,10 @@ if ( $t_project_without_versions ) {
 				  JOIN $t_project_table pc ON b.project_id = pc.id
 				  JOIN $t_category_table c ON b.category_id = c.id
 				 WHERE w.book_date BETWEEN $t_release_date_previous AND $t_release_date_target
-			 	   AND w.minutes_type = $t_done
+			 	   AND w.minutes_type = $t_const_done
 			 	   AND b.handler_id <> 0
 			 	   AND b.target_version <> '$f_target_version'
+			 	   AND ($f_user_id = $t_const_all_users OR b.handler_id = $f_user_id)
 			 	   AND NOT EXISTS
 			 	   (
 			 	   SELECT 1

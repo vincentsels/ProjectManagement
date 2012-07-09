@@ -116,6 +116,9 @@
 	$s_plugin_ProjectManagement_unplanned = 'Niet gepland';
 	$s_plugin_ProjectManagement_unavailable = 'Onbeschikbaar';
 	$s_plugin_ProjectManagement_finished = 'Afgewerkt';
+	$s_plugin_ProjectManagement_select_target_version = 'Selecteer een doelversie';
+	$s_plugin_ProjectManagement_select_from_version = 'Selecteer eventueel een startversie';
+	$s_plugin_ProjectManagement_select_from_date = '<i>of</i> startdatum';
 
 	$s_plugin_ProjectManagement_error_enddate_before_startdate = 'Einddatum moet na startdatum liggen.';
 ?>
