@@ -36,6 +36,13 @@ If I find the time, I'll try to come up with a workaround for this problem and g
   * Displays summary reports per user.
   * Allow easy export to excel or other formats *(todo)*.
 
+### Per-resource Gantt chart
+
+* In addition to the amount of hours per week, also add support to enter non-working days per resource.
+* A Gantt chart that lists all work items per resource, shows the progress and expected completion date.
+* Play around with expected 'availability' of each resource, expressed as a percentage of their available time,
+to discover a realistic date of when this developer's work will be finished.
+
 ### Project timeline
 
 * Shows an overview of all projects, sub-projects, categories and tickets for a certain version:
@@ -55,13 +62,6 @@ If I find the time, I'll try to come up with a workaround for this problem and g
 * Allow certain customers to be able to approve of tickets simply as a notion, or in order to be able to assign them.
 
 ## Upcoming features
-
-### Per-resource Gantt chart
-
-* In addition to the amount of hours per week, also add support to enter non-working days per resource.
-* A Gantt chart that lists all work items per resource, shows the progress and expected completion date.
-* Play around with expected 'availability' of each resource, expressed as a percentage of their available time,
-to discover a realistic date of when this developer's work will be finished.
 
 ### Resource overviews
 
