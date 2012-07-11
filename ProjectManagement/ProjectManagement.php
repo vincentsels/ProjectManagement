@@ -110,7 +110,8 @@ class ProjectManagementPlugin extends MantisPlugin {
 			'edit_targets_threshold'					 => DEVELOPER,
 			'unavailability_types'	                     => '10:unspecified,20:unavailable,30:out of office,40:appointment,50:private appointment,60:vacation,70:administration,80:service desk,90:other',
 			'default_unavailability_type'				 => 10,
-			'ignore_work_during_unavailability_periods' => array(60, 80)
+			'ignore_work_during_unavailability_periods' => array(60, 80),
+			'release_buffer' 							=> 21
 		);
 	}
 

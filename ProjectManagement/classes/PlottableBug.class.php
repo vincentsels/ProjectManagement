@@ -63,7 +63,7 @@ class PlottableBug extends PlottableTask {
 		$this->calculate_actual_end_date( $this->task_start, $this->task_end, $this->est, $this->na );
 	}
 
-	public function plot_specific_start( $p_unique_id, $p_min_date, $p_max_date ) {
+	public function plot_specific_start( $p_unique_id, $p_last_dev_day, $p_min_date, $p_max_date ) {
 		if ( $this->id == PLUGIN_PM_DUMMY_BUG ) {
 			return; # Don't show the dummy bug!
 		}
@@ -100,7 +100,7 @@ class PlottableBug extends PlottableTask {
 		<td width="85%">
 			<div class="resource-section">
 			<span class="filler" style="width: <?php echo $t_before ?>%"></span>
-			<?php print_progress_span( $this->handler_id, $t_task_width )  ?>
+			<?php print_progress_span( $this->handler_id, $t_task_width, $p_max_date > $p_last_dev_day )  ?>
 				<?php print_progressbar_span( $this->handler_id, $t_original_work_width )  ?>
 					<?php echo $t_progress_text ?>
 				</span><?php

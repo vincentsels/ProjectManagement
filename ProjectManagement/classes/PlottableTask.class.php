@@ -34,7 +34,7 @@ abstract class PlottableTask {
 		$this->handler_id = $p_handler_id;
 	}
 
-	public function plot( $p_min_date = null, $p_max_date = null ) {
+	public function plot( $p_last_dev_day, $p_min_date = null, $p_max_date = null ) {
 		if ( is_null( $p_min_date ) ) {
 			$p_min_date = $this->task_start;
 		}
@@ -48,14 +48,14 @@ abstract class PlottableTask {
 
 		$t_unique_id = uniqid($this->type . '' . $this->id);
 
-		$this->plot_specific_start( $t_unique_id, $p_min_date, $p_max_date );
+		$this->plot_specific_start( $t_unique_id, $p_last_dev_day, $p_min_date, $p_max_date );
 		foreach ( $this->children as $child ) {
-			$child->plot( $p_min_date, $p_max_date );
+			$child->plot( $p_last_dev_day, $p_min_date, $p_max_date );
 		}
 		$this->plot_specific_end( $t_unique_id );
 	}
 
-	protected abstract function plot_specific_start( $p_unique_id, $p_min_date, $p_max_date );
+	protected abstract function plot_specific_start( $p_unique_id, $p_last_dev_day, $p_min_date, $p_max_date );
 	protected function plot_specific_end( $p_unique_id ) {
 		# Standard behaviour does nothing
 	}

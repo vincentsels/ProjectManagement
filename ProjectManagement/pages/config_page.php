@@ -156,6 +156,12 @@ print_pm_config_menu( 'config_page' );
 			<td><input type="text" size="100" maxlength="200" name="default_owner" id="default_owner"
 					   value="<?php var_export( plugin_config_get( 'default_owner' ) ) ?>"></td>
 		</tr>
+		<tr class="spacer"/>
+		<tr <?php echo helper_alternate_class() ?>>
+			<td class="category"><?php echo plugin_lang_get( 'release_buffer' ) ?></td>
+			<td><input type="text" size="2" maxlength="2" name="release_buffer" id="release_buffer"
+					   value="<?php echo plugin_config_get( 'release_buffer' ) ?>"></td>
+		</tr>
 		<tr>
 			<td class="center" colspan="2"><input type="submit" value="<?php echo lang_get( 'update' ) ?>"/></td>
 		</tr>

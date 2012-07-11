@@ -114,11 +114,11 @@ span.bar {
     color: #333;
 }
 
-span.overdue {
+span.bar-overdue {
     background: #666600;
 }
 
-span.na {
+span.bar-na {
     background: #BBBBBB;
 }
 
@@ -138,6 +138,10 @@ td.target-date-overdue {
 
 td.target-date-notice {
     background-color: #ffcb52;
+}
+
+span.overdue {
+    color: #ff0000;
 }
 
 tr.progress-row {

@@ -35,6 +35,8 @@ if ( $t_project_without_versions ) {
 } else {
 	# Release dates of previous and current version
 	$t_release_date_target = version_get_field( version_get_id( $f_target_version ), 'date_order' );
+	$t_release_buffer = plugin_config_get( 'release_buffer' ) * 24 * 60 * 60;
+	$t_last_dev_day = $t_release_date_target - $t_release_buffer;
 
 	if ( !empty( $f_from_date ) ) {
 		$t_release_date_previous = strtotime_safe( $f_from_date );
@@ -59,8 +61,17 @@ if ( $t_project_without_versions ) {
 		<table class="width100" cellspacing="1">
 			<tr <?php echo helper_alternate_class() ?>>
 				<td class="category"><?php echo plugin_lang_get( 'select_target_version' ), ': ' ?></td>
-				<td colspan="3">
+				<td>
 					<select name="target_version"><?php print_version_option_list( $f_target_version, null, VERSION_FUTURE, false, true ) ?></select>
+				</td>
+				<td class="category" colspan="2">
+					<?php
+					echo plugin_lang_get( 'last_dev_day' ), ': ' .
+						format_short_date( $t_last_dev_day );
+					echo '<br />';
+					echo plugin_lang_get( 'release_date' ), ': ' .
+						format_short_date( $t_release_date_target );
+					?>
 				</td>
 			</tr>
 			<tr <?php echo helper_alternate_class() ?>>
@@ -263,6 +274,6 @@ if ( $t_project_without_versions ) {
 
 	# Plot everything
 	foreach ( $t_all_users as $user ) {
-		$user->plot();
+		$user->plot( $t_last_dev_day );
 	}
 }

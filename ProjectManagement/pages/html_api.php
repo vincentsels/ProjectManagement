@@ -137,12 +137,16 @@ function print_na_color() {
  * Prints the opening span tag for the work bar.
  * Note the closing span must still be printed.
  */
-function print_progress_span( $p_handler_id, $p_width ) {
+function print_progress_span( $p_handler_id, $p_width, $p_overdue = false ) {
 	global $g_resources;
 	echo '<span class="progress" style="background-color:';
 	print_background_color( $g_resources[$p_handler_id]['color'], PLUGIN_PM_LIGHT );
 	echo ' border-color: ';
-	print_background_color( $g_resources[$p_handler_id]['color'], PLUGIN_PM_DARK );
+	if ( $p_overdue ) {
+		echo "rgb(255, 0, 0);";
+	} else {
+		print_background_color( $g_resources[$p_handler_id]['color'], PLUGIN_PM_DARK );
+	}
 	echo ' width: ' . $p_width . '%">';
 }
 
@@ -162,7 +166,7 @@ function print_progressbar_span( $p_handler_id, $p_width ) {
  * Note the closing span must still be printed.
  */
 function print_overdue_span( $p_width ) {
-	echo '<span class="bar overdue" style="background-color:';
+	echo '<span class="bar bar-overdue" style="background-color:';
 	print_overdue_color();
 	echo ' width: ' . $p_width . '%">';
 }
@@ -172,7 +176,7 @@ function print_overdue_span( $p_width ) {
  * Note the closing span must still be printed.
  */
 function print_na_span( $p_width ) {
-	echo '<span class="bar unavailable" style="background-color:';
+	echo '<span class="bar bar-na" style="background-color:';
 	print_na_color();
 	echo ' width: ' . $p_width . '%">';
 }

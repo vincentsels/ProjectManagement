@@ -8,7 +8,7 @@ class PlottableCategory extends PlottableTask {
 		$this->name = $p_name;
 	}
 
-	public function plot_specific_start( $p_unique_id, $p_min_date, $p_max_date ) {
+	public function plot_specific_start( $p_unique_id, $p_last_dev_day, $p_min_date, $p_max_date ) {
 		$t_total_width = $p_max_date - $p_min_date;
 		$t_before = ( $this->task_start - $p_min_date ) / $t_total_width * 99;
 		$t_task_width = ( $this->task_end - $this->task_start ) / $t_total_width * 99;
@@ -39,7 +39,7 @@ class PlottableCategory extends PlottableTask {
 		<td width="85%">
 			<div class="resource-section">
 				<span class="filler" style="width: <?php echo $t_before ?>%"></span>
-				<?php print_progress_span( $this->handler_id, $t_task_width )  ?>
+				<?php print_progress_span( $this->handler_id, $t_task_width, $p_max_date > $p_last_dev_day )  ?>
 					<?php print_progressbar_span( $this->handler_id, $t_original_work_width )  ?>
 						<?php echo $t_text ?>
 					</span><?php
