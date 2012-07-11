@@ -100,7 +100,7 @@ class PlottableBug extends PlottableTask {
 		<td width="85%">
 			<div class="resource-section">
 			<span class="filler" style="width: <?php echo $t_before ?>%"></span>
-			<?php print_progress_span( $this->handler_id, $t_task_width, $p_max_date > $p_last_dev_day )  ?>
+			<?php print_progress_span( $this->handler_id, $t_task_width, $this->task_end > $p_last_dev_day )  ?>
 				<?php print_progressbar_span( $this->handler_id, $t_original_work_width )  ?>
 					<?php echo $t_progress_text ?>
 				</span><?php

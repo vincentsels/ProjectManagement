@@ -27,10 +27,8 @@ class PlottableProject extends PlottableTask {
 
 		$t_start = format_short_date( $this->task_start );
 		$t_finish = format_short_date( $this->task_end );
-		$t_text = '<a href="#" class="invisible" title="' . $t_start . ' - ' . $t_finish . '">' .
-			number_format( $t_total_work_width, 1 ) . '%</a>';
-		$t_na_text = '<a href="#" class="invisible" title="' . minutes_to_days( $this->na ) . ' ' . lang_get( 'days' ) . '"></a>';
-		$t_overdue_text = '<a href="#" class="invisible" title="' . $t_start . ' - ' . $t_finish . '"></a>';
+		$t_info = '<a href="#" class="invisible" title="' . $t_start . ' - ' . $t_finish . '">';
+		$t_text =  number_format( $t_total_work_width, 1 ) . '%';
 
 		if ( $this->id == PLUGIN_PM_PROJ_ID_UNPLANNED || $this->id == PLUGIN_PM_PROJ_ID_NONWORKING ) {
 			$t_project_name = $this->name;
@@ -49,20 +47,21 @@ class PlottableProject extends PlottableTask {
 		<td width="85%" style="text-align:left;">
 			<div class="resource-section">
 				<span class="filler" style="width: <?php echo $t_before ?>%"></span>
-				<?php print_progress_span( $this->handler_id, $t_task_width, $p_max_date > $p_last_dev_day )  ?>
-					<?php print_progressbar_span( $this->handler_id, $t_original_work_width )  ?>
-						<?php echo $t_text ?>
-					</span><?php
-					if ( $t_na_with > 0 ) {
-						print_na_span( $t_na_with );
-						echo $t_na_text . '</span>';
-					}
-					if ( $t_extra_work_width > 0 ) {
-						print_overdue_span( $t_extra_work_width );
-						echo $t_overdue_text . '</span>';
-					}
-					?>
-				</span>
+				<?php echo $t_info ?>
+				<?php print_progress_span( $this->handler_id, $t_task_width, $this->task_end > $p_last_dev_day )  ?>
+				<?php print_progressbar_span( $this->handler_id, $t_original_work_width )  ?>
+				<?php echo $t_text ?>
+				</span><?php
+				if ( $t_na_with > 0 ) {
+					print_na_span( $t_na_with );
+					echo '</span>';
+				}
+				if ( $t_extra_work_width > 0 ) {
+					print_overdue_span( $t_extra_work_width );
+					echo '</span>';
+				}
+				?>
+				</span></a>
 			</div>
 		</td>
 	</tr>

@@ -17,7 +17,7 @@ class PlottableUser extends PlottableTask {
 				echo user_get_realname( $this->id );
 				print_expand_icon_end();
 				$t_finished_text = plugin_lang_get( 'finished' ) . ': <span ';
-				if ( $p_max_date > $p_last_dev_day ) {
+				if ( $this->task_end > $p_last_dev_day ) {
 					$t_finished_text .= 'class="overdue"';
 				}
 				$t_finished_text .= '>' . format_short_date( $p_max_date ) . '</span>';
