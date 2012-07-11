@@ -118,6 +118,10 @@ span.overdue {
     background: #666600;
 }
 
+span.na {
+    background: #BBBBBB;
+}
+
 span.progress a, span.progress :link, span.progress :visited, span.progress :link:hover, span.progress :visited:hover {
     border: none;
     display: inline-block;

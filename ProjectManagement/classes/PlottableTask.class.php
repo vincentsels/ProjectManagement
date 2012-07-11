@@ -18,6 +18,7 @@ abstract class PlottableTask {
 
 	protected $est;
 	protected $done;
+	protected $na;
 	protected $overdue;
 	protected $task_start;
 	protected $task_end;
@@ -39,6 +40,10 @@ abstract class PlottableTask {
 		}
 		if ( is_null( $p_max_date ) ) {
 			$p_max_date = $this->task_end;
+		}
+
+		if ( $p_max_date - $p_min_date == 0 ) {
+			return; # Prevent division by zero, don't plot this task
 		}
 
 		$t_unique_id = uniqid($this->type . '' . $this->id);
@@ -81,6 +86,7 @@ abstract class PlottableTask {
 			# The data of each task is the sum of the data of all its children
 			$this->est += $child->est;
 			$this->done += $child->done;
+			$this->na += $child->na;
 			$this->overdue += $child->overdue;
 		}
 		$this->task_start = $t_min_start_date;
@@ -90,7 +96,6 @@ abstract class PlottableTask {
 	public function remove_empty_children() {
 		$t_has_children = false;
 		foreach ( $this->children as $child ) {
-			$child->remove_empty_children();
 			if ( count( $child->children ) > 0 ) {
 				$t_has_children = true;
 			}
@@ -98,5 +103,50 @@ abstract class PlottableTask {
 		if ( !$t_has_children ) {
 			$this->children = array();
 		}
+	}
+
+	protected function calculate_actual_end_date( &$p_task_start, &$p_task_end, &$p_est, &$p_na) {
+		$p_task_end = $this->calculate_end_date( $p_task_start, $p_est );
+		$p_total_na = 0;
+		$p_new_na = $this->check_non_working_period( $p_task_start, $p_task_end );
+		while ( $p_total_na != $p_new_na ) {
+			$p_total_na = $p_new_na;
+			$t_new_est = $p_est + $p_total_na;
+			$p_task_end = $this->calculate_end_date( $p_task_start, $t_new_est );
+			$p_new_na = $this->check_non_working_period( $p_task_start, $p_task_end );
+		}
+		$p_na = $p_total_na;
+		$p_est += $p_total_na;
+	}
+
+	private function calculate_end_date( $p_task_start, $p_est ) {
+		global $g_resources;
+
+		$t_workdays_per_week = 7;
+		$t_hours_per_day = $g_resources[$this->handler_id]['hours_per_week'] / $t_workdays_per_week;
+		if ( $t_hours_per_day > 0 ) {
+			$t_seconds_for_bug = $p_est / $t_hours_per_day * 24 * 60;
+			return $p_task_start + $t_seconds_for_bug;
+		}
+		return $p_task_start;
+	}
+
+	private function check_non_working_period( $p_task_start, $p_task_end ) {
+		global $g_resources;
+
+		$t_seconds_na = 0;
+		# Iterate through all the non-working days of the user
+		foreach ( $g_resources[$this->handler_id]['resource_unavailable'] as $t_na_period ) {
+			if ( $t_na_period['start_date'] <= $p_task_end &&
+				$t_na_period['start_date'] > $p_task_start ) {
+				$t_seconds_na = ($t_na_period['end_date'] - $t_na_period['start_date']);
+			}
+		}
+
+		# Convert na period's seconds to 'relative' seconds
+		$t_ratio = $g_resources[$this->handler_id]['hours_per_week'] / ( 7 * 24 );
+		$t_seconds_na *= $t_ratio;
+
+		return $t_seconds_na / 60;
 	}
 }

@@ -15,11 +15,13 @@ class PlottableCategory extends PlottableTask {
 
 		if ( $this->est > 0 ) {
 			$t_original_work_width = ( $this->done - $this->overdue ) / $this->est * 100;
-			$t_total_work_width    = $this->done / $this->est * 100;
+			$t_total_work_width    = ( $this->done + $this->na ) / $this->est * 100;
+			$t_na_with			   = $this->na / $this->est * 100;
 			$t_extra_work_width    = $this->overdue / $this->est * 100;
 		} else {
 			$t_original_work_width = 0;
 			$t_total_work_width    = 0;
+			$t_na_with			   = 0;
 			$t_extra_work_width    = 0;
 		}
 
@@ -27,6 +29,7 @@ class PlottableCategory extends PlottableTask {
 		$t_finish = format_short_date( $this->task_end );
 		$t_text = '<a href="#" class="invisible" title="' . $t_start . ' - ' . $t_finish . '">' .
 			number_format( $t_total_work_width, 1 ) . '%</a>';
+		$t_na_text = '<a href="#" class="invisible" title="' . minutes_to_days( $this->na ) . ' ' . lang_get( 'days' ) . '"></a>';
 		$t_overdue_text = '<a href="#" class="invisible" title="' . $t_start . ' - ' . $t_finish . '"></a>';
 		?>
 	<tr class="progress-row row-category2">
@@ -40,6 +43,10 @@ class PlottableCategory extends PlottableTask {
 					<?php print_progressbar_span( $this->handler_id, $t_original_work_width )  ?>
 						<?php echo $t_text ?>
 					</span><?php
+					if ( $t_na_with > 0 ) {
+						print_na_span( $t_na_with );
+						echo $t_na_text . '</span>';
+					}
 					if ( $t_extra_work_width > 0 ) {
 						print_overdue_span( $t_extra_work_width );
 						echo $t_overdue_text . '</span>';

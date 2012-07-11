@@ -46,7 +46,7 @@ class Action {
  * otherwise, empty $p_minutes return the literal string '0:00'.
  * @return string the amount of minutes formatted as 'HH:MM'.
  */
-function minutes_to_time( $p_minutes, $p_allow_blanks = true, $p_show_days = false ) {
+function minutes_to_time( $p_minutes, $p_allow_blanks = true ) {
 	if ( $p_minutes == 0 ) {
 		if ( $p_allow_blanks ) {
 			return null;
@@ -644,13 +644,25 @@ function resource_cache_data() {
 	$t_result   = db_query_bound( $t_query );
 
 	while ( $t_row = db_fetch_array( $t_result ) ) {
-		$g_resources[$t_row['user_id']] = $t_row;
+		$t_user_id = $t_row['user_id'];
+		$g_resources[$t_user_id] = $t_row;
+		# Fetch the non-working days
+		$t_resource_na_table = plugin_table( 'resource_unavailable' );
+		$t_query_na    = "SELECT start_date, end_date, type, note
+							FROM $t_resource_na_table
+						   WHERE user_id = $t_user_id";
+		$t_result_na   = db_query_bound( $t_query_na );
+		$g_resources[$t_user_id]['resource_unavailable'] = array();
+		while ( $t_res_na = db_fetch_array( $t_result_na ) ) {
+			$g_resources[$t_user_id]['resource_unavailable'][] = $t_res_na;
+		}
 	}
 	# Add default
 	$g_resources[NO_USER]['user_id'] = NO_USER;
 	$g_resources[NO_USER]['color'] = 120;
 	$g_resources[NO_USER]['deployability'] = 100;
 	$g_resources[NO_USER]['hours_per_week'] = 0;
+	$g_resources[NO_USER]['resource_unavailable'] = array();
 }
 
 

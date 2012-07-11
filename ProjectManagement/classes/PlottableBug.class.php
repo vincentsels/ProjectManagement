@@ -56,20 +56,11 @@ class PlottableBug extends PlottableTask {
 
 		if ( is_null( $this->previous_bug ) ) {
 			$this->task_start = $p_reference_date;
-			$this->name = 'previous_bug is null';
 		} else {
 			$this->task_start = $this->previous_bug->task_end;
-			$this->name = 'previous_bug id = ' . $this->previous_bug->id . ' and task_end is ' . $this->previous_bug->task_end;
 		}
 
-		# First retrieve the amount of hours this resource works per day
-		$t_workdays_per_week = 7;
-		$t_hours_per_day = $g_resources[$this->handler_id]['hours_per_week'] / $t_workdays_per_week;
-		if ( $t_hours_per_day > 0 ) {
-			$t_seconds_for_bug = $this->est / $t_hours_per_day * 24 * 60;
-			# Todo: include logic for non-working days
-			$this->task_end = $this->task_start + $t_seconds_for_bug;
-		}
+		$this->calculate_actual_end_date( $this->task_start, $this->task_end, $this->est, $this->na );
 	}
 
 	public function plot_specific_start( $p_unique_id, $p_min_date, $p_max_date ) {
@@ -83,17 +74,20 @@ class PlottableBug extends PlottableTask {
 
 		if ( $this->est > 0 ) {
 			$t_original_work_width = ( $this->done - $this->overdue ) / $this->est * 100;
-			$t_total_work_width    = $this->done / $this->est * 100;
+			$t_total_work_width    = ( $this->done + $this->na ) / $this->est * 100;
+			$t_na_with			   = $this->na / $this->est * 100;
 			$t_extra_work_width    = $this->overdue / $this->est * 100;
 		} else {
 			$t_original_work_width = 0;
 			$t_total_work_width    = 0;
+			$t_na_with			   = 0;
 			$t_extra_work_width    = 0;
 		}
 
 		$t_progress_info = minutes_to_time( $this->done, false ) . '&nbsp;/&nbsp;' . minutes_to_time( $this->est, false );
 		$t_overdue_info = minutes_to_time( $this->overdue ) . '&nbsp;/&nbsp;' . minutes_to_time( $this->done );
 		$t_progress_text = '<a href="#" class="invisible" title="' . $t_progress_info . '">' . number_format( $t_total_work_width, 1 ) . '%</a>';
+		$t_na_text = '<a href="#" class="invisible" title="' . minutes_to_days( $this->na ) . ' ' . lang_get( 'days' ) . '"></a>';
 		$t_overdue_text = '<a href="#" class="invisible" title="' . $t_overdue_info . '"></a>';
 		$t_description = '<span class="description-info">: ' . bug_get_field( $this->id, 'summary' ) . '</span>';
 
@@ -110,6 +104,10 @@ class PlottableBug extends PlottableTask {
 				<?php print_progressbar_span( $this->handler_id, $t_original_work_width )  ?>
 					<?php echo $t_progress_text ?>
 				</span><?php
+				if ( $t_na_with > 0 ) {
+					print_na_span( $t_na_with );
+					echo $t_na_text . '</span>';
+				}
 				if ( $t_extra_work_width > 0 ) {
 					print_overdue_span( $t_extra_work_width );
 					echo $t_overdue_text . '</span>';

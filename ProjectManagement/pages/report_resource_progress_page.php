@@ -250,8 +250,6 @@ if ( $t_project_without_versions ) {
 	# Re-organize sub projects
 	# TODO
 
-	# Calculate the bug data first, per user, in the correct order
-	resource_cache_data();
 	foreach ( $t_all_bugs_ordered as $user ) {
 		foreach ( $user as $bug ) {
 			$bug->calculate_data( $t_release_date_previous );
@@ -262,9 +260,6 @@ if ( $t_project_without_versions ) {
 	foreach ( $t_all_users as $user ) {
 		$user->calculate_data( $t_release_date_previous );
 	}
-
-	# Get all non-working days and assign to special project
-	# TODO
 
 	# Plot everything
 	foreach ( $t_all_users as $user ) {

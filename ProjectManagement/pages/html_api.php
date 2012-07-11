@@ -123,7 +123,14 @@ function print_background_color( $p_hue = 120, $p_style = PLUGIN_PM_DARK ) {
  * Prints a transparent red overlay.
  */
 function print_overdue_color() {
-	echo "rgba(255, 0, 0, 0.5);";
+	echo "rgba(255, 0, 0, 0.3);";
+}
+
+/**
+ * Prints a transparent grey overlay.
+ */
+function print_na_color() {
+	echo "rgba(20, 20, 20, 0.3);";
 }
 
 /*
@@ -157,6 +164,16 @@ function print_progressbar_span( $p_handler_id, $p_width ) {
 function print_overdue_span( $p_width ) {
 	echo '<span class="bar overdue" style="background-color:';
 	print_overdue_color();
+	echo ' width: ' . $p_width . '%">';
+}
+
+/*
+ * Prints the opening span tag for the unavailability part in a work bar.
+ * Note the closing span must still be printed.
+ */
+function print_na_span( $p_width ) {
+	echo '<span class="bar unavailable" style="background-color:';
+	print_na_color();
 	echo ' width: ' . $p_width . '%">';
 }
 

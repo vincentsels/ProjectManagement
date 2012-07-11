@@ -15,11 +15,13 @@ class PlottableProject extends PlottableTask {
 
 		if ( $this->est > 0 ) {
 			$t_original_work_width = ( $this->done - $this->overdue ) / $this->est * 100;
-			$t_total_work_width    = $this->done / $this->est * 100;
+			$t_total_work_width    = ( $this->done + $this->na ) / $this->est * 100;
+			$t_na_with			   = $this->na / $this->est * 100;
 			$t_extra_work_width    = $this->overdue / $this->est * 100;
 		} else {
 			$t_original_work_width = 0;
 			$t_total_work_width    = 0;
+			$t_na_with			   = 0;
 			$t_extra_work_width    = 0;
 		}
 
@@ -27,6 +29,7 @@ class PlottableProject extends PlottableTask {
 		$t_finish = format_short_date( $this->task_end );
 		$t_text = '<a href="#" class="invisible" title="' . $t_start . ' - ' . $t_finish . '">' .
 			number_format( $t_total_work_width, 1 ) . '%</a>';
+		$t_na_text = '<a href="#" class="invisible" title="' . minutes_to_days( $this->na ) . ' ' . lang_get( 'days' ) . '"></a>';
 		$t_overdue_text = '<a href="#" class="invisible" title="' . $t_start . ' - ' . $t_finish . '"></a>';
 
 		if ( $this->id == PLUGIN_PM_PROJ_ID_UNPLANNED || $this->id == PLUGIN_PM_PROJ_ID_NONWORKING ) {
@@ -50,6 +53,10 @@ class PlottableProject extends PlottableTask {
 					<?php print_progressbar_span( $this->handler_id, $t_original_work_width )  ?>
 						<?php echo $t_text ?>
 					</span><?php
+					if ( $t_na_with > 0 ) {
+						print_na_span( $t_na_with );
+						echo $t_na_text . '</span>';
+					}
 					if ( $t_extra_work_width > 0 ) {
 						print_overdue_span( $t_extra_work_width );
 						echo $t_overdue_text . '</span>';
@@ -112,12 +119,8 @@ class PlottableNotPlannedProject extends PlottableProject {
 				$t_deployability, $t_hours_per_week );
 			$this->est = max( $this->est, $this->done );
 
-			$t_hours_per_day = $t_hours_per_week / 7;
-			if ( $t_hours_per_day > 0 ) {
-				$t_seconds_for_bug = $this->est / $t_hours_per_day * 24 * 60;
-				# Todo: include logic for non-working days
-				$this->task_end = $this->task_start + $t_seconds_for_bug;
-			}
+			$t_na = 0;
+			$this->calculate_actual_end_date( $this->task_start, $this->task_end, $this->est, $t_na );
 
 			# Calculate overdue
 			$t_est_till_today = $this->minutes_none_deployability( $this->period_start, min( time(), $this->period_end ),
