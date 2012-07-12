@@ -34,6 +34,7 @@ if ( $t_project_without_versions ) {
 	echo plugin_lang_get( 'project_without_versions' );
 } else {
 	# Release dates of previous and current version
+	log_event( LOG_FILTERING, $f_target_version );
 	$t_release_date_target = version_get_field( version_get_id( $f_target_version ), 'date_order' );
 	$t_release_buffer = plugin_config_get( 'release_buffer' ) * 24 * 60 * 60;
 	$t_last_dev_day = $t_release_date_target - $t_release_buffer;
@@ -62,7 +63,7 @@ if ( $t_project_without_versions ) {
 			<tr <?php echo helper_alternate_class() ?>>
 				<td class="category"><?php echo plugin_lang_get( 'select_target_version' ), ': ' ?></td>
 				<td>
-					<select name="target_version"><?php print_version_option_list( $f_target_version, null, VERSION_FUTURE, false, true ) ?></select>
+					<select name="target_version"><?php print_version_option_list( $f_target_version, null, VERSION_FUTURE, false, false ) ?></select>
 				</td>
 				<td class="category" colspan="2">
 					<?php
@@ -115,6 +116,7 @@ if ( $t_project_without_versions ) {
 	$t_project_table         = db_get_table( 'mantis_project_table' );
 	$t_category_table        = db_get_table( 'mantis_category_table' );
 	$t_work_table            = plugin_table( 'work' );
+	$t_res_table       		 = plugin_table( 'resource' );
 	$t_res_unav_table        = plugin_table( 'resource_unavailable' );
 	$t_const_done		 	 = PLUGIN_PM_DONE;
 	$t_const_all_users		 = ALL_USERS;
@@ -125,6 +127,7 @@ if ( $t_project_without_versions ) {
 				  JOIN $t_bug_table b ON w.bug_id = b.id
 				  JOIN $t_project_table pc ON b.project_id = pc.id
 				  JOIN $t_category_table c ON b.category_id = c.id
+				  JOIN $t_res_table r ON b.handler_id = r.user_id
 				 WHERE w.book_date BETWEEN $t_release_date_previous AND $t_release_date_target
 			 	   AND w.minutes_type = $t_const_done
 			 	   AND b.handler_id <> 0
