@@ -120,7 +120,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 		# would stop from showing until Mantis adds this event in the
 		# change status page, as mentioned in this Mantis ticket:
 		# http://www.mantisbt.org/bugs/view.php?id=14329
-		return array( 'EVENT_BUG_STATUS_UPDATE_FORM' => EVENT_TYPE_EXECUTE );
+		return array( 'EVENT_UPDATE_BUG_STATUS_FORM' => EVENT_TYPE_EXECUTE );
 	}
 
 	function hooks() {
@@ -134,7 +134,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 			'EVENT_FILTER_COLUMNS'		=> 'filter_columns',
 			'EVENT_LAYOUT_RESOURCES'	  => 'link_files',
 			'EVENT_UPDATE_BUG_FORM'	   => 'update_bug_form',
-			'EVENT_BUG_STATUS_UPDATE_FORM'	   => 'update_bug_form',
+			'EVENT_UPDATE_BUG_STATUS_FORM'	   => 'update_bug_form',
 			'EVENT_ACCOUNT_PREF_UPDATE_FORM' => 'view_resource',
 			'EVENT_ACCOUNT_PREF_UPDATE' => 'update_resource'
 		);
