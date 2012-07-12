@@ -135,6 +135,8 @@ class PlottableNotPlannedProject extends PlottableProject {
 				$t_dummy->calculate_data( $p_reference_date );
 				$this->children[PLUGIN_PM_DUMMY_BUG] = $t_dummy;
 			}
+
+			$this->calculate_actual_end_date( $this->task_start, $this->task_end, $this->est, $t_na );
 		}
 	}
 
