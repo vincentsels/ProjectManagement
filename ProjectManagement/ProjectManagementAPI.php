@@ -743,7 +743,7 @@ if ( !function_exists( 'strtotime_safe' ) ) {
 	 * @return number
 	 */
 	function strtotime_safe( $p_date, $p_allow_null = false ) {
-		if( !$p_allow_null && ( $p_date == null || is_blank ( $p_date ) || date_is_null( $p_date ) ) ) {
+		if( !$p_allow_null && ( $p_date == null || is_blank ( $p_date ) || $p_date === 1 ) ) {
 			return date_get_null();
 		}
 
