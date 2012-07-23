@@ -48,7 +48,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 			array( 'CreateTableSQL', array( plugin_table( 'bug_customer' ), "
 						bug_id		I		NOTNULL UNSIGNED PRIMARY,
 						type		I2		NOTNULL PRIMARY,
-						customers	C(64)	NOTNULL DEFAULT 0
+						customers	C(64)	NOTNULL DEFAULT '0'
 						" ) ),
 			array( 'CreateTableSQL', array( plugin_table( 'user_customer' ), "
 						user_id		I		NOTNULL UNSIGNED PRIMARY,
