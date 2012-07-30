@@ -136,10 +136,12 @@ abstract class PlottableTask {
 
 		$t_seconds_na = 0;
 		# Iterate through all the non-working days of the user
-		foreach ( $g_resources[$this->handler_id]['resource_unavailable'] as $t_na_period ) {
-			if ( $t_na_period['start_date'] <= $p_task_end &&
-				$t_na_period['start_date'] > $p_task_start ) {
-				$t_seconds_na = ($t_na_period['end_date'] - $t_na_period['start_date']);
+		if ( is_array( $g_resources[$this->handler_id]['resource_unavailable'] ) ) {
+			foreach ( $g_resources[$this->handler_id]['resource_unavailable'] as $t_na_period ) {
+				if ( $t_na_period['start_date'] <= $p_task_end &&
+					$t_na_period['start_date'] > $p_task_start ) {
+					$t_seconds_na = ($t_na_period['end_date'] - $t_na_period['start_date']);
+				}
 			}
 		}
 
