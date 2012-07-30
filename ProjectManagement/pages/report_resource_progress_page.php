@@ -41,6 +41,7 @@ if ( $t_project_without_versions ) {
 
 	if ( !empty( $f_from_date ) ) {
 		$t_release_date_previous = strtotime_safe( $f_from_date );
+		$f_from_version = null;
 	} else if ( !empty( $f_from_version ) ) {
 		$t_release_date_previous = version_get_field( version_get_id( $f_from_version ), 'date_order' );
 	} else {
@@ -53,26 +54,25 @@ if ( $t_project_without_versions ) {
 		$t_release_date_previous_array  = db_fetch_array( $t_result_release_date_previous );
 		$t_release_date_previous        = $t_release_date_previous_array ? $t_release_date_previous_array['date_order'] : time();
 	}
+	$t_reference_date_display = format_short_date( $t_release_date_previous );
+	if ( !empty( $f_from_version ) ) {
+		$t_reference_date_display .= ' (' . $f_from_version . ')';
+	}
+	$t_last_dev_day_display = format_short_date( $t_last_dev_day );
+	$t_release_date_display = format_short_date( $t_release_date_target ) . ' (' . $f_target_version . ')';
 
 	?>
 
-<div class="center">
+<div class="center75">
+	<table class="hide">
+	<tr><td>
 	<form name="project_progress" method="post"
 		  action="<?php echo plugin_page( 'report_resource_progress_page' ) ?>">
 		<table class="width100" cellspacing="1">
 			<tr <?php echo helper_alternate_class() ?>>
 				<td class="category"><?php echo plugin_lang_get( 'select_target_version' ), ': ' ?></td>
-				<td>
+				<td colspan="3">
 					<select name="target_version"><?php print_version_option_list( $f_target_version, null, VERSION_FUTURE, false, false ) ?></select>
-				</td>
-				<td class="category" colspan="2">
-					<?php
-					echo plugin_lang_get( 'last_dev_day' ), ': ' .
-						format_short_date( $t_last_dev_day );
-					echo '<br />';
-					echo plugin_lang_get( 'release_date' ), ': ' .
-						format_short_date( $t_release_date_target );
-					?>
 				</td>
 			</tr>
 			<tr <?php echo helper_alternate_class() ?>>
@@ -98,10 +98,29 @@ if ( $t_project_without_versions ) {
 					</select>
 				</td>
 			</tr>
+			<tr>
 				<td colspan="4" class="center"><input name="submit" type="submit" value="<?php echo lang_get( 'update' ) ?>"></td>
 			</tr>
 		</table>
 	</form>
+	</td>
+	<td valign="top">
+		<table class="width100" cellspacing="1">
+			<tr <?php echo helper_alternate_class() ?>>
+				<td class="category"><?php echo plugin_lang_get( 'reference_date' ) ?></td>
+				<td><?php echo $t_reference_date_display ?></td>
+			</tr>
+			<tr <?php echo helper_alternate_class() ?>>
+				<td class="category"><?php echo plugin_lang_get( 'last_dev_day' ) ?></td>
+				<td><?php echo $t_last_dev_day_display ?></td>
+			</tr>
+			<tr <?php echo helper_alternate_class() ?>>
+				<td class="category"><?php echo plugin_lang_get( 'release_date' ) ?></td>
+				<td><?php echo $t_release_date_display ?></td>
+			</tr>
+		</table>
+	</td></tr>
+	</table>
 </div>
 <br/>
 

@@ -158,3 +158,9 @@ tr.progress-row td {
     opacity: 0.2;
     filter:alpha(opacity=20); /* For IE8 and earlier */
 }
+
+div.center75 {
+    width: 75%;
+    margin-right: auto;
+    margin-left: auto;
+}

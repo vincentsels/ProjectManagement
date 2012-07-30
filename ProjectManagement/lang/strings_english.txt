@@ -119,6 +119,7 @@
 	$s_plugin_ProjectManagement_select_target_version = 'Select a target version';
 	$s_plugin_ProjectManagement_select_from_version = 'Optionally specify a reference version';
 	$s_plugin_ProjectManagement_select_from_date = '<i>or</i> reference date';
+	$s_plugin_ProjectManagement_reference_date = 'Reference date';
 	$s_plugin_ProjectManagement_release_date = 'Release date';
 	$s_plugin_ProjectManagement_last_dev_day = 'Last dev day';
 	$s_plugin_ProjectManagement_release_buffer = 'Buffer days before release';
