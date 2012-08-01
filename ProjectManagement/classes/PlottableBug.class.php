@@ -64,13 +64,35 @@ class PlottableBug extends PlottableTask {
 	}
 
 	public function plot_specific_start( $p_unique_id, $p_last_dev_day, $p_min_date, $p_max_date ) {
-		if ( $this->id == PLUGIN_PM_DUMMY_BUG ) {
-			return; # Don't show the dummy bug!
-		}
-
 		$t_total_width = $p_max_date - $p_min_date;
 		$t_before = ( $this->task_start - $p_min_date ) / $t_total_width * 99;
 		$t_task_width = ( $this->task_end - $this->task_start ) / $t_total_width * 99;
+
+		if ( $this->id == PLUGIN_PM_DUMMY_BUG ) {
+			if ( $this->na > 0 ) {
+				$t_na_with = $this->na / $this->est * $t_task_width;
+				$t_na_text = '<a href="#" class="invisible" title="' . minutes_to_days( $this->na ) . ' ' . lang_get( 'days' ) . '"></a>';
+				?>
+				<tr class="progress-row row-2">
+					<td width="15%"><?php echo plugin_lang_get( 'unavailable' ) ?>
+					</td>
+					<td width="85%">
+						<div class="resource-section">
+							<span class="filler" style="width: <?php echo $t_before ?>%"></span>
+							<?php print_progress_span( $this->handler_id, $t_na_with, $this->task_end > $p_last_dev_day )  ?>
+							<?php print_progressbar_span( $this->handler_id, 0 )  ?>
+							</span><?php
+								print_na_span( 100 );
+								echo $t_na_text . '</span>';
+							?>
+							</span>
+						</div>
+					</td>
+				</tr>
+				<?php
+			}
+			return; # Don't show the dummy bug!
+		}
 
 		if ( $this->est > 0 ) {
 			$t_original_work_width = ( $this->done - $this->overdue ) / $this->est * 100;
