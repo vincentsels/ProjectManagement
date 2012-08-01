@@ -51,9 +51,9 @@ class ProjectManagementPlugin extends MantisPlugin {
 						customers	C(64)	NOTNULL DEFAULT '0'
 						" ) ),
 			array( 'CreateTableSQL', array( plugin_table( 'user_customer' ), "
-						user_id		I		NOTNULL UNSIGNED PRIMARY,
-						customer_id	I		NOTNULL,
-						function	C(64)
+						user_id		I			NOTNULL UNSIGNED PRIMARY,
+						customer_id	I			NOTNULL,
+						function_description	C(64)
 						" ) ),
 			array( 'CreateTableSQL', array( plugin_table( 'target' ), "
 						id                 I       NOTNULL UNSIGNED AUTOINCREMENT PRIMARY,

@@ -141,7 +141,7 @@ if ( $t_project_without_versions ) {
 	$t_const_all_users		 = ALL_USERS;
 
 	$t_query = "SELECT pc.id as project_id, pc.name as project_name, c.id as category_id, c.name as category_name,
-					   b.id, b.handler_id, sum(w.minutes) as minutes
+					   b.id, b.handler_id, b.date_submitted, sum(w.minutes) as minutes
 				  FROM $t_work_table w
 				  JOIN $t_bug_table b ON w.bug_id = b.id
 				  JOIN $t_project_table pc ON b.project_id = pc.id
@@ -160,7 +160,7 @@ if ( $t_project_without_versions ) {
 			 	      AND w.book_date between u.start_date and u.end_date
 			 	      AND u.include_work = 0
 			 	   )
-				 GROUP BY pc.id, pc.name, c.id, c.name, b.id, b.handler_id
+				 GROUP BY pc.id, pc.name, c.id, c.name, b.id, b.handler_id, b.date_submitted
 				 ORDER BY b.handler_id, b.date_submitted";
 	$t_result = db_query_bound( $t_query );
 

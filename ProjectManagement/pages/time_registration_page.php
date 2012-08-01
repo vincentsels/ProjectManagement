@@ -18,7 +18,9 @@ $t_category_table = db_get_table( 'mantis_category_table' );
 
 $t_const_done             = PLUGIN_PM_DONE;
 $t_const_recently_visited = PLUGIN_PM_TOKEN_RECENTLY_VISITED_COUNT;
-$t_query_recent           = "SELECT b.last_updated, b.handler_id, b.project_id, p.name as project_name,
+$t_limit_clause_before    = get_limit_clause_after_select( $t_const_recently_visited );
+$t_limit_clause_after     = get_limit_clause_after_order_by( $t_const_recently_visited );
+$t_query_recent           = "SELECT $t_limit_clause_before b.last_updated, b.handler_id, b.project_id, p.name as project_name,
                             c.id as category_id, c.name as category_name, b.id as bug_id, b.summary as bug_summary, b.status,
                             (SELECT SUM(minutes) FROM $t_work_table w WHERE w.bug_id = b.id AND minutes_type = $t_const_done) as done
                              FROM $t_bug_table b
@@ -26,7 +28,7 @@ $t_query_recent           = "SELECT b.last_updated, b.handler_id, b.project_id, 
                              LEFT JOIN $t_category_table c ON b.category_id = c.id
                             WHERE b.id IN ( $t_recently_visited )
                             ORDER BY b.last_updated DESC
-                            LIMIT $t_const_recently_visited";
+                            $t_limit_clause_after";
 if ( !empty( $t_recently_visited ) ) {
 	$t_result_recent = db_query_bound( $t_query_recent );
 }
@@ -37,7 +39,7 @@ $t_query_registered_day  = "SELECT b.id as bug_id, sum(w.minutes) as minutes, ma
 							WHERE w.user_id = $t_user
 							  AND w.book_date = $t_today
 							  AND w.minutes_type = 1
-							GROUP BY bug_id
+							GROUP BY b.id
 							ORDER BY timestamp DESC";
 $t_result_registered_day = db_query_bound( $t_query_registered_day );
 

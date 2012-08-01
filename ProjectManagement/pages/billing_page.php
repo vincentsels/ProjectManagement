@@ -35,8 +35,8 @@ $t_query      = "SELECT p.name as project_name, c.name as category_name, u.usern
 			   LEFT OUTER JOIN $t_bug_customer_table bc ON b.id = bc.bug_id AND $t_const_paying = bc.type
 				   WHERE w.minutes_type = $t_const_done
 					 AND w.book_date BETWEEN $t_startdate AND $t_enddate
-				   GROUP BY project_name, category_name, username, bug_id, bug_summary
-				   ORDER BY project_name, category_name, username, bug_id, bug_summary";
+				   GROUP BY p.name, c.name, u.username, b.id, b.summary
+				   ORDER BY p.name, c.name, u.username, b.id, b.summary";
 
 $t_result = db_query_bound( $t_query );
 
