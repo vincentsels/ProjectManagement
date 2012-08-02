@@ -63,6 +63,8 @@
 	$s_plugin_ProjectManagement_view_report_registration_threshold = 'Drempel voor tijdsregistratie rapportering';
 	$s_plugin_ProjectManagement_view_resource_management_threshold = 'Drempel voor beheer resources';
 	$s_plugin_ProjectManagement_view_project_progress_threshold = 'Drempel voor bekijken resource verdeling';
+	$s_plugin_ProjectManagement_view_target_overview_threshold = 'Drempel voor bekijken overzicht targets';
+	$s_plugin_ProjectManagement_view_all_targets_threshold = 'Drempel voor bekijken targets van andere gebruikers';
 	$s_plugin_ProjectManagement_admin_threshold = 'Drempel voor plugin admin';
 	
 	$s_plugin_ProjectManagement_decimal_separator = 'Decimaal scheidingsteken';

@@ -95,6 +95,18 @@ print_pm_config_menu( 'config_page' );
 			</td>
 		</tr>
 		<tr <?php echo helper_alternate_class() ?>>
+			<td class="category"><?php echo plugin_lang_get( 'view_target_overview_threshold' ) ?></td>
+			<td><select
+				name="view_target_overview_threshold"><?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'view_target_overview_threshold' ) ) ?></select>
+			</td>
+		</tr>
+		<tr <?php echo helper_alternate_class() ?>>
+			<td class="category"><?php echo plugin_lang_get( 'view_all_targets_threshold' ) ?></td>
+			<td><select
+				name="view_all_targets_threshold"><?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'view_all_targets_threshold' ) ) ?></select>
+			</td>
+		</tr>
+		<tr <?php echo helper_alternate_class() ?>>
 			<td class="category"><?php echo plugin_lang_get( 'admin_threshold' ) ?></td>
 			<td><select
 				name="admin_threshold"><?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'admin_threshold' ) ) ?></select>

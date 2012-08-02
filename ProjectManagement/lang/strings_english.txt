@@ -63,6 +63,8 @@
 	$s_plugin_ProjectManagement_view_report_registration_threshold = 'View time registration report threshold';
 	$s_plugin_ProjectManagement_view_resource_management_threshold = 'View resource management threshold';
 	$s_plugin_ProjectManagement_view_project_progress_threshold = 'View resource allocation threshold';
+	$s_plugin_ProjectManagement_view_target_overview_threshold = 'View target overview threshold';
+	$s_plugin_ProjectManagement_view_all_targets_threshold = 'Threshold for viewing other users'' targets';
 	$s_plugin_ProjectManagement_admin_threshold = 'Plugin administrator threshold';
 	
 	$s_plugin_ProjectManagement_decimal_separator = 'Decimal separator';
