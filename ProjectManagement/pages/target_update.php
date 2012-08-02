@@ -20,14 +20,15 @@ if ( count( $t_work_types ) > 0 ) {
 
 			$f_data[$t_bug_id][$t_work_type]["target_date"] =
 				strtotime_safe( gpc_get_string( $t_bug_id . '_target_date_' . $t_work_type,
-					date( config_get( 'short_date_format' ) ), null ) );
+					date( config_get( 'short_date_format' ) ), null ), true );
 			$f_data[$t_bug_id][$t_work_type]["owner_id"] =
 				gpc_get_int( $t_bug_id . '_owner_id_' . $t_work_type, -1 );
 
 			$t_completed_date_as_string = gpc_get_string( $t_bug_id . '_completed_date_' . $t_work_type,
 				date( config_get( 'short_date_format' ) ), null );
 			if ( !is_null( $t_completed_date_as_string ) ) {
-				$f_data[$t_bug_id][$t_work_type]["completed_date"] = strtotime_safe( $t_completed_date_as_string );
+				$f_data[$t_bug_id][$t_work_type]["completed_date"] =
+					strtotime_safe( $t_completed_date_as_string, true );
 			}
 
 			# Check for errors
