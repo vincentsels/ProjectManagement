@@ -8,6 +8,7 @@ class PlottableUser extends PlottableTask {
 	}
 
 	public function plot_specific_start( $p_unique_id, $p_last_dev_day, $p_min_date, $p_max_date ) {
+		global $g_resources;
 		?>
 	<table class="width100" cellspacing="1">
 		<tr>
@@ -16,6 +17,16 @@ class PlottableUser extends PlottableTask {
 				print_expand_icon_start( $p_unique_id );
 				echo user_get_realname( $this->id );
 				print_expand_icon_end();
+				$t_deployability_name = 'deployability_' . $this->id;
+				$t_deployability_value = $g_resources[$this->id]['deployability'];
+				$f_deployability = gpc_get_int( $t_deployability_name, -1 );
+				$t_class_text = '';
+				if ( $f_deployability != -1 && $f_deployability <> $t_deployability_value ) {
+					$t_deployability_value = min( $f_deployability, 100 );
+					$t_class_text = 'class="modified"';
+				}
+				echo ' &nbsp; <input ' . $t_class_text . ' type="text" size="2" maxlength="3" autocomplete="off" id="' . $t_deployability_name . '"
+				name="' . $t_deployability_name . '" value="' . $t_deployability_value . '">%';
 				$t_finished_text = plugin_lang_get( 'finished' ) . ': <span ';
 				if ( $this->task_end > $p_last_dev_day ) {
 					$t_finished_text .= 'class="overdue"';

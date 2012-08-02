@@ -104,6 +104,10 @@ class PlottableNotPlannedProject extends PlottableProject {
 		# In order to calculate the estimated 'not plannable' work, use the
 		# deployability of the resource.
 		$t_deployability = $g_resources[$this->handler_id]['deployability'];
+		$f_deployability = gpc_get_int( 'deployability_' . $this->handler_id, -1 );
+		if ( $f_deployability != -1 && $f_deployability <> $t_deployability ) {
+			$t_deployability = min( $f_deployability, 100 );
+		}
 		$t_hours_per_week = $g_resources[$this->handler_id]['hours_per_week'];
 
 		if ( $t_deployability === 0 || $t_hours_per_week === 0 ) {

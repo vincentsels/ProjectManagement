@@ -63,11 +63,11 @@ if ( $t_project_without_versions ) {
 
 	?>
 
+<form name="project_progress" method="post"
+	  action="<?php echo plugin_page( 'report_resource_progress_page' ) ?>">
 <div class="center75">
 	<table class="hide">
 	<tr><td>
-	<form name="project_progress" method="post"
-		  action="<?php echo plugin_page( 'report_resource_progress_page' ) ?>">
 		<table class="width100" cellspacing="1">
 			<tr <?php echo helper_alternate_class() ?>>
 				<td class="category"><?php echo plugin_lang_get( 'select_target_version' ), ': ' ?></td>
@@ -102,7 +102,6 @@ if ( $t_project_without_versions ) {
 				<td colspan="4" class="center"><input name="submit" type="submit" value="<?php echo lang_get( 'update' ) ?>"></td>
 			</tr>
 		</table>
-	</form>
 	</td>
 	<td valign="top">
 		<table class="width100" cellspacing="1">
@@ -298,4 +297,6 @@ if ( $t_project_without_versions ) {
 	foreach ( $t_all_users as $user ) {
 		$user->plot( $t_last_dev_day );
 	}
+
+	echo '</form>'; # The whole page must be a form to include the input elements from underlying sections
 }

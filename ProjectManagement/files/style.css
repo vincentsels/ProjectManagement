@@ -164,3 +164,7 @@ div.center75 {
     margin-right: auto;
     margin-left: auto;
 }
+
+input.modified {
+    background-color: #fff5b1;
+}
