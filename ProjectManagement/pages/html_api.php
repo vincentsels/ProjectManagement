@@ -2,6 +2,7 @@
 
 function print_pm_reports_menu( $p_page = '' ) {
 	$t_pm_time_registration_page   = plugin_page( 'time_registration_page' );
+	$t_pm_target_overview_page = plugin_page( 'target_overview_page' );
 	$t_pm_report_registration_page = plugin_page( 'report_registration_page' );
 	$t_pm_resource_progress_page = plugin_page( 'report_resource_progress_page' );
 	$t_pm_project_progress_page = plugin_page( 'report_project_progress_page' );
@@ -11,6 +12,9 @@ function print_pm_reports_menu( $p_page = '' ) {
 	switch ( plugin_page( $p_page ) ) {
 		case $t_pm_time_registration_page:
 			$t_pm_time_registration_page = '';
+			break;
+		case $t_pm_target_overview_page:
+			$t_pm_target_overview_page = '';
 			break;
 		case $t_pm_report_registration_page:
 			$t_pm_report_registration_page = '';
@@ -32,6 +36,9 @@ function print_pm_reports_menu( $p_page = '' ) {
 	echo '<div align="center"><p>';
 	if ( access_has_global_level( plugin_config_get( 'view_registration_worksheet_threshold' ) ) ) {
 		print_bracket_link( $t_pm_time_registration_page, plugin_lang_get( 'time_registration_worksheet' ) );
+	}
+	if ( access_has_global_level( plugin_config_get( 'view_target_overview_threshold' ) ) ) {
+		print_bracket_link( $t_pm_target_overview_page, plugin_lang_get( 'target_overview' ) );
 	}
 	if ( access_has_global_level( plugin_config_get( 'view_registration_report_threshold' ) ) ) {
 		print_bracket_link( $t_pm_report_registration_page, plugin_lang_get( 'time_registration_overview' ) );

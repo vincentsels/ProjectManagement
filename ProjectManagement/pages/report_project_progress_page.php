@@ -5,7 +5,7 @@ access_ensure_global_level( plugin_config_get( 'view_project_progress_threshold'
 html_page_top1( plugin_lang_get( 'title' ) );
 html_page_top2();
 
-print_pm_reports_menu( 'project_progress_page' );
+print_pm_reports_menu( 'report_project_progress_page' );
 
 $f_target_version = gpc_get_string( 'target_version', null );
 $f_user_id        = gpc_get_int( 'user_id', ALL_USERS );

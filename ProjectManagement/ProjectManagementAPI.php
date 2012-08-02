@@ -524,7 +524,7 @@ function bug_customer_update_or_insert( $p_bug_id, $p_cust_string, $p_type = PLU
 
 /**
  * Returns the days between two given dates, or between the given date and today if only one is supplied.
- * Returns a positive number if the given date is in the future, negative if it is in the past.
+ * Returns a positive number if the given date is in the past, negative if it is in the future.
  */
 function days_between( $p_date, $p_refdate = null ) {
 	if ( is_null( $p_refdate ) ) {

@@ -102,6 +102,7 @@
 	$s_plugin_ProjectManagement_owner = 'Owner';
 	$s_plugin_ProjectManagement_completed = 'Completed';
 	$s_plugin_ProjectManagement_new_target = 'New target';
+	$s_plugin_ProjectManagement_target_overview = 'Targets overview';
 
 	$s_plugin_ProjectManagement_project_without_versions = 'In order to view this page, you must select a project which contains versions.';
 
