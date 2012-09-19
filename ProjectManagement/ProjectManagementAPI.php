@@ -683,7 +683,7 @@ function get_all_tasks( $f_target_version, $f_user_id = ALL_USERS, $p_include_bu
 
 	$t_query = "SELECT pp.id as parent_project_id, pp.name as parent_project,
 				  pc.id as project_id, pc.name as project_name, c.id as category_id, c.name as category_name,
-				  SUM(b.sponsorship_total) as weight, MAX(b.due_date) as due_date,
+				  b.sponsorship_total as weight, b.due_date,
 				  b.id, b.handler_id, w.work_type, w.minutes_type, sum(w.minutes) as minutes
 				  FROM $t_bug_table b
 				  JOIN $t_project_table pc ON b.project_id = pc.id
@@ -723,7 +723,8 @@ function get_all_tasks( $f_target_version, $f_user_id = ALL_USERS, $p_include_bu
 		$t_query .= " AND b.handler_id = $f_user_id";
 	}
 
-	$t_query .= " GROUP BY pp.id, pp.name, pc.id, pc.name, c.id, c.name, b.id, b.handler_id, w.work_type, w.minutes_type
+	$t_query .= " GROUP BY pp.id, pp.name, pc.id, pc.name, c.id, c.name, b.id, b.handler_id, w.work_type, w.minutes_type,
+				  b.sponsorship_total, b.due_date
 				  ORDER BY handler_id, CASE WHEN MAX(b.due_date) = 1 THEN 9999999999 ELSE MAX(b.due_date) END, weight DESC, id";
 
 	$t_result = db_query_bound( $t_query );
