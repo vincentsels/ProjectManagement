@@ -140,7 +140,7 @@ abstract class PlottableTask {
 			foreach ( $g_resources[$this->handler_id]['resource_unavailable'] as $t_na_period ) {
 				if ( $t_na_period['start_date'] <= $p_task_end &&
 					$t_na_period['start_date'] > $p_task_start ) {
-					$t_seconds_na = ($t_na_period['end_date'] - $t_na_period['start_date']);
+					$t_seconds_na += ($t_na_period['end_date'] - $t_na_period['start_date']);
 				}
 			}
 		}

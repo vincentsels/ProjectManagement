@@ -122,8 +122,6 @@ class PlottableNotPlannedProject extends PlottableProject {
 				$t_deployability, $t_hours_per_week );
 			$this->est = max( $this->est, $this->done );
 
-			$this->calculate_actual_end_date( $this->task_start, $this->task_end, $this->est, $this->na );
-
 			# Calculate overdue
 			$t_est_till_today = $this->minutes_none_deployability( $this->period_start, min( time(), $this->period_end ),
 				$t_deployability, $t_hours_per_week );
@@ -139,7 +137,7 @@ class PlottableNotPlannedProject extends PlottableProject {
 				$this->children[PLUGIN_PM_DUMMY_BUG] = $t_dummy;
 			}
 
-			$this->calculate_actual_end_date( $this->task_start, $this->task_end, $this->est, $t_na );
+			$this->calculate_actual_end_date( $this->task_start, $this->task_end, $this->est, $this->na );
 		}
 	}
 
