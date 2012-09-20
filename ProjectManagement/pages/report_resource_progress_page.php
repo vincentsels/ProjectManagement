@@ -129,7 +129,7 @@ if ( $t_project_without_versions ) {
 	$t_all_users = array();
 	$t_all_bugs_ordered = array();
 
-	# Get all non-planned work and assign to special project
+	# Some constants to be used in subsequent queries
 	$t_bug_table             = db_get_table( 'mantis_bug_table' );
 	$t_project_table         = db_get_table( 'mantis_project_table' );
 	$t_category_table        = db_get_table( 'mantis_category_table' );
@@ -139,6 +139,25 @@ if ( $t_project_without_versions ) {
 	$t_const_done		 	 = PLUGIN_PM_DONE;
 	$t_const_all_users		 = ALL_USERS;
 
+	# Populate the user and project structure
+	# Only include users with hours per week filled in
+	$t_query = "SELECT t.user_id
+				  FROM $t_res_table t
+				 WHERE t.hours_per_week > 0";
+	$t_result = db_query_bound( $t_query );
+
+	while ( $row = db_fetch_array( $t_result ) ) {
+		$t_user = new PlottableUser( $row['user_id'] );
+		$t_all_users[$row['user_id']] = $t_user;
+		$t_all_bugs_ordered[$row['user_id']] = array();
+
+		# Add the unplanned project for each user
+		$t_project = new PlottableNotPlannedProject( $row['user_id'],
+			$t_release_date_previous, $t_release_date_target );
+		$t_user->children[PLUGIN_PM_PROJ_ID_UNPLANNED] = $t_project;
+	}
+
+	# Get all non-planned work and assign to special project
 	$t_query = "SELECT pc.id as project_id, pc.name as project_name, c.id as category_id, c.name as category_name,
 					   b.id, b.handler_id, b.date_submitted, sum(w.minutes) as minutes
 				  FROM $t_work_table w
@@ -171,23 +190,14 @@ if ( $t_project_without_versions ) {
 		if ( array_key_exists( $row['handler_id'], $t_all_users ) ) {
 			$t_user = $t_all_users[$row['handler_id']];
 		} else {
-			$t_user = new PlottableUser( $row['handler_id'] );
-			$t_all_users[$row['handler_id']] = $t_user;
-			$t_all_bugs_ordered[$row['handler_id']] = array();
+			continue;
 		}
 
 		if ( $row['handler_id'] != $t_previous_handler_id ) {
 			$t_previous_bug = null;
 		}
 
-		# Check whether the unplanned project already exists for this user
-		if ( array_key_exists( PLUGIN_PM_PROJ_ID_UNPLANNED, $t_user->children ) ) {
-			$t_project = $t_user->children[PLUGIN_PM_PROJ_ID_UNPLANNED];
-		} else {
-			$t_project = new PlottableNotPlannedProject( $row['handler_id'],
-				$t_release_date_previous, $t_release_date_target );
-			$t_user->children[PLUGIN_PM_PROJ_ID_UNPLANNED] = $t_project;
-		}
+		$t_project = $t_user->children[PLUGIN_PM_PROJ_ID_UNPLANNED];
 
 		# Assign the bug to this project
 		$t_bug = new PlottableBug( $row['handler_id'],
@@ -225,19 +235,18 @@ if ( $t_project_without_versions ) {
 		if ( $row['handler_id'] == 0) {
 			continue;
 		}
-		# Check whether this user already exists and if not, create it
+		# Check whether this user already exists and if not, skip
 		if ( array_key_exists( $row['handler_id'], $t_all_users ) ) {
 			$t_user = $t_all_users[$row['handler_id']];
 		} else {
-			$t_user = new PlottableUser( $row['handler_id'] );
-			$t_all_users[$row['handler_id']] = $t_user;
-			$t_all_bugs_ordered[$row['handler_id']] = array();
+			continue;
 		}
 
 		if ( $row['handler_id'] != $t_previous_handler_id ) {
 			# Try to get the latest 'unplanned' bug
 			if ( array_key_exists( PLUGIN_PM_PROJ_ID_UNPLANNED, $t_user->children ) &&
 				count( $t_user->children[PLUGIN_PM_PROJ_ID_UNPLANNED] ) > 0 ) {
+
 				$t_previous_bug = end( array_values( $t_user->children[PLUGIN_PM_PROJ_ID_UNPLANNED]->children ) );
 			} else {
 				$t_previous_bug = null;

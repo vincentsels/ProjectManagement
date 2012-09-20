@@ -54,7 +54,7 @@ class PlottableBug extends PlottableTask {
 
 		# Step 2: Next, calculate the start and finish dates
 
-		if ( is_null( $this->previous_bug ) ) {
+		if ( is_null( $this->previous_bug ) || $this->previous_bug === false ) {
 			$this->task_start = $p_reference_date;
 		} else {
 			$this->task_start = $this->previous_bug->task_end;
