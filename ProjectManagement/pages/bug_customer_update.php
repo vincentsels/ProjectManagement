@@ -61,15 +61,15 @@ if ( count( $t_customers ) > 0 ) {
 			bug_customer_update_or_insert( $t_bug_id, $t_integration_custom_dev_string, PLUGIN_PM_CUST_INTEGRATION_DEV );
 		}
 	}
+}
 
-	form_security_purge( 'plugin_ProjectManagement_bug_customer_update' );
+form_security_purge( 'plugin_ProjectManagement_bug_customer_update' );
 
-	if ( is_null( $f_redirect_page ) ) {
-		$t_url = string_get_bug_view_url( $t_bug_id, auth_get_current_user_id() );
-		print_successful_redirect( $t_url . "#customer_section" );
-	} else {
-		print_successful_redirect( plugin_page( $f_redirect_page, true ) );
-	}
+if ( is_null( $f_redirect_page ) && count ( $f_bug_ids ) == 1 ) {
+	$t_url = string_get_bug_view_url( $f_bug_ids[0], auth_get_current_user_id() );
+	print_successful_redirect( $t_url . "#customer_section" );
+} else {
+	print_successful_redirect( plugin_page( $f_redirect_page, true ) );
 }
 
 ?>
