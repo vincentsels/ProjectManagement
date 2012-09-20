@@ -105,27 +105,27 @@ abstract class PlottableTask {
 		}
 	}
 
-	protected function calculate_actual_end_date( &$p_task_start, &$p_task_end, &$p_est, &$p_na) {
-		$p_task_end = $this->calculate_end_date( $p_task_start, $p_est );
+	protected function calculate_actual_end_date( $p_task_start, &$p_task_end, $p_todo_on_ref_date, &$p_est, &$p_na) {
+		$p_task_end = $this->calculate_end_date( $p_task_start, $p_todo_on_ref_date );
 		$p_total_na = 0;
 		$p_new_na = $this->check_non_working_period( $p_task_start, $p_task_end );
 		while ( $p_total_na != $p_new_na ) {
 			$p_total_na = $p_new_na;
-			$t_new_est = $p_est + $p_total_na;
-			$p_task_end = $this->calculate_end_date( $p_task_start, $t_new_est );
+			$t_new_todo_on_ref_date = $p_todo_on_ref_date + $p_total_na;
+			$p_task_end = $this->calculate_end_date( $p_task_start, $t_new_todo_on_ref_date );
 			$p_new_na = $this->check_non_working_period( $p_task_start, $p_task_end );
 		}
 		$p_na = $p_total_na;
 		$p_est += $p_total_na;
 	}
 
-	private function calculate_end_date( $p_task_start, $p_est ) {
+	private function calculate_end_date( $p_task_start, $p_todo ) {
 		global $g_resources;
 
 		$t_workdays_per_week = 7;
 		$t_hours_per_day = $g_resources[$this->handler_id]['hours_per_week'] / $t_workdays_per_week;
 		if ( $t_hours_per_day > 0 ) {
-			$t_seconds_for_bug = $p_est / $t_hours_per_day * 24 * 60;
+			$t_seconds_for_bug = $p_todo / $t_hours_per_day * 24 * 60;
 			return $p_task_start + $t_seconds_for_bug;
 		}
 		return $p_task_start;

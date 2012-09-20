@@ -153,13 +153,13 @@ if ( $t_project_without_versions ) {
 
 		# Add the unplanned project for each user
 		$t_project = new PlottableNotPlannedProject( $row['user_id'],
-			$t_release_date_previous, $t_release_date_target );
+			$t_release_date_previous, $t_last_dev_day );
 		$t_user->children[PLUGIN_PM_PROJ_ID_UNPLANNED] = $t_project;
 	}
 
 	# Get all non-planned work and assign to special project
 	$t_query = "SELECT pc.id as project_id, pc.name as project_name, c.id as category_id, c.name as category_name,
-					   b.id, b.handler_id, b.date_submitted, sum(w.minutes) as minutes
+					   b.id, b.handler_id, b.date_submitted, sum(w.minutes) as minutes, max(w.book_date) as book_date
 				  FROM $t_work_table w
 				  JOIN $t_bug_table b ON w.bug_id = b.id
 				  JOIN $t_project_table pc ON b.project_id = pc.id
@@ -202,7 +202,7 @@ if ( $t_project_without_versions ) {
 		# Assign the bug to this project
 		$t_bug = new PlottableBug( $row['handler_id'],
 			$row['id'], null, null, $t_previous_bug, $t_user );
-		$t_bug->work_data[PLUGIN_PM_DONE][$t_default_worktype] = $row['minutes'];
+		$t_bug->set_work_data( PLUGIN_PM_DONE, $t_default_worktype, $row['minutes'], $row['book_date'] );
 
 		$t_project->children[$row['id']] = $t_bug;
 		$t_all_bugs_ordered[$row['handler_id']][] = $t_bug;
@@ -275,14 +275,14 @@ if ( $t_project_without_versions ) {
 		if ( array_key_exists( $row['id'], $t_category->children ) ) {
 			$t_bug = $t_category->children[$row['id']];
 		} else {
-			$t_bug = new PlottableBug( $row['handler_id'], $row['id'],
+			$t_bug = new PlottableBug( $t_release_date_previous, $row['handler_id'], $row['id'],
 				$row['weight'], $row['due_date'], $t_previous_bug, $t_user );
 			$t_all_bugs_ordered[$row['handler_id']][] = $t_bug;
 			$t_category->children[$row['id']] = $t_bug;
 		}
 
 		# Set the work data for this bug
-		$t_bug->work_data[$row['minutes_type']][$row['work_type']] = $row['minutes'];
+		$t_bug->set_work_data( $row['minutes_type'], $row['work_type'], $row['minutes'], $row['book_date'] );
 
 		$t_previous_bug = $t_bug;
 		$t_previous_handler_id = $row['handler_id'];

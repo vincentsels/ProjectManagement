@@ -7,6 +7,7 @@ define( 'PLUGIN_PM_TODO', 2 );
 define( 'PLUGIN_PM_REMAINING', 3 );
 define( 'PLUGIN_PM_DIFF', 4 );
 define( 'PLUGIN_PM_OVERDUE', 5 );
+define( 'PLUGIN_PM_DONE_BEFORE_REFDATE', 6 );
 
 define( 'PLUGIN_PM_WORKTYPE_TOTAL', 100 );
 define( 'PLUGIN_PM_TOKEN_RECENTLY_VISITED', 6876 ); # Has to be unique among plugins !!
@@ -684,7 +685,7 @@ function get_all_tasks( $f_target_version, $f_user_id = ALL_USERS, $p_include_bu
 	$t_query = "SELECT pp.id as parent_project_id, pp.name as parent_project,
 				  pc.id as project_id, pc.name as project_name, c.id as category_id, c.name as category_name,
 				  b.sponsorship_total as weight, b.due_date,
-				  b.id, b.handler_id, w.work_type, w.minutes_type, sum(w.minutes) as minutes
+				  b.id, b.handler_id, w.work_type, w.minutes_type, sum(w.minutes) as minutes, max(w.book_date) as book_date
 				  FROM $t_bug_table b
 				  JOIN $t_project_table pc ON b.project_id = pc.id
 				  JOIN $t_category_table c ON b.category_id = c.id

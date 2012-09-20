@@ -129,15 +129,15 @@ class PlottableNotPlannedProject extends PlottableProject {
 
 			# In case we still got time left, add a dummy bug to fill up the remaining space
 			if ( $this->est - $this->done > 0 ) {
-				$t_dummy = new PlottableBug( $this->handler_id, PLUGIN_PM_DUMMY_BUG, 0, null,
+				$t_dummy = new PlottableBug( $p_reference_date, $this->handler_id, PLUGIN_PM_DUMMY_BUG, 0, null,
 					end( array_values( $this->children ) ) );
-				$t_dummy->work_data[PLUGIN_PM_EST][plugin_config_get( 'default_worktype' )] = $this->est - $this->done;
-				$t_dummy->work_data[PLUGIN_PM_DONE][plugin_config_get( 'default_worktype' )] = 0;
+				$t_dummy->set_work_data( PLUGIN_PM_EST, plugin_config_get( 'default_worktype' ), $this->est - $this->done );
+				$t_dummy->set_work_data( PLUGIN_PM_DONE, plugin_config_get( 'default_worktype' ), 0, time() );
 				$t_dummy->calculate_data( $p_reference_date );
 				$this->children[PLUGIN_PM_DUMMY_BUG] = $t_dummy;
 			}
 
-			$this->calculate_actual_end_date( $this->task_start, $this->task_end, $this->est, $this->na );
+			$this->calculate_actual_end_date( $this->task_start, $this->task_end, $this->est, $this->est, $this->na );
 		}
 	}
 
