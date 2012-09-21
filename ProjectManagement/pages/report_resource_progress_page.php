@@ -200,7 +200,7 @@ if ( $t_project_without_versions ) {
 		$t_project = $t_user->children[PLUGIN_PM_PROJ_ID_UNPLANNED];
 
 		# Assign the bug to this project
-		$t_bug = new PlottableBug( $row['handler_id'],
+		$t_bug = new PlottableBug( $t_release_date_previous, $row['handler_id'],
 			$row['id'], null, null, $t_previous_bug, $t_user );
 		$t_bug->set_work_data( PLUGIN_PM_DONE, $t_default_worktype, $row['minutes'], $row['book_date'] );
 

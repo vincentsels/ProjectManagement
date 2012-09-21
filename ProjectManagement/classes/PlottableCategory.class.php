@@ -15,7 +15,7 @@ class PlottableCategory extends PlottableTask {
 
 		if ( $this->est > 0 ) {
 			$t_original_work_width = ( $this->done - $this->overdue ) / $this->est * 100;
-			$t_total_work_width    = ( $this->done + $this->na ) / $this->est * 100;
+			$t_total_work_width    = $this->done / ( $this->est - $this->na ) * 100;
 			$t_na_with			   = $this->na / $this->est * 100;
 			$t_extra_work_width    = $this->overdue / $this->est * 100;
 		} else {

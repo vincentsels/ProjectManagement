@@ -726,7 +726,7 @@ function get_all_tasks( $f_target_version, $f_user_id = ALL_USERS, $p_include_bu
 
 	$t_query .= " GROUP BY pp.id, pp.name, pc.id, pc.name, c.id, c.name, b.id, b.handler_id, w.work_type, w.minutes_type,
 				  b.sponsorship_total, b.due_date
-				  ORDER BY handler_id, CASE WHEN MAX(b.due_date) = 1 THEN 9999999999 ELSE MAX(b.due_date) END, weight DESC, id";
+				  ORDER BY handler_id, b.resolution DESC, CASE WHEN MAX(b.due_date) = 1 THEN 9999999999 ELSE MAX(b.due_date) END, weight DESC, id";
 
 	$t_result = db_query_bound( $t_query );
 	return $t_result;
