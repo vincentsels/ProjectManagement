@@ -82,7 +82,13 @@ if ( $t_project_without_versions ) {
 				</td>
 				<td class="category"><?php echo plugin_lang_get( 'select_from_date' ), ': ' ?></td>
 				<td>
-					<input type="text" size="8" maxlength="10" autocomplete="off" id="from_date" name="from_date">
+					<input type="text" size="8" maxlength="10" autocomplete="off" id="from_date" name="from_date"
+							<?php
+							if ( empty( $f_from_version ) ) {
+								echo 'value="' . $f_from_date . '"';
+							}
+							?>
+							>
 					<?php
 					date_print_calendar( 'from_date_cal' );
 					date_finish_calendar( 'from_date', 'from_date_cal' );
