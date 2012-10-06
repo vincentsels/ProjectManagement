@@ -15,15 +15,9 @@ $f_user_id        = gpc_get_int( 'user_id', ALL_USERS );
 $t_project_without_versions = false;
 
 if ( empty( $f_target_version ) ) {
-	# When no version number is specified and 'all projects' is selected, the system can
-	# not determine the desired version number. Display this as an information message.
-	if ( helper_get_current_project() == ALL_PROJECTS ) {
-		$t_project_without_versions = true;
-	}
-
 	# Attempt to get the most logical one - the first non-released
 	$t_non_released = version_get_all_rows_with_subs( helper_get_current_project(), false, false );
-	if ( count( $t_non_released ) > 0 ) {
+	if ( count( $t_non_released ) > 0 && $t_non_released[count( $t_non_released ) - 1]['date_order'] > 1 ) {
 		$f_target_version = $t_non_released[count( $t_non_released ) - 1]['version'];
 	} else {
 		$t_project_without_versions = true;
@@ -52,7 +46,8 @@ if ( $t_project_without_versions ) {
 										WHERE v.date_order < '$t_release_date_target'";
 		$t_result_release_date_previous = db_query_bound( $t_query_release_date_previous );
 		$t_release_date_previous_array  = db_fetch_array( $t_result_release_date_previous );
-		$t_release_date_previous        = $t_release_date_previous_array ? $t_release_date_previous_array['date_order'] : time();
+		$t_release_date_previous        = empty( $t_release_date_previous_array['date_order'] ) ? time() :
+			$t_release_date_previous_array['date_order'];
 	}
 	$t_reference_date_display = format_short_date( $t_release_date_previous );
 	if ( !empty( $f_from_version ) ) {

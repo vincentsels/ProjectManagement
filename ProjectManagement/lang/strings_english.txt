@@ -106,7 +106,7 @@
 	$s_plugin_ProjectManagement_new_target = 'New target';
 	$s_plugin_ProjectManagement_target_overview = 'Targets overview';
 
-	$s_plugin_ProjectManagement_project_without_versions = 'In order to view this page, you must select a project which contains versions.';
+	$s_plugin_ProjectManagement_project_without_versions = 'In order to view this page, you must select a project which contains versions with release dates.';
 
 	$s_plugin_ProjectManagement_unavailability = 'Unavailability';
 	$s_plugin_ProjectManagement_unavailability_add_new = 'Add new period of unavailability';
