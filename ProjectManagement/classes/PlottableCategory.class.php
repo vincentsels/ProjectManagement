@@ -25,9 +25,6 @@ class PlottableCategory extends PlottableTask {
 			$t_extra_work_width    = 0;
 		}
 
-		$t_start = format_short_date( $this->task_start );
-		$t_finish = format_short_date( $this->task_end );
-		$t_info = '<a href="#" class="invisible" title="' . $t_start . ' - ' . $t_finish . '">';
 		$t_text =  number_format( $t_total_work_width, 1 ) . '%';
 		?>
 	<tr class="progress-row row-category2">
@@ -37,7 +34,7 @@ class PlottableCategory extends PlottableTask {
 		<td width="85%">
 			<div class="resource-section">
 				<span class="filler" style="width: <?php echo $t_before ?>%"></span>
-				<?php echo $t_info ?>
+                <a href="#" class="invisible" title="<?php echo $this->generate_info_message() ?>">
 				<?php print_progress_span( $this->handler_id, $t_task_width, $this->task_end > $p_last_dev_day )  ?>
 				<?php print_progressbar_span( $this->handler_id, $t_original_work_width )  ?>
 				<?php echo $t_text ?>

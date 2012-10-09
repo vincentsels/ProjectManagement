@@ -134,11 +134,7 @@ class PlottableBug extends PlottableTask {
 			$t_extra_work_width    = 0;
 		}
 
-		$t_progress_info = minutes_to_time( $this->done, false ) . '&nbsp;/&nbsp;' . minutes_to_time( $this->est, false );
-		$t_overdue_info = minutes_to_time( $this->overdue ) . '&nbsp;/&nbsp;' . minutes_to_time( $this->done );
-		$t_progress_text = '<a href="#" class="invisible" title="' . $t_progress_info . '">' . number_format( $t_total_work_width, 1 ) . '%</a>';
-		$t_na_text = '<a href="#" class="invisible" title="' . minutes_to_days( $this->na ) . ' ' . lang_get( 'days' ) . '"></a>';
-		$t_overdue_text = '<a href="#" class="invisible" title="' . $t_overdue_info . '"></a>';
+		$t_progress_text = number_format( $t_total_work_width, 1 );
 		$t_description = '<span class="description-info">: ' . bug_get_field( $this->id, 'summary' ) . '</span>';
 
 		?>
@@ -150,20 +146,21 @@ class PlottableBug extends PlottableTask {
 		<td width="85%">
 			<div class="resource-section">
 			<span class="filler" style="width: <?php echo $t_before ?>%"></span>
+            <a href="#" class="invisible" title="<?php echo $this->generate_info_message() ?>">
 			<?php print_progress_span( $this->handler_id, $t_task_width, $this->task_end > $p_last_dev_day )  ?>
 				<?php print_progressbar_span( $this->handler_id, $t_original_work_width )  ?>
 					<?php echo $t_progress_text ?>
 				</span><?php
 				if ( $t_na_with > 0 ) {
 					print_na_span( $t_na_with );
-					echo $t_na_text . '</span>';
+					echo '</span>';
 				}
 				if ( $t_extra_work_width > 0 ) {
 					print_overdue_span( $t_extra_work_width );
-					echo $t_overdue_text . '</span>';
+					echo '</span>';
 				}
 				?>
-			</span>
+			</span></a>
 			</div>
 		</td>
 	</tr>

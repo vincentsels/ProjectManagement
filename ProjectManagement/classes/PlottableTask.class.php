@@ -60,6 +60,36 @@ abstract class PlottableTask {
 		# Standard behaviour does nothing
 	}
 
+	/***
+	 * Returns an informational message based on this task's data,
+	 * which can be used as tooltip. Time data of 8 hours or below are displayed
+	 * as hours/minutes, above 8 hours are displayed in days.
+	 * Can be overridden if desired.
+	 * @return string the information message
+	 */
+	protected function generate_info_message( ) {
+		$t_real_est = $this->est;
+		if ( $this->na > 0 ) {
+			$t_real_est -= $this->na;
+		}
+
+		$t_str = format_short_date( $this->task_start ) . ' - ' . format_short_date( $this->task_end ) . ' &nbsp; &#10;';
+		if ( $t_real_est < 8 * 60 ) {
+			$t_str .= plugin_lang_get( 'done' ) . ': ' . minutes_to_time( $this->done, false )
+				. ' / ' . minutes_to_time( $t_real_est, false );
+			if ( $this->overdue > 0 ) {
+				$t_str .= ' &nbsp; &#10;' . plugin_lang_get( 'overdue' ) . ': ' . minutes_to_time( $this->overdue, false );
+			}
+		} else {
+			$t_str .= plugin_lang_get( 'done' ) . ' (d): ' . minutes_to_days( $this->done )
+				. ' / ' . minutes_to_days( $t_real_est );
+			if ( $this->overdue > 0 ) {
+				$t_str .= ' &nbsp; &#10;' . plugin_lang_get( 'overdue' ) . ' (d): ' . minutes_to_days( $this->overdue );
+			}
+		}
+		return $t_str;
+	}
+
 	public function calculate_data( $p_reference_date ) {
 		foreach ( $this->children as $child ) {
 			$child->calculate_data( $p_reference_date );
