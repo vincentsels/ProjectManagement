@@ -123,9 +123,11 @@ class PlottableNotPlannedProject extends PlottableProject {
 			$this->est = max( $this->est, $this->done );
 
 			# Calculate overdue
-			$t_est_till_today = $this->minutes_none_deployability( $this->period_start, min( time(), $this->period_end ),
-				$t_deployability, $t_hours_per_week );
-			$this->overdue = max( 0, $this->done - $t_est_till_today );
+			if ( $this->period_start < time() ) {
+				$t_est_till_today = $this->minutes_none_deployability( $this->period_start, min( time(), $this->period_end ),
+					$t_deployability, $t_hours_per_week );
+				$this->overdue = max( 0, $this->done - $t_est_till_today );
+			}
 
 			# In case we still got time left, add a dummy bug to fill up the remaining space
 			if ( $this->est - $this->done > 0 ) {
