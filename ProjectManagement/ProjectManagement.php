@@ -113,7 +113,8 @@ class ProjectManagementPlugin extends MantisPlugin {
 			'ignore_work_during_unavailability_periods' => array(60, 80),
 			'release_buffer' 							=> 21,
 			'view_target_overview_threshold'			=> REPORTER,
-			'view_all_targets_threshold'				=> MANAGER
+			'view_all_targets_threshold'				=> MANAGER,
+			'group_by_projects_by_default'				=> TRUE
 		);
 	}
 

@@ -99,8 +99,18 @@ if ( $t_project_without_versions ) {
 					</select>
 				</td>
 			</tr>
+            <tr <?php echo helper_alternate_class() ?>>
+                <td colspan="4">
+                    <input type="checkbox" name="group_by_projects"
+                           id="group_by_projects"
+						<?php echo plugin_config_get( 'group_by_projects_by_default' ) ? 'checked="checked" ' : '' ?>>
+					<?php echo plugin_lang_get( 'group_by_projects' ) ?>
+                </td>
+            </tr>
 			<tr>
-				<td colspan="4" class="center"><input name="submit" type="submit" value="<?php echo lang_get( 'update' ) ?>"></td>
+				<td colspan="4" class="center">
+					<input name="submit" type="submit" value="<?php echo lang_get( 'update' ) ?>">
+				</td>
 			</tr>
 		</table>
 	</td>
