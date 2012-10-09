@@ -117,6 +117,7 @@
 	$s_plugin_ProjectManagement_unavailability_note = 'Note';
 
 	$s_plugin_ProjectManagement_unplanned = 'Unplanned';
+	$s_plugin_ProjectManagement_planned = 'Planned';
 	$s_plugin_ProjectManagement_unavailable = 'Unavailable';
 	$s_plugin_ProjectManagement_finished = 'Finished';
 	$s_plugin_ProjectManagement_select_target_version = 'Select a target version';

@@ -11,9 +11,9 @@ $f_target_version = gpc_get_string( 'target_version', null );
 $f_from_version   = gpc_get_string( 'from_version', null );
 $f_from_date	  = gpc_get_string( 'from_date', null );
 $f_user_id        = gpc_get_int( 'user_id', ALL_USERS );
+$f_group_by_projects = gpc_get_bool( 'group_by_projects', false );
 
 $t_project_without_versions = false;
-
 if ( empty( $f_target_version ) ) {
 	# Attempt to get the most logical one - the first non-released
 	$t_non_released = version_get_all_rows_with_subs( helper_get_current_project(), false, false );
@@ -254,22 +254,32 @@ if ( $t_project_without_versions ) {
 			}
 		}
 
+		$t_actual_project_id = $row['project_id'];
+		$t_actual_project_name = $row['project_name'];
+		if ( !$f_group_by_projects ) {
+			$t_actual_project_id = PLUGIN_PM_PROJ_ID_PLANNED;
+			$t_actual_project_name = plugin_lang_get( 'planned' );
+		}
 		# Check whether this project already exists and if not, create it
-		if ( array_key_exists( $row['project_id'], $t_user->children ) ) {
-			$t_project = $t_user->children[$row['project_id']];
+		if ( array_key_exists( $t_actual_project_id, $t_user->children ) ) {
+			$t_project = $t_user->children[$t_actual_project_id];
 		} else {
 			$t_project = new PlottableProject( $row['handler_id'],
-				$row['project_id'], $row['project_name'] );
-			$t_user->children[$row['project_id']] = $t_project;
+				$t_actual_project_id, $t_actual_project_name );
+			$t_user->children[$t_actual_project_id] = $t_project;
 		}
 
-		# Check whether this category already exists in this project and if not, create it
-		if ( array_key_exists( $row['category_id'], $t_project->children ) ) {
-			$t_category = $t_project->children[$row['category_id']];
+		if ( $f_group_by_projects ) {
+			# Check whether this category already exists in this project and if not, create it
+			if ( array_key_exists( $row['category_id'], $t_project->children ) ) {
+				$t_category = $t_project->children[$row['category_id']];
+			} else {
+				$t_category = new PlottableCategory( $row['handler_id'],
+					$row['category_id'], $row['category_name'] );
+				$t_project->children[$row['category_id']] = $t_category;
+			}
 		} else {
-			$t_category = new PlottableCategory( $row['handler_id'],
-				$row['category_id'], $row['category_name'] );
-			$t_project->children[$row['category_id']] = $t_category;
+			$t_category = $t_project;
 		}
 
 		# Check whether this bug already exists in this category and if not, add it

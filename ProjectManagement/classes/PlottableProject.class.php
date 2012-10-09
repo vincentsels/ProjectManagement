@@ -30,7 +30,9 @@ class PlottableProject extends PlottableTask {
 		$t_info = '<a href="#" class="invisible" title="' . $t_start . ' - ' . $t_finish . '">';
 		$t_text =  number_format( $t_total_work_width, 1 ) . '%';
 
-		if ( $this->id == PLUGIN_PM_PROJ_ID_UNPLANNED || $this->id == PLUGIN_PM_PROJ_ID_NONWORKING ) {
+		if ( $this->id == PLUGIN_PM_PROJ_ID_UNPLANNED ||
+			$this->id == PLUGIN_PM_PROJ_ID_PLANNED ||
+			$this->id == PLUGIN_PM_PROJ_ID_NONWORKING ) {
 			$t_project_name = $this->name;
 		} else {
 			$t_project_name = project_get_name( $this->id );
