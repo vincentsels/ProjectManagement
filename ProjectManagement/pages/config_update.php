@@ -35,6 +35,7 @@ maybe_set_option( 'view_billing_threshold', gpc_get_int( 'view_billing_threshold
 maybe_set_option( 'default_owner', string_to_array( gpc_get_string( 'default_owner', null ) ) );
 maybe_set_option( 'release_buffer', gpc_get_string( 'release_buffer' ) );
 maybe_set_option( 'group_by_projects_by_default', gpc_get_bool( 'group_by_projects_by_default' ) );
+maybe_set_option( 'show_projects_by_default', gpc_get_bool( 'show_projects_by_default' ) );
 
 form_security_purge( 'plugin_ProjectManagement_config_update' );
 print_successful_redirect( plugin_page( 'config_page', true ) );

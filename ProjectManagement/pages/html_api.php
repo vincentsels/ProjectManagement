@@ -92,20 +92,37 @@ function print_plugin_enum_string_option_list( $p_enum_name, $p_val = 0 ) {
 	}
 }
 
-function print_expand_icon_start( $p_div_id ) {
+/***
+ * Prints the start of a region that is used as header of a collapsable section.
+ * @param $p_div_id string The unique name for this div.
+ * @param $p_visible bool Whether or not the div should be shown immediately. Default false.
+ * Note that when setting this to true, also the 'print_expandable_div_start' method must use 'true' as this parameter.
+ */
+function print_expand_icon_start( $p_div_id, $p_visible = false ) {
 	echo '<a class="subtle" href="#" onclick="ShowOrHide( \'' . $p_div_id . '\' ); return false; ">
-	<img id="' . $p_div_id . '_img" border="0" src="images/plus.png" alt="+" />&nbsp;';
+		<img id="' . $p_div_id . '_img" border="0" ' .
+		($p_visible ? 'src="images/minus.png" alt="-"' : 'src="images/plus.png" alt="+"') . ' />&nbsp;';
 }
 
+/***
+ * Prints the end of the region used as a header of a collapsable section.
+ */
 function print_expand_icon_end() {
 	echo '</a>';
 }
 
-
-function print_expandable_div_start( $p_div_id ) {
-	echo '<div id="' . $p_div_id . '" class="hidden content-list">';
+/***
+ * Prints the start of an expandable section.
+ * @param $p_div_id string The unique name of this div.
+ * @param bool $p_visible Whether or not this div should be shown immediately. Default false.
+ */
+function print_expandable_div_start( $p_div_id, $p_visible = false ) {
+	echo '<div id="' . $p_div_id . '" class="' . ($p_visible ? '' : 'hidden') . ' content-list">';
 }
 
+/***
+ * Print the end of an expandable section.
+ */
 function print_expandable_div_end() {
 	echo '</div>';
 }

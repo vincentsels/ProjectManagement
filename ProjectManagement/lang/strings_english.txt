@@ -128,6 +128,7 @@
 	$s_plugin_ProjectManagement_last_dev_day = 'Last dev day';
 	$s_plugin_ProjectManagement_group_by_projects = 'Group by projects and categories';
 	$s_plugin_ProjectManagement_group_by_projects_by_default = 'Group by projects and categories by default';
+	$s_plugin_ProjectManagement_show_projects_by_default = 'Immediately show projects for each resource by default';
 	$s_plugin_ProjectManagement_release_buffer = 'Buffer days before release';
 
 	$s_plugin_ProjectManagement_error_enddate_before_startdate = 'Enddate must be later than startdate.';

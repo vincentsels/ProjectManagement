@@ -114,7 +114,8 @@ class ProjectManagementPlugin extends MantisPlugin {
 			'release_buffer' 							=> 21,
 			'view_target_overview_threshold'			=> REPORTER,
 			'view_all_targets_threshold'				=> MANAGER,
-			'group_by_projects_by_default'				=> TRUE
+			'group_by_projects_by_default'				=> TRUE,
+			'show_projects_by_default'					=> TRUE
 		);
 	}
 

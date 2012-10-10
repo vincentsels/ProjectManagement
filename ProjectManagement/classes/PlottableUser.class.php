@@ -14,7 +14,7 @@ class PlottableUser extends PlottableTask {
 		<tr>
 			<td class="form-title" colspan="2">
 				<?php
-				print_expand_icon_start( $p_unique_id );
+				print_expand_icon_start( $p_unique_id, plugin_config_get('show_projects_by_default') );
 				echo user_get_realname( $this->id );
 				print_expand_icon_end();
 				$t_deployability_name = 'deployability_' . $this->id;
@@ -38,7 +38,7 @@ class PlottableUser extends PlottableTask {
 		</tr>
 		<?php
 		echo '<tr><td colspan="2">';
-		print_expandable_div_start( $p_unique_id );
+		print_expandable_div_start( $p_unique_id, plugin_config_get('show_projects_by_default') );
 		echo '<table class="width100" cellspacing="1">';
 	}
 

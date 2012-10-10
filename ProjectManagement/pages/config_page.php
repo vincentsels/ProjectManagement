@@ -181,6 +181,13 @@ print_pm_config_menu( 'config_page' );
 				<?php echo plugin_config_get( 'group_by_projects_by_default' ) ? 'checked="checked" ' : '' ?>>
 			</td>
         </tr>
+        <tr <?php echo helper_alternate_class() ?>>
+            <td class="category"><?php echo plugin_lang_get( 'show_projects_by_default' ) ?></td>
+            <td><input type="checkbox" name="show_projects_by_default"
+                       id="show_projects_by_default"
+				<?php echo plugin_config_get( 'show_projects_by_default' ) ? 'checked="checked" ' : '' ?>>
+            </td>
+        </tr>
 		<tr>
 			<td class="center" colspan="2"><input type="submit" value="<?php echo lang_get( 'update' ) ?>"/></td>
 		</tr>

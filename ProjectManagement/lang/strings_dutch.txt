@@ -128,6 +128,7 @@
 	$s_plugin_ProjectManagement_last_dev_day = 'Laatste ontwikkeldatum';
 	$s_plugin_ProjectManagement_group_by_projects = 'Groepeer per project en categorie';
 	$s_plugin_ProjectManagement_group_by_projects_by_default = 'Groepeer standaard per project en categorie';
+	$s_plugin_ProjectManagement_show_projects_by_default = 'Toon standaard onmiddellijk de projecten voor iedere resource';
 	$s_plugin_ProjectManagement_release_buffer = 'Bufferdagen voor release';
 
 	$s_plugin_ProjectManagement_error_enddate_before_startdate = 'Einddatum moet na startdatum liggen.';

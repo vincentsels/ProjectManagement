@@ -11,7 +11,7 @@ $f_target_version = gpc_get_string( 'target_version', null );
 $f_from_version   = gpc_get_string( 'from_version', null );
 $f_from_date	  = gpc_get_string( 'from_date', null );
 $f_user_id        = gpc_get_int( 'user_id', ALL_USERS );
-$f_group_by_projects = gpc_get_bool( 'group_by_projects', false );
+$f_group_by_projects = gpc_get_bool( 'group_by_projects', plugin_config_get( 'group_by_projects_by_default' ) );
 
 $t_project_without_versions = false;
 if ( empty( $f_target_version ) ) {
@@ -150,20 +150,29 @@ if ( $t_project_without_versions ) {
 	$t_const_done		 	 = PLUGIN_PM_DONE;
 	$t_const_all_users		 = ALL_USERS;
 
-	# Populate the user and project structure
-	# Only include users with hours per week filled in
-	$t_query = "SELECT t.user_id
-				  FROM $t_res_table t
-				 WHERE t.hours_per_week > 0";
-	$t_result = db_query_bound( $t_query );
+	# Populate the user and project structure.
+	$t_users_to_list = array();
+	if ( $f_user_id == ALL_USERS ) {
+		# Only include users with hours per week filled in.
+		$t_query = "SELECT t.user_id
+					  FROM $t_res_table t
+					 WHERE t.hours_per_week > 0";
+		$t_result = db_query_bound( $t_query );
 
-	while ( $row = db_fetch_array( $t_result ) ) {
-		$t_user = new PlottableUser( $row['user_id'] );
-		$t_all_users[$row['user_id']] = $t_user;
-		$t_all_bugs_ordered[$row['user_id']] = array();
+		while ( $row = db_fetch_array( $t_result ) ) {
+			$t_users_to_list[] = $row['user_id'];
+		}
+	} else {
+		$t_users_to_list[] = $f_user_id;
+	}
+
+	foreach ( $t_users_to_list as $t_user_id ) {
+		$t_user = new PlottableUser( $t_user_id );
+		$t_all_users[$t_user_id] = $t_user;
+		$t_all_bugs_ordered[$t_user_id] = array();
 
 		# Add the unplanned project for each user
-		$t_project = new PlottableNotPlannedProject( $row['user_id'],
+		$t_project = new PlottableNotPlannedProject( $t_user_id,
 			$t_release_date_previous, $t_last_dev_day );
 		$t_user->children[PLUGIN_PM_PROJ_ID_UNPLANNED] = $t_project;
 	}
