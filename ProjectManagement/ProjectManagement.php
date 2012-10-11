@@ -349,12 +349,12 @@ class ProjectManagementPlugin extends MantisPlugin {
 			}
 
 			# Check for new period of unavailability
-			$f_unavailable_start = strtotime_safe( gpc_get_string( 'period_start', false ) );
-			$f_unavailable_end = strtotime_safe( gpc_get_string( 'period_end', false ) );
+			$f_unavailable_start = strtotime_safe( gpc_get_string( 'period_start' ), true );
+			$f_unavailable_end = strtotime_safe( gpc_get_string( 'period_end' ), true );
 			$f_unavailable_type = gpc_get_int( 'unavailability_type', null );
 			$f_unavailable_note = gpc_get_string( 'unavailability_note', null );
 
-			if ( $f_unavailable_start ) {
+			if ( $f_unavailable_start !== false ) {
 				# A period has been entered
 				if ( empty( $f_unavailable_end ) ) {
 					# Assume a period of one day

@@ -87,6 +87,11 @@ abstract class PlottableTask {
 				$t_str .= ' &nbsp; &#10;' . plugin_lang_get( 'overdue' ) . ' (d): ' . minutes_to_days( $this->overdue );
 			}
 		}
+
+		if ( $this-> na > 0 ) {
+			$t_str .= ' &nbsp; &#10;' . plugin_lang_get( 'unavailable' ) . ' (d): ' . minutes_to_days( $this->na );
+		}
+
 		return $t_str;
 	}
 
@@ -152,8 +157,7 @@ abstract class PlottableTask {
 	private function calculate_end_date( $p_task_start, $p_todo ) {
 		global $g_resources;
 
-		$t_workdays_per_week = 7;
-		$t_hours_per_day = $g_resources[$this->handler_id]['hours_per_week'] / $t_workdays_per_week;
+		$t_hours_per_day = $g_resources[$this->handler_id]['hours_per_week'] / 7;
 		if ( $t_hours_per_day > 0 ) {
 			$t_seconds_for_bug = $p_todo / $t_hours_per_day * 24 * 60;
 			return $p_task_start + $t_seconds_for_bug;
@@ -164,21 +168,30 @@ abstract class PlottableTask {
 	private function check_non_working_period( $p_task_start, $p_task_end ) {
 		global $g_resources;
 
-		$t_seconds_na = 0;
+		$t_minutes_na = 0;
+		$t_resource_unavailable = $g_resources[$this->handler_id]['resource_unavailable'];
+		$t_weekly_work_days = $g_resources[$this->handler_id]['weekly_work_days'];
+		$t_hours_per_day = $g_resources[$this->handler_id]['hours_per_week'] / 7;
+
 		# Iterate through all the non-working days of the user
-		if ( is_array( $g_resources[$this->handler_id]['resource_unavailable'] ) ) {
-			foreach ( $g_resources[$this->handler_id]['resource_unavailable'] as $t_na_period ) {
+		if ( is_array( $t_resource_unavailable ) ) {
+			foreach ( $t_resource_unavailable as $t_na_period ) {
 				if ( $t_na_period['start_date'] <= $p_task_end &&
 					$t_na_period['start_date'] > $p_task_start ) {
-					$t_seconds_na += ($t_na_period['end_date'] - $t_na_period['start_date']);
+					$t_day_to_check = $t_na_period['start_date'];
+					while ( $t_day_to_check <= $t_na_period['end_date'] ) {
+						log_event( LOG_FILTERING, format_short_date( $t_day_to_check ) . ': ' . date( 'N', $t_day_to_check ) );
+						if ( array_search( date( 'N', $t_day_to_check ), $t_weekly_work_days ) !== false ) {
+							log_event( LOG_FILTERING, $t_minutes_na . ' + ' . ($t_hours_per_day * 60) . ' = ' . $t_minutes_na + ($t_hours_per_day * 60) );
+							$t_minutes_na += ($t_hours_per_day * 60); # Add a non-working day
+						}
+						# Move on to the next day
+						$t_day_to_check += (24 * 60 * 60);
+					}
 				}
 			}
 		}
 
-		# Convert na period's seconds to 'relative' seconds
-		$t_ratio = $g_resources[$this->handler_id]['hours_per_week'] / ( 7 * 24 );
-		$t_seconds_na *= $t_ratio;
-
-		return $t_seconds_na / 60;
+		return $t_minutes_na;
 	}
 }

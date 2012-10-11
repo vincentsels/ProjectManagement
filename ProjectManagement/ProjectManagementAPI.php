@@ -658,6 +658,13 @@ function resource_cache_data() {
 		while ( $t_res_na = db_fetch_array( $t_result_na ) ) {
 			$g_resources[$t_user_id]['resource_unavailable'][] = $t_res_na;
 		}
+		# Fetch the weekly work days
+		# First check whether this user has a diverging setting value
+		$g_resources[$t_user_id]['weekly_work_days'] = plugin_config_get( 'weekly_work_days', null, false, $t_row['user_id'] );
+		if ( is_null( $g_resources[$t_user_id]['weekly_work_days'] ) ) {
+			# If not, use the global settings
+			$g_resources[$t_user_id]['weekly_work_days'] = plugin_config_get( 'weekly_work_days', null, true );
+		}
 	}
 	# Add default
 	$g_resources[NO_USER]['user_id'] = NO_USER;
@@ -665,6 +672,7 @@ function resource_cache_data() {
 	$g_resources[NO_USER]['deployability'] = 100;
 	$g_resources[NO_USER]['hours_per_week'] = 0;
 	$g_resources[NO_USER]['resource_unavailable'] = array();
+	$g_resources[NO_USER]['weekly_work_days'] = array();
 }
 
 
