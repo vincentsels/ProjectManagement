@@ -106,7 +106,9 @@
 	$s_plugin_ProjectManagement_new_target = 'Nieuw target';
 	$s_plugin_ProjectManagement_target_overview = 'Targets overzicht';
 
-	$s_plugin_ProjectManagement_project_without_versions = 'Om deze pagina te bekijken dient u een project met versies en release datums te selecteren.';
+	$s_plugin_ProjectManagement_project_without_versions = 'Om deze pagina te kunnen bekijken dient u een project met versies en release datums te selecteren.';
+	$s_plugin_ProjectManagement_all_versions_selected = 'Om deze pagina te kunnen bekijken dient u een specifiek project te selecteren in de plaats van \'Alle projecten\'.';
+	$s_plugin_ProjectManagement_project_selection_disabled = 'Om deze pagina te kunnen bekijken dient u de configuratie optie \'show_project_menu_bar\' op \'ON\' te zetten. Contacteer een beheerder.';
 
 	$s_plugin_ProjectManagement_unavailability = 'Onbeschikbaarheid';
 	$s_plugin_ProjectManagement_unavailability_add_new = 'Nieuwe periode van onbeschikbaarheid toevoegen';

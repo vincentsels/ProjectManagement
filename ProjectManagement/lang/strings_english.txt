@@ -107,6 +107,8 @@
 	$s_plugin_ProjectManagement_target_overview = 'Targets overview';
 
 	$s_plugin_ProjectManagement_project_without_versions = 'In order to view this page, you must select a project which contains versions with release dates.';
+	$s_plugin_ProjectManagement_all_versions_selected = 'In order to view this page, a specific project must be selected instead of \'All projects\'.';
+	$s_plugin_ProjectManagement_project_selection_disabled = 'In order to view this page, the configuration \'show_project_menu_bar\' must be turned \'ON\'. Contact an administrator.';
 
 	$s_plugin_ProjectManagement_unavailability = 'Unavailability';
 	$s_plugin_ProjectManagement_unavailability_add_new = 'Add new period of unavailability';
