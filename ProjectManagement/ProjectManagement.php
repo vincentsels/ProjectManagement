@@ -115,7 +115,8 @@ class ProjectManagementPlugin extends MantisPlugin {
 			'view_target_overview_threshold'			=> REPORTER,
 			'view_all_targets_threshold'				=> MANAGER,
 			'group_by_projects_by_default'				=> TRUE,
-			'show_projects_by_default'					=> TRUE
+			'show_projects_by_default'					=> TRUE,
+			'weekly_work_days'					  		=> array( 1, 2, 3, 4, 5 )
 		);
 	}
 

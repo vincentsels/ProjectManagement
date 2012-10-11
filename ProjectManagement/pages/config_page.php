@@ -188,6 +188,38 @@ print_pm_config_menu( 'config_page' );
 				<?php echo plugin_config_get( 'show_projects_by_default' ) ? 'checked="checked" ' : '' ?>>
             </td>
         </tr>
+
+        <tr <?php echo helper_alternate_class() ?>>
+			<?php
+			$t_weekly_work_days = plugin_config_get( 'weekly_work_days' );
+			?>
+            <td class="category"><?php echo plugin_lang_get( 'weekly_work_days' ) ?></td>
+            <td>
+				<input type="checkbox" name="weekly_work_days_1" id="weekly_work_days_1"
+					<?php if ( array_search( 1, $t_weekly_work_days ) !== false ) { echo 'checked="checked"'; } ?>>
+				<?php echo plugin_lang_get( 'monday' ) . ' ' ?>
+                <input type="checkbox" name="weekly_work_days_2" id="weekly_work_days_2"
+					<?php if ( array_search( 2, $t_weekly_work_days ) !== false ) { echo 'checked="checked"'; } ?>>
+				<?php echo plugin_lang_get( 'tuesday' ) . ' ' ?>
+                <input type="checkbox" name="weekly_work_days_3" id="weekly_work_days_3"
+					<?php if ( array_search( 3, $t_weekly_work_days ) !== false ) { echo 'checked="checked"'; } ?>>
+				<?php echo plugin_lang_get( 'wednesday' ) . ' ' ?>
+                <input type="checkbox" name="weekly_work_days_4" id="weekly_work_days_4"
+					<?php if ( array_search( 4, $t_weekly_work_days ) !== false ) { echo 'checked="checked"'; } ?>>
+				<?php echo plugin_lang_get( 'thursday' ) . ' ' ?>
+                <input type="checkbox" name="weekly_work_days_5" id="weekly_work_days_5"
+					<?php if ( array_search( 5, $t_weekly_work_days ) !== false ) { echo 'checked="checked"'; } ?>>
+				<?php echo plugin_lang_get( 'friday' ) . ' ' ?>
+                <input type="checkbox" name="weekly_work_days_6" id="weekly_work_days_6"
+					<?php if ( array_search( 6, $t_weekly_work_days ) !== false ) { echo 'checked="checked"'; } ?>>
+				<?php echo plugin_lang_get( 'saturday' ) . ' ' ?>
+                <input type="checkbox" name="weekly_work_days_7" id="weekly_work_days_7"
+					<?php if ( array_search( 7, $t_weekly_work_days ) !== false ) { echo 'checked="checked"'; } ?>>
+				<?php echo plugin_lang_get( 'sunday' ) . ' ' ?>
+            </td>
+        </tr>
+
+
 		<tr>
 			<td class="center" colspan="2"><input type="submit" value="<?php echo lang_get( 'update' ) ?>"/></td>
 		</tr>

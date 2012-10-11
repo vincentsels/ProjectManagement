@@ -134,4 +134,13 @@
 	$s_plugin_ProjectManagement_release_buffer = 'Bufferdagen voor release';
 
 	$s_plugin_ProjectManagement_error_enddate_before_startdate = 'Einddatum moet na startdatum liggen.';
+
+	$s_plugin_ProjectManagement_weekly_work_days = 'Werkdagen';
+	$s_plugin_ProjectManagement_monday = 'maandag';
+	$s_plugin_ProjectManagement_tuesday = 'dinsdag';
+	$s_plugin_ProjectManagement_wednesday = 'woensdag';
+	$s_plugin_ProjectManagement_thursday = 'donderdag';
+	$s_plugin_ProjectManagement_friday = 'vrijdag';
+	$s_plugin_ProjectManagement_saturday = 'zaterdag';
+	$s_plugin_ProjectManagement_sunday = 'zondag';
 ?>
