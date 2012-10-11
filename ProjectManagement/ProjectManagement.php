@@ -258,19 +258,53 @@ class ProjectManagementPlugin extends MantisPlugin {
 			<td><input type="text" size="3" maxlength="6" name="hourly_rate_<?php echo $p_user_id?>"
 					   value="<?php echo $t_row['hourly_rate'] ?>"></td>
 		</tr>
-		<tr <?php echo helper_alternate_class() ?>>
-			<td  class="category"><?php echo plugin_lang_get( 'color' ) ?></td>
-			<td>
-				<select name="color_<?php echo $p_user_id?>">
-					<?php print_color_option_list( $t_row['color'] ) ?>
-				</select>
-			</td>
-		</tr>
+        <tr <?php echo helper_alternate_class() ?>>
+			<?php
+			$t_weekly_work_days = plugin_config_get( 'weekly_work_days', null, false, $p_user_id );
+			if ( is_null( $t_weekly_work_days ) ) {
+				# When this config option has not been overwritten for this user, use the general one
+				$t_weekly_work_days = plugin_config_get( 'weekly_work_days', null );
+			}
+			?>
+            <td class="category"><?php echo plugin_lang_get( 'weekly_work_days' ) ?></td>
+            <td>
+                <input type="checkbox" name="weekly_work_days_1" id="weekly_work_days_1"
+					<?php if ( array_search( 1, $t_weekly_work_days ) !== false ) { echo 'checked="checked"'; } ?>>
+				<?php echo plugin_lang_get( 'monday' ) . ' ' ?>
+                <input type="checkbox" name="weekly_work_days_2" id="weekly_work_days_2"
+					<?php if ( array_search( 2, $t_weekly_work_days ) !== false ) { echo 'checked="checked"'; } ?>>
+				<?php echo plugin_lang_get( 'tuesday' ) . ' ' ?>
+                <input type="checkbox" name="weekly_work_days_3" id="weekly_work_days_3"
+					<?php if ( array_search( 3, $t_weekly_work_days ) !== false ) { echo 'checked="checked"'; } ?>>
+				<?php echo plugin_lang_get( 'wednesday' ) . ' ' ?>
+                <input type="checkbox" name="weekly_work_days_4" id="weekly_work_days_4"
+					<?php if ( array_search( 4, $t_weekly_work_days ) !== false ) { echo 'checked="checked"'; } ?>>
+				<?php echo plugin_lang_get( 'thursday' ) . ' ' ?>
+                <input type="checkbox" name="weekly_work_days_5" id="weekly_work_days_5"
+					<?php if ( array_search( 5, $t_weekly_work_days ) !== false ) { echo 'checked="checked"'; } ?>>
+				<?php echo plugin_lang_get( 'friday' ) . ' ' ?>
+                <input type="checkbox" name="weekly_work_days_6" id="weekly_work_days_6"
+					<?php if ( array_search( 6, $t_weekly_work_days ) !== false ) { echo 'checked="checked"'; } ?>>
+				<?php echo plugin_lang_get( 'saturday' ) . ' ' ?>
+                <input type="checkbox" name="weekly_work_days_7" id="weekly_work_days_7"
+					<?php if ( array_search( 7, $t_weekly_work_days ) !== false ) { echo 'checked="checked"'; } ?>>
+				<?php echo plugin_lang_get( 'sunday' ) . ' ' ?>
+            </td>
+        </tr>
 		<tr <?php echo helper_alternate_class() ?>>
 			<td  class="category"><?php echo plugin_lang_get( 'deployability' ) ?></td>
 			<td><input type="text" size="3" maxlength="3" name="deployability_<?php echo $p_user_id?>"
 					   value="<?php echo $t_row['deployability'] ?>"></td>
 		</tr>
+        <tr class="spacer"/>
+        <tr <?php echo helper_alternate_class() ?>>
+            <td  class="category"><?php echo plugin_lang_get( 'color' ) ?></td>
+            <td>
+                <select name="color_<?php echo $p_user_id?>">
+					<?php print_color_option_list( $t_row['color'] ) ?>
+                </select>
+            </td>
+        </tr>
 			<?php
 		}
 	}
@@ -297,6 +331,20 @@ class ProjectManagementPlugin extends MantisPlugin {
 					!empty( $f_color  ) || !empty( $f_deployability  ) ) {
 					resource_insert_or_update( $p_user_id, $f_hourly_rate, $f_hours_per_week,
 						$f_color, $f_deployability );
+				}
+
+				# Weekly work days
+				$t_days_set = array();
+				for ( $i = 1; $i <= 7; $i++ ) {
+					if ( gpc_get_bool( 'weekly_work_days_' . $i ) ) {
+						$t_days_set[] = $i;
+					}
+				}
+				if ( $t_days_set !== plugin_config_get( 'weekly_work_days', null, true ) ) {
+					plugin_config_set( 'weekly_work_days', $t_days_set, $p_user_id );
+				} else {
+					# If the set values are the default, remove this setting for this user
+					plugin_config_delete( 'weekly_work_days', $p_user_id );
 				}
 			}
 
