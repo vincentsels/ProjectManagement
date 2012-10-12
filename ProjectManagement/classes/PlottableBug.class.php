@@ -149,7 +149,7 @@ class PlottableBug extends PlottableTask {
             <a href="#" class="invisible" title="<?php echo $this->generate_info_message() ?>">
 			<?php print_progress_span( $this->handler_id, $t_task_width, $this->task_end > $p_last_dev_day )  ?>
 				<?php print_progressbar_span( $this->handler_id, $t_original_work_width )  ?>
-					<?php echo $t_progress_text ?>
+					<?php echo $t_progress_text ?>%
 				</span><?php
 				if ( $t_na_with > 0 ) {
 					print_na_span( $t_na_with );
