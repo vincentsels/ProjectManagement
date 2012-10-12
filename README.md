@@ -64,10 +64,11 @@ to discover a realistic date of when this developer's work will be finished.
 
 A lot of credit goes to Mantis plugin-guru jreese ([http://noswap.com](http://noswap.com/)), whose plugins supplied a great source of examples and inspiration.
 
-## Important notice - compatibility issues
+## Compatibility issues
 
-Starting from version 1.1, one small feature will not work with the base installation of Mantis:
-* When 'paying customer' is set as a required field, you will be able to leave it blank when changing a bug's status.
+* In order to be able to deviate from the general 'working hours per day' on user-basis, you need Mantis v1.2.9 or onward.
+* Starting from v1.1 of this plugin, one small feature will not work with the base installation of Mantis:
+  * When 'paying customer' is set as a required field, you will be able to leave it blank when changing a bug's status.
 In order to be able to use this feature, two small modifications have to be made to the basic Mantis installation,
 as explained in [this Mantis issue](http://www.mantisbt.org/bugs/view.php?id=14329). This is necessary until the Mantis team decides
 to include the event in their core, if they deem it appropriate.
