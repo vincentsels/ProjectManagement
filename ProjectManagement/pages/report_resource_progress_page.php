@@ -43,7 +43,6 @@ if ( $t_project_without_versions ) {
 	echo plugin_lang_get( 'project_selection_disabled' );
 } else {
 	# Release dates of previous and current version
-	log_event( LOG_FILTERING, $f_target_version );
 	$t_release_date_target = version_get_field( version_get_id( $f_target_version ), 'date_order' );
 	$t_release_buffer = plugin_config_get( 'release_buffer' ) * 24 * 60 * 60;
 	$t_last_dev_day = $t_release_date_target - $t_release_buffer;

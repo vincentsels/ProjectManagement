@@ -67,7 +67,7 @@ abstract class PlottableTask {
 	 * Can be overridden if desired.
 	 * @return string the information message
 	 */
-	protected function generate_info_message( ) {
+	protected function generate_info_message() {
 		$t_real_est = $this->est;
 		if ( $this->na > 0 ) {
 			$t_real_est -= $this->na;
@@ -75,10 +75,10 @@ abstract class PlottableTask {
 
 		$t_str = format_short_date( $this->task_start ) . ' - ' . format_short_date( $this->task_end ) . ' &nbsp; &#10;';
 		if ( $t_real_est < 8 * 60 ) {
-			$t_str .= plugin_lang_get( 'done' ) . ': ' . minutes_to_time( $this->done, false )
+			$t_str .= plugin_lang_get( 'done' ) . ' (h): ' . minutes_to_time( $this->done, false )
 				. ' / ' . minutes_to_time( $t_real_est, false );
 			if ( $this->overdue > 0 ) {
-				$t_str .= ' &nbsp; &#10;' . plugin_lang_get( 'overdue' ) . ': ' . minutes_to_time( $this->overdue, false );
+				$t_str .= ' &nbsp; &#10;' . plugin_lang_get( 'overdue' ) . ' (h): ' . minutes_to_time( $this->overdue, false );
 			}
 		} else {
 			$t_str .= plugin_lang_get( 'done' ) . ' (d): ' . minutes_to_days( $this->done )
@@ -157,35 +157,44 @@ abstract class PlottableTask {
 	private function calculate_end_date( $p_task_start, $p_todo ) {
 		global $g_resources;
 
-		$t_hours_per_day = $g_resources[$this->handler_id]['hours_per_week'] / 7;
-		if ( $t_hours_per_day > 0 ) {
-			$t_seconds_for_bug = $p_todo / $t_hours_per_day * 24 * 60;
-			return $p_task_start + $t_seconds_for_bug;
+		$t_task_end = $p_task_start;
+		while ( $p_todo > 0 ) {
+			$t_day_number = date( 'N', $p_task_start );
+			$t_hours_for_day = $g_resources[$this->handler_id]['work_hours_per_day'][$t_day_number];
+			if ( $t_hours_for_day == 0 ) {
+				# Resource doesn't work this day - add a whole day
+				$t_task_end += (24 * 60 * 60);
+			} else {
+				# Transform this amount of working hours to its 24-hour equivalent
+				$t_relative_period = ((24 * 60 * 60) * min( $t_hours_for_day, $p_todo / 60 ) / $t_hours_for_day);
+				$t_task_end += $t_relative_period;
+			}
+
+			# Move on to the next day
+			$p_task_start += (24 * 60 * 60);
+			$p_todo -= ($t_hours_for_day * 60);
 		}
-		return $p_task_start;
+
+		return $t_task_end;
 	}
 
 	private function check_non_working_period( $p_task_start, $p_task_end ) {
 		global $g_resources;
-		log_event( LOG_FILTERING, format_short_date( $p_task_start ) . ' - ' . format_short_date( $p_task_end ) );
 
 		$t_minutes_na = 0;
 		$t_resource_unavailable = $g_resources[$this->handler_id]['resource_unavailable'];
 		$t_work_hours_per_day = $g_resources[$this->handler_id]['work_hours_per_day'];
-		$t_hours_per_day = $g_resources[$this->handler_id]['hours_per_week'] / 7;
 
 		# Iterate through all the non-working days of the user
 		if ( is_array( $t_resource_unavailable ) ) {
 			foreach ( $t_resource_unavailable as $t_na_period ) {
-				if ( $t_na_period['start_date'] <= $p_task_end &&
-					$t_na_period['start_date'] > $p_task_start ) {
+				if ( $t_na_period['start_date'] <= $p_task_end && $t_na_period['start_date'] > $p_task_start ) {
 					$t_day_to_check = $t_na_period['start_date'];
-					while ( $t_day_to_check <= $t_na_period['end_date'] ) {
-						log_event( LOG_FILTERING, format_short_date( $t_day_to_check ) . ': ' . date( 'N', $t_day_to_check ) );
-						if ( array_search( date( 'N', $t_day_to_check ), $t_work_hours_per_day ) !== false ) {
-							log_event( LOG_FILTERING, $t_minutes_na );
-							$t_minutes_na += ($t_hours_per_day * 60); # Add a non-working day
-						}
+					while ( $t_day_to_check < $t_na_period['end_date'] ) {
+						$t_day_number = date( 'N', $t_day_to_check );
+						$t_hours_for_day = $g_resources[$this->handler_id]['work_hours_per_day'][$t_day_number];
+						$t_minutes_na += $t_hours_for_day * 60;
+
 						# Move on to the next day
 						$t_day_to_check += (24 * 60 * 60);
 					}
