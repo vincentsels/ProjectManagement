@@ -168,3 +168,8 @@ div.center75 {
 input.modified {
     background-color: #fff5b1;
 }
+
+input[type="text"].small-textbox {
+    width: 20px;
+    padding-left: 4px;
+}

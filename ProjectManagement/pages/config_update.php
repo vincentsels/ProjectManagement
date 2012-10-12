@@ -41,7 +41,7 @@ $t_hours_for_day = array();
 for ( $i = 1; $i <= 7; $i++ ) {
 	$t_hours_for_day[$i] = gpc_get_int( 'work_hours_per_day_' . $i, 0 );
 }
-maybe_set_option( 'work_hours_per_day', $t_hours_for_day );
+plugin_config_set( 'work_hours_per_day', $t_hours_for_day );
 
 form_security_purge( 'plugin_ProjectManagement_config_update' );
 print_successful_redirect( plugin_page( 'config_page', true ) );

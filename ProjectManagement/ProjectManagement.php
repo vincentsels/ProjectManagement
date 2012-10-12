@@ -268,27 +268,27 @@ class ProjectManagementPlugin extends MantisPlugin {
 			?>
             <td class="category"><?php echo plugin_lang_get( 'work_hours_per_day' ) ?></td>
             <td>
-                <input type="checkbox" name="work_hours_per_day_1" id="work_hours_per_day_1"
-					<?php if ( array_search( 1, $t_work_hours_per_day ) !== false ) { echo 'checked="checked"'; } ?>>
-				<?php echo plugin_lang_get( 'monday' ) . ' ' ?>
-                <input type="checkbox" name="work_hours_per_day_2" id="work_hours_per_day_2"
-					<?php if ( array_search( 2, $t_work_hours_per_day ) !== false ) { echo 'checked="checked"'; } ?>>
-				<?php echo plugin_lang_get( 'tuesday' ) . ' ' ?>
-                <input type="checkbox" name="work_hours_per_day_3" id="work_hours_per_day_3"
-					<?php if ( array_search( 3, $t_work_hours_per_day ) !== false ) { echo 'checked="checked"'; } ?>>
-				<?php echo plugin_lang_get( 'wednesday' ) . ' ' ?>
-                <input type="checkbox" name="work_hours_per_day_4" id="work_hours_per_day_4"
-					<?php if ( array_search( 4, $t_work_hours_per_day ) !== false ) { echo 'checked="checked"'; } ?>>
-				<?php echo plugin_lang_get( 'thursday' ) . ' ' ?>
-                <input type="checkbox" name="work_hours_per_day_5" id="work_hours_per_day_5"
-					<?php if ( array_search( 5, $t_work_hours_per_day ) !== false ) { echo 'checked="checked"'; } ?>>
-				<?php echo plugin_lang_get( 'friday' ) . ' ' ?>
-                <input type="checkbox" name="work_hours_per_day_6" id="work_hours_per_day_6"
-					<?php if ( array_search( 6, $t_work_hours_per_day ) !== false ) { echo 'checked="checked"'; } ?>>
-				<?php echo plugin_lang_get( 'saturday' ) . ' ' ?>
-                <input type="checkbox" name="work_hours_per_day_7" id="work_hours_per_day_7"
-					<?php if ( array_search( 7, $t_work_hours_per_day ) !== false ) { echo 'checked="checked"'; } ?>>
-				<?php echo plugin_lang_get( 'sunday' ) . ' ' ?>
+				<?php echo plugin_lang_get( 'monday' ) . ':' ?>
+                <input type="text" class="small-textbox" maxlength="2" name="work_hours_per_day_1" id="work_hours_per_day_1"
+                       value="<?php echo @$t_work_hours_per_day[1] ?>">
+				<?php echo ' &nbsp; ' . plugin_lang_get( 'tuesday' ) . ':' ?>
+                <input type="text" class="small-textbox"  maxlength="2" name="work_hours_per_day_2" id="work_hours_per_day_2"
+                       value="<?php echo @$t_work_hours_per_day[2] ?>">
+				<?php echo ' &nbsp; ' . plugin_lang_get( 'wednesday' ) . ':' ?>
+                <input type="text" class="small-textbox" maxlength="2" name="work_hours_per_day_3" id="work_hours_per_day_3"
+                       value="<?php echo @$t_work_hours_per_day[3] ?>">
+				<?php echo ' &nbsp; ' . plugin_lang_get( 'thursday' ) . ':' ?>
+                <input type="text" class="small-textbox" maxlength="2" name="work_hours_per_day_4" id="work_hours_per_day_4"
+                       value="<?php echo @$t_work_hours_per_day[4] ?>">
+				<?php echo ' &nbsp; ' . plugin_lang_get( 'friday' ) . ':' ?>
+                <input type="text" class="small-textbox" maxlength="2" name="work_hours_per_day_5" id="work_hours_per_day_5"
+                       value="<?php echo @$t_work_hours_per_day[5] ?>">
+				<?php echo ' &nbsp; ' . plugin_lang_get( 'saturday' ) . ':' ?>
+                <input type="text" class="small-textbox" maxlength="2" name="work_hours_per_day_6" id="work_hours_per_day_6"
+                       value="<?php echo @$t_work_hours_per_day[6] ?>">
+				<?php echo ' &nbsp; ' . plugin_lang_get( 'sunday' ) . ':' ?>
+                <input type="text" class="small-textbox" maxlength="2" name="work_hours_per_day_7" id="work_hours_per_day_7"
+                       value="<?php echo @$t_work_hours_per_day[7] ?>">
             </td>
         </tr>
 		<tr <?php echo helper_alternate_class() ?>>
@@ -334,11 +334,10 @@ class ProjectManagementPlugin extends MantisPlugin {
 				}
 
 				# Weekly work days
+
 				$t_days_set = array();
 				for ( $i = 1; $i <= 7; $i++ ) {
-					if ( gpc_get_bool( 'work_hours_per_day_' . $i ) ) {
-						$t_days_set[] = $i;
-					}
+					$t_days_set[$i] = gpc_get_int( 'work_hours_per_day_' . $i, 0 );
 				}
 				if ( $t_days_set !== plugin_config_get( 'work_hours_per_day', null, true ) ) {
 					plugin_config_set( 'work_hours_per_day', $t_days_set, $p_user_id );

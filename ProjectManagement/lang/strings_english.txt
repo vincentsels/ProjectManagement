@@ -135,7 +135,7 @@
 
 	$s_plugin_ProjectManagement_error_enddate_before_startdate = 'Enddate must be later than startdate.';
 
-	$s_plugin_ProjectManagement_work_hours_per_day = 'Work days';
+	$s_plugin_ProjectManagement_work_hours_per_day = 'Work hours per day';
 	$s_plugin_ProjectManagement_monday = 'monday';
 	$s_plugin_ProjectManagement_tuesday = 'tuesday';
 	$s_plugin_ProjectManagement_wednesday = 'wednesday';

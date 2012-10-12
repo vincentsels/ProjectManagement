@@ -195,27 +195,27 @@ print_pm_config_menu( 'config_page' );
 			?>
             <td class="category"><?php echo plugin_lang_get( 'work_hours_per_day' ) ?></td>
             <td>
-				<input type="text" size="2" maxlength="2" name="work_hours_per_day_1" id="work_hours_per_day_1"
-					   value="<?php @$t_work_hours_per_day[1] ?>">
-				<?php echo plugin_lang_get( 'monday' ) . ' &nbsp; ' ?>
-                <input type="text" size="2" maxlength="2" name="work_hours_per_day_2" id="work_hours_per_day_2"
-                       value="<?php @$t_work_hours_per_day[2] ?>">
-				<?php echo plugin_lang_get( 'tuesday' ) . ' &nbsp; ' ?>
-                <input type="text" size="2" maxlength="2" name="work_hours_per_day_3" id="work_hours_per_day_3"
-                       value="<?php @$t_work_hours_per_day[3] ?>">
-				<?php echo plugin_lang_get( 'wednesday' ) . ' &nbsp; ' ?>
-                <input type="text" size="2" maxlength="2" name="work_hours_per_day_4" id="work_hours_per_day_4"
-                       value="<?php @$t_work_hours_per_day[4] ?>">
-				<?php echo plugin_lang_get( 'thursday' ) . ' &nbsp; ' ?>
-                <input type="text" size="2" maxlength="2" name="work_hours_per_day_5" id="work_hours_per_day_5"
-                       value="<?php @$t_work_hours_per_day[5] ?>">
-				<?php echo plugin_lang_get( 'friday' ) . ' &nbsp; ' ?>
-                <input type="text" size="2" maxlength="2" name="work_hours_per_day_6" id="work_hours_per_day_6"
-                       value="<?php @$t_work_hours_per_day[6] ?>">
-				<?php echo plugin_lang_get( 'saturday' ) . ' &nbsp; ' ?>
-                <input type="text" size="2" maxlength="2" name="work_hours_per_day_7" id="work_hours_per_day_7"
-                       value="<?php @$t_work_hours_per_day[7] ?>">
-				<?php echo plugin_lang_get( 'sunday' ) . ' &nbsp; ' ?>
+				<?php echo plugin_lang_get( 'monday' ) . ':' ?>
+				<input type="text" class="small-textbox" maxlength="2" name="work_hours_per_day_1" id="work_hours_per_day_1"
+					   value="<?php echo @$t_work_hours_per_day[1] ?>">
+				<?php echo ' &nbsp; ' . plugin_lang_get( 'tuesday' ) . ':' ?>
+                <input type="text" class="small-textbox"  maxlength="2" name="work_hours_per_day_2" id="work_hours_per_day_2"
+                       value="<?php echo @$t_work_hours_per_day[2] ?>">
+				<?php echo ' &nbsp; ' . plugin_lang_get( 'wednesday' ) . ':' ?>
+                <input type="text" class="small-textbox" maxlength="2" name="work_hours_per_day_3" id="work_hours_per_day_3"
+                       value="<?php echo @$t_work_hours_per_day[3] ?>">
+				<?php echo ' &nbsp; ' . plugin_lang_get( 'thursday' ) . ':' ?>
+                <input type="text" class="small-textbox" maxlength="2" name="work_hours_per_day_4" id="work_hours_per_day_4"
+                       value="<?php echo @$t_work_hours_per_day[4] ?>">
+				<?php echo ' &nbsp; ' . plugin_lang_get( 'friday' ) . ':' ?>
+                <input type="text" class="small-textbox" maxlength="2" name="work_hours_per_day_5" id="work_hours_per_day_5"
+                       value="<?php echo @$t_work_hours_per_day[5] ?>">
+				<?php echo ' &nbsp; ' . plugin_lang_get( 'saturday' ) . ':' ?>
+                <input type="text" class="small-textbox" maxlength="2" name="work_hours_per_day_6" id="work_hours_per_day_6"
+                       value="<?php echo @$t_work_hours_per_day[6] ?>">
+				<?php echo ' &nbsp; ' . plugin_lang_get( 'sunday' ) . ':' ?>
+                <input type="text" class="small-textbox" maxlength="2" name="work_hours_per_day_7" id="work_hours_per_day_7"
+                       value="<?php echo @$t_work_hours_per_day[7] ?>">
             </td>
         </tr>
 
