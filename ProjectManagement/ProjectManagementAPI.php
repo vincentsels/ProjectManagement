@@ -660,10 +660,10 @@ function resource_cache_data() {
 		}
 		# Fetch the weekly work days
 		# First check whether this user has a diverging setting value
-		$g_resources[$t_user_id]['weekly_work_days'] = plugin_config_get( 'weekly_work_days', null, false, $t_row['user_id'] );
-		if ( is_null( $g_resources[$t_user_id]['weekly_work_days'] ) ) {
+		$g_resources[$t_user_id]['work_hours_per_day'] = plugin_config_get( 'work_hours_per_day', null, false, $t_row['user_id'] );
+		if ( is_null( $g_resources[$t_user_id]['work_hours_per_day'] ) ) {
 			# If not, use the global settings
-			$g_resources[$t_user_id]['weekly_work_days'] = plugin_config_get( 'weekly_work_days', null, true );
+			$g_resources[$t_user_id]['work_hours_per_day'] = plugin_config_get( 'work_hours_per_day', null, true );
 		}
 	}
 	# Add default
@@ -672,7 +672,7 @@ function resource_cache_data() {
 	$g_resources[NO_USER]['deployability'] = 100;
 	$g_resources[NO_USER]['hours_per_week'] = 0;
 	$g_resources[NO_USER]['resource_unavailable'] = array();
-	$g_resources[NO_USER]['weekly_work_days'] = array();
+	$g_resources[NO_USER]['work_hours_per_day'] = array();
 }
 
 

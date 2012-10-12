@@ -135,7 +135,7 @@
 
 	$s_plugin_ProjectManagement_error_enddate_before_startdate = 'Einddatum moet na startdatum liggen.';
 
-	$s_plugin_ProjectManagement_weekly_work_days = 'Werkdagen';
+	$s_plugin_ProjectManagement_work_hours_per_day = 'Werkdagen';
 	$s_plugin_ProjectManagement_monday = 'maandag';
 	$s_plugin_ProjectManagement_tuesday = 'dinsdag';
 	$s_plugin_ProjectManagement_wednesday = 'woensdag';

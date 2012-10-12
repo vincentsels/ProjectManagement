@@ -167,10 +167,11 @@ abstract class PlottableTask {
 
 	private function check_non_working_period( $p_task_start, $p_task_end ) {
 		global $g_resources;
+		log_event( LOG_FILTERING, format_short_date( $p_task_start ) . ' - ' . format_short_date( $p_task_end ) );
 
 		$t_minutes_na = 0;
 		$t_resource_unavailable = $g_resources[$this->handler_id]['resource_unavailable'];
-		$t_weekly_work_days = $g_resources[$this->handler_id]['weekly_work_days'];
+		$t_work_hours_per_day = $g_resources[$this->handler_id]['work_hours_per_day'];
 		$t_hours_per_day = $g_resources[$this->handler_id]['hours_per_week'] / 7;
 
 		# Iterate through all the non-working days of the user
@@ -181,8 +182,8 @@ abstract class PlottableTask {
 					$t_day_to_check = $t_na_period['start_date'];
 					while ( $t_day_to_check <= $t_na_period['end_date'] ) {
 						log_event( LOG_FILTERING, format_short_date( $t_day_to_check ) . ': ' . date( 'N', $t_day_to_check ) );
-						if ( array_search( date( 'N', $t_day_to_check ), $t_weekly_work_days ) !== false ) {
-							log_event( LOG_FILTERING, $t_minutes_na . ' + ' . ($t_hours_per_day * 60) . ' = ' . $t_minutes_na + ($t_hours_per_day * 60) );
+						if ( array_search( date( 'N', $t_day_to_check ), $t_work_hours_per_day ) !== false ) {
+							log_event( LOG_FILTERING, $t_minutes_na );
 							$t_minutes_na += ($t_hours_per_day * 60); # Add a non-working day
 						}
 						# Move on to the next day

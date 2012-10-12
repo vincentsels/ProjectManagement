@@ -37,13 +37,11 @@ maybe_set_option( 'release_buffer', gpc_get_string( 'release_buffer' ) );
 maybe_set_option( 'group_by_projects_by_default', gpc_get_bool( 'group_by_projects_by_default' ) );
 maybe_set_option( 'show_projects_by_default', gpc_get_bool( 'show_projects_by_default' ) );
 
-$t_days_set = array();
+$t_hours_for_day = array();
 for ( $i = 1; $i <= 7; $i++ ) {
-	if ( gpc_get_bool( 'weekly_work_days_' . $i ) ) {
-		$t_days_set[] = $i;
-	}
+	$t_hours_for_day[$i] = gpc_get_int( 'work_hours_per_day_' . $i, 0 );
 }
-maybe_set_option( 'weekly_work_days', $t_days_set );
+maybe_set_option( 'work_hours_per_day', $t_hours_for_day );
 
 form_security_purge( 'plugin_ProjectManagement_config_update' );
 print_successful_redirect( plugin_page( 'config_page', true ) );

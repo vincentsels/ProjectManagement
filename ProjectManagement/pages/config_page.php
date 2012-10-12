@@ -191,31 +191,31 @@ print_pm_config_menu( 'config_page' );
 
         <tr <?php echo helper_alternate_class() ?>>
 			<?php
-			$t_weekly_work_days = plugin_config_get( 'weekly_work_days' );
+			$t_work_hours_per_day = plugin_config_get( 'work_hours_per_day' );
 			?>
-            <td class="category"><?php echo plugin_lang_get( 'weekly_work_days' ) ?></td>
+            <td class="category"><?php echo plugin_lang_get( 'work_hours_per_day' ) ?></td>
             <td>
-				<input type="checkbox" name="weekly_work_days_1" id="weekly_work_days_1"
-					<?php if ( array_search( 1, $t_weekly_work_days ) !== false ) { echo 'checked="checked"'; } ?>>
-				<?php echo plugin_lang_get( 'monday' ) . ' ' ?>
-                <input type="checkbox" name="weekly_work_days_2" id="weekly_work_days_2"
-					<?php if ( array_search( 2, $t_weekly_work_days ) !== false ) { echo 'checked="checked"'; } ?>>
-				<?php echo plugin_lang_get( 'tuesday' ) . ' ' ?>
-                <input type="checkbox" name="weekly_work_days_3" id="weekly_work_days_3"
-					<?php if ( array_search( 3, $t_weekly_work_days ) !== false ) { echo 'checked="checked"'; } ?>>
-				<?php echo plugin_lang_get( 'wednesday' ) . ' ' ?>
-                <input type="checkbox" name="weekly_work_days_4" id="weekly_work_days_4"
-					<?php if ( array_search( 4, $t_weekly_work_days ) !== false ) { echo 'checked="checked"'; } ?>>
-				<?php echo plugin_lang_get( 'thursday' ) . ' ' ?>
-                <input type="checkbox" name="weekly_work_days_5" id="weekly_work_days_5"
-					<?php if ( array_search( 5, $t_weekly_work_days ) !== false ) { echo 'checked="checked"'; } ?>>
-				<?php echo plugin_lang_get( 'friday' ) . ' ' ?>
-                <input type="checkbox" name="weekly_work_days_6" id="weekly_work_days_6"
-					<?php if ( array_search( 6, $t_weekly_work_days ) !== false ) { echo 'checked="checked"'; } ?>>
-				<?php echo plugin_lang_get( 'saturday' ) . ' ' ?>
-                <input type="checkbox" name="weekly_work_days_7" id="weekly_work_days_7"
-					<?php if ( array_search( 7, $t_weekly_work_days ) !== false ) { echo 'checked="checked"'; } ?>>
-				<?php echo plugin_lang_get( 'sunday' ) . ' ' ?>
+				<input type="text" size="2" maxlength="2" name="work_hours_per_day_1" id="work_hours_per_day_1"
+					   value="<?php @$t_work_hours_per_day[1] ?>">
+				<?php echo plugin_lang_get( 'monday' ) . ' &nbsp; ' ?>
+                <input type="text" size="2" maxlength="2" name="work_hours_per_day_2" id="work_hours_per_day_2"
+                       value="<?php @$t_work_hours_per_day[2] ?>">
+				<?php echo plugin_lang_get( 'tuesday' ) . ' &nbsp; ' ?>
+                <input type="text" size="2" maxlength="2" name="work_hours_per_day_3" id="work_hours_per_day_3"
+                       value="<?php @$t_work_hours_per_day[3] ?>">
+				<?php echo plugin_lang_get( 'wednesday' ) . ' &nbsp; ' ?>
+                <input type="text" size="2" maxlength="2" name="work_hours_per_day_4" id="work_hours_per_day_4"
+                       value="<?php @$t_work_hours_per_day[4] ?>">
+				<?php echo plugin_lang_get( 'thursday' ) . ' &nbsp; ' ?>
+                <input type="text" size="2" maxlength="2" name="work_hours_per_day_5" id="work_hours_per_day_5"
+                       value="<?php @$t_work_hours_per_day[5] ?>">
+				<?php echo plugin_lang_get( 'friday' ) . ' &nbsp; ' ?>
+                <input type="text" size="2" maxlength="2" name="work_hours_per_day_6" id="work_hours_per_day_6"
+                       value="<?php @$t_work_hours_per_day[6] ?>">
+				<?php echo plugin_lang_get( 'saturday' ) . ' &nbsp; ' ?>
+                <input type="text" size="2" maxlength="2" name="work_hours_per_day_7" id="work_hours_per_day_7"
+                       value="<?php @$t_work_hours_per_day[7] ?>">
+				<?php echo plugin_lang_get( 'sunday' ) . ' &nbsp; ' ?>
             </td>
         </tr>
 

@@ -116,7 +116,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 			'view_all_targets_threshold'				=> MANAGER,
 			'group_by_projects_by_default'				=> TRUE,
 			'show_projects_by_default'					=> TRUE,
-			'weekly_work_days'					  		=> array( 1, 2, 3, 4, 5 )
+			'work_hours_per_day'					    => array( 1 => 8, 2 => 8, 3 => 8, 4 => 8, 5 => 7, 6 => 0, 7 => 0 )
 		);
 	}
 
@@ -260,34 +260,34 @@ class ProjectManagementPlugin extends MantisPlugin {
 		</tr>
         <tr <?php echo helper_alternate_class() ?>>
 			<?php
-			$t_weekly_work_days = plugin_config_get( 'weekly_work_days', null, false, $p_user_id );
-			if ( is_null( $t_weekly_work_days ) ) {
+			$t_work_hours_per_day = plugin_config_get( 'work_hours_per_day', null, false, $p_user_id );
+			if ( is_null( $t_work_hours_per_day ) ) {
 				# When this config option has not been overwritten for this user, use the general one
-				$t_weekly_work_days = plugin_config_get( 'weekly_work_days', null );
+				$t_work_hours_per_day = plugin_config_get( 'work_hours_per_day', null );
 			}
 			?>
-            <td class="category"><?php echo plugin_lang_get( 'weekly_work_days' ) ?></td>
+            <td class="category"><?php echo plugin_lang_get( 'work_hours_per_day' ) ?></td>
             <td>
-                <input type="checkbox" name="weekly_work_days_1" id="weekly_work_days_1"
-					<?php if ( array_search( 1, $t_weekly_work_days ) !== false ) { echo 'checked="checked"'; } ?>>
+                <input type="checkbox" name="work_hours_per_day_1" id="work_hours_per_day_1"
+					<?php if ( array_search( 1, $t_work_hours_per_day ) !== false ) { echo 'checked="checked"'; } ?>>
 				<?php echo plugin_lang_get( 'monday' ) . ' ' ?>
-                <input type="checkbox" name="weekly_work_days_2" id="weekly_work_days_2"
-					<?php if ( array_search( 2, $t_weekly_work_days ) !== false ) { echo 'checked="checked"'; } ?>>
+                <input type="checkbox" name="work_hours_per_day_2" id="work_hours_per_day_2"
+					<?php if ( array_search( 2, $t_work_hours_per_day ) !== false ) { echo 'checked="checked"'; } ?>>
 				<?php echo plugin_lang_get( 'tuesday' ) . ' ' ?>
-                <input type="checkbox" name="weekly_work_days_3" id="weekly_work_days_3"
-					<?php if ( array_search( 3, $t_weekly_work_days ) !== false ) { echo 'checked="checked"'; } ?>>
+                <input type="checkbox" name="work_hours_per_day_3" id="work_hours_per_day_3"
+					<?php if ( array_search( 3, $t_work_hours_per_day ) !== false ) { echo 'checked="checked"'; } ?>>
 				<?php echo plugin_lang_get( 'wednesday' ) . ' ' ?>
-                <input type="checkbox" name="weekly_work_days_4" id="weekly_work_days_4"
-					<?php if ( array_search( 4, $t_weekly_work_days ) !== false ) { echo 'checked="checked"'; } ?>>
+                <input type="checkbox" name="work_hours_per_day_4" id="work_hours_per_day_4"
+					<?php if ( array_search( 4, $t_work_hours_per_day ) !== false ) { echo 'checked="checked"'; } ?>>
 				<?php echo plugin_lang_get( 'thursday' ) . ' ' ?>
-                <input type="checkbox" name="weekly_work_days_5" id="weekly_work_days_5"
-					<?php if ( array_search( 5, $t_weekly_work_days ) !== false ) { echo 'checked="checked"'; } ?>>
+                <input type="checkbox" name="work_hours_per_day_5" id="work_hours_per_day_5"
+					<?php if ( array_search( 5, $t_work_hours_per_day ) !== false ) { echo 'checked="checked"'; } ?>>
 				<?php echo plugin_lang_get( 'friday' ) . ' ' ?>
-                <input type="checkbox" name="weekly_work_days_6" id="weekly_work_days_6"
-					<?php if ( array_search( 6, $t_weekly_work_days ) !== false ) { echo 'checked="checked"'; } ?>>
+                <input type="checkbox" name="work_hours_per_day_6" id="work_hours_per_day_6"
+					<?php if ( array_search( 6, $t_work_hours_per_day ) !== false ) { echo 'checked="checked"'; } ?>>
 				<?php echo plugin_lang_get( 'saturday' ) . ' ' ?>
-                <input type="checkbox" name="weekly_work_days_7" id="weekly_work_days_7"
-					<?php if ( array_search( 7, $t_weekly_work_days ) !== false ) { echo 'checked="checked"'; } ?>>
+                <input type="checkbox" name="work_hours_per_day_7" id="work_hours_per_day_7"
+					<?php if ( array_search( 7, $t_work_hours_per_day ) !== false ) { echo 'checked="checked"'; } ?>>
 				<?php echo plugin_lang_get( 'sunday' ) . ' ' ?>
             </td>
         </tr>
@@ -336,15 +336,15 @@ class ProjectManagementPlugin extends MantisPlugin {
 				# Weekly work days
 				$t_days_set = array();
 				for ( $i = 1; $i <= 7; $i++ ) {
-					if ( gpc_get_bool( 'weekly_work_days_' . $i ) ) {
+					if ( gpc_get_bool( 'work_hours_per_day_' . $i ) ) {
 						$t_days_set[] = $i;
 					}
 				}
-				if ( $t_days_set !== plugin_config_get( 'weekly_work_days', null, true ) ) {
-					plugin_config_set( 'weekly_work_days', $t_days_set, $p_user_id );
+				if ( $t_days_set !== plugin_config_get( 'work_hours_per_day', null, true ) ) {
+					plugin_config_set( 'work_hours_per_day', $t_days_set, $p_user_id );
 				} else {
 					# If the set values are the default, remove this setting for this user
-					plugin_config_delete( 'weekly_work_days', $p_user_id );
+					plugin_config_delete( 'work_hours_per_day', $p_user_id );
 				}
 			}
 
