@@ -611,22 +611,24 @@ function resource_insert_or_update( $p_user_id, $p_hourly_rate, $p_hours_per_wee
 		$t_query_update_set_clause    = array();
 		$t_query_update_where_clause  = " WHERE user_id = $p_user_id";
 
-		if ( !empty( $p_hourly_rate ) && $p_hourly_rate != $t_query_old_row['hourly_rate'] ) {
+		if ( $p_hourly_rate != $t_old_row['hourly_rate'] ) {
 			$t_query_update_set_clause[] = "hourly_rate = $p_hourly_rate";
 		}
-		if ( !empty( $p_hours_per_week ) && $p_hours_per_week != $t_query_old_row['hours_per_week'] ) {
+		if ( $p_hours_per_week != $t_old_row['hours_per_week'] ) {
 			$t_query_update_set_clause[] = "hours_per_week = $p_hours_per_week";
 		}
-		if ( !empty( $p_color ) && $p_color != $t_query_old_row['color'] ) {
+		if ( $p_color != $t_old_row['color'] ) {
 			$t_query_update_set_clause[] = "color = $p_color";
 		}
-		if ( !empty( $p_deployability ) && $p_deployability != $t_query_old_row['deployability'] ) {
+		if ( $p_deployability != $t_old_row['deployability'] ) {
 			$t_query_update_set_clause[] = "deployability = $p_deployability";
 		}
 
-		db_query_bound( $t_query_update_update_clause .
-			implode( ', ', $t_query_update_set_clause ) .
-			$t_query_update_where_clause );
+        if ( count( $t_query_update_set_clause ) > 0 ) {
+            db_query_bound( $t_query_update_update_clause .
+                implode( ', ', $t_query_update_set_clause ) .
+                $t_query_update_where_clause );
+        }
 	}
 }
 

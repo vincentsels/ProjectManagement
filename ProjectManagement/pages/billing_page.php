@@ -53,7 +53,7 @@ while ( $row = db_fetch_array( $t_result ) ) {
 	$t_billing_row['bug_id']        = $row["bug_id"];
 	$t_billing_row['bug_summary']   = $row["bug_summary"];
 	$t_billing_row['hours']         = $row["minutes"] / 60;
-	$t_billing_row['hourly_rate']   = format( $row["hourly_rate"] );
+	$t_billing_row['hourly_rate']   = $row["hourly_rate"];
 	$t_billing_row['cost']          = $row["minutes"] * $row["hourly_rate"] / 60;
 
 	$t_paying_customers = explode( PLUGIN_PM_CUST_CONCATENATION_CHAR, $row['customers'] );
