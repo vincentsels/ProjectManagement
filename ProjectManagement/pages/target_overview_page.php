@@ -6,22 +6,37 @@ html_page_top2();
 
 print_pm_reports_menu( 'target_overview_page' );
 
-$f_user_id      = gpc_get_int( 'user_id', auth_get_current_user_id() );
+$t_current_user = auth_get_current_user_id();
+$f_user_id      = gpc_get_int( 'user_id', $t_current_user );
+
+$t_project_id = helper_get_current_project();
+$t_project_select_clause = "1 = 1";
+if ( $t_project_id != ALL_PROJECTS ) {
+    $t_subprojects[] = $t_project_id;
+    foreach ( user_get_all_accessible_subprojects( auth_get_current_user_id(), $t_project_id ) as $t_subproject ) {
+        $t_subprojects[] = $t_subproject;
+    }
+    $t_project_select_clause = "b.project_id IN ( " . implode( ',', array_unique( $t_subprojects ) ) . " )";
+}
 
 $t_target_table   = plugin_table( 'target' );
+$t_user_table      = db_get_table( 'mantis_user_table' );
 $t_bug_table      = db_get_table( 'mantis_bug_table' );
 $t_project_table  = db_get_table( 'mantis_project_table' );
 $t_category_table = db_get_table( 'mantis_category_table' );
+$t_all_users      = ALL_USERS;
 
-$t_query      = "SELECT p.name as project_name, c.name as category_name,
+$t_query      = "SELECT u.id as user_id, p.name as project_name, c.name as category_name,
 						b.id as bug_id, b.summary, t.work_type, t.target_date
 					FROM $t_target_table t
-			   LEFT JOIN $t_bug_table b ON t.bug_id = b.id
-			   LEFT JOIN $t_project_table p ON b.project_id = p.id
-			   LEFT JOIN $t_category_table c ON b.category_id = c.id
-				   WHERE t.owner_id = $f_user_id
+					JOIN $t_user_table u ON t.owner_id = u.id
+			        JOIN $t_bug_table b ON t.bug_id = b.id
+			        JOIN $t_project_table p ON b.project_id = p.id
+			        JOIN $t_category_table c ON b.category_id = c.id
+				   WHERE (t.owner_id = $f_user_id OR $f_user_id = $t_all_users)
 					 AND t.completed_date IS NULL
-				   ORDER BY t.target_date";
+					 AND $t_project_select_clause
+				   ORDER BY u.id, t.target_date";
 $t_result = db_query_bound( $t_query );
 
 if ( access_has_global_level( plugin_config_get( 'view_all_targets_threshold' ) ) ) {
@@ -34,10 +49,10 @@ if ( access_has_global_level( plugin_config_get( 'view_all_targets_threshold' ) 
 				<form name="target_overview" method="post"
 					  action="<?php echo plugin_page( 'target_overview_page' ) ?>">
 					<?php
-					echo lang_get( 'username' ), ': ';
+					echo plugin_lang_get( 'owner' ), ': ';
 					?>
 					<select name="user_id">
-						<option value="0" selected="selected"></option>
+						<option value="<?php echo ALL_USERS ?>" selected="selected"><?php echo lang_get('all_users') ?></option>
 						<?php print_user_option_list( $f_user_id ) ?>
 					</select>
 					<input name="submit" type="submit" value="<?php echo lang_get( 'update' ) ?>">
@@ -57,6 +72,15 @@ if ( access_has_global_level( plugin_config_get( 'view_all_targets_threshold' ) 
 		</td>
 	</tr>
 	<tr class="row-category">
+        <?php
+        if ( $t_current_user != $f_user_id ) {
+            ?>
+            <td>
+                <div align="center"><?php echo plugin_lang_get( 'owner' ) ?></div>
+            </td>
+            <?php
+        }
+        ?>
 		<td>
 			<div align="center"><?php echo lang_get( 'project_name' ) ?></div>
 		</td>
@@ -106,6 +130,12 @@ if ( access_has_global_level( plugin_config_get( 'view_all_targets_threshold' ) 
 		$t_days_overdue = abs( $t_days_overdue );
 
 		echo "<tr " . helper_alternate_class() . ">";
+
+        if ( $t_current_user != $f_user_id ) {
+            $t_user_name = user_get_name( $row["user_id"] );
+            echo "<td>$t_user_name</td>";
+        }
+
 		echo "<td>$t_project_name</td>";
 		echo "<td>$t_category_name</td>";
 		echo "<td>$t_bug_id</td>";
