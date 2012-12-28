@@ -16,6 +16,16 @@ $t_bug_table      = db_get_table( 'mantis_bug_table' );
 $t_project_table  = db_get_table( 'mantis_project_table' );
 $t_category_table = db_get_table( 'mantis_category_table' );
 
+$t_project_id = helper_get_current_project();
+$t_project_select_clause = "1 = 1";
+if ( $t_project_id != ALL_PROJECTS ) {
+    $t_subprojects[] = $t_project_id;
+    foreach ( user_get_all_accessible_subprojects( auth_get_current_user_id(), $t_project_id ) as $t_subproject ) {
+        $t_subprojects[] = $t_subproject;
+    }
+    $t_project_select_clause = "b.project_id IN ( " . implode( ',', array_unique( $t_subprojects ) ) . " )";
+}
+
 $t_const_done             = PLUGIN_PM_DONE;
 $t_const_recently_visited = PLUGIN_PM_TOKEN_RECENTLY_VISITED_COUNT;
 $t_limit_clause_before    = get_limit_clause_after_select( $t_const_recently_visited );
@@ -27,6 +37,7 @@ $t_query_recent           = "SELECT $t_limit_clause_before b.last_updated, b.han
                              LEFT JOIN $t_project_table p ON b.project_id = p.id
                              LEFT JOIN $t_category_table c ON b.category_id = c.id
                             WHERE b.id IN ( $t_recently_visited )
+                              AND $t_project_select_clause
                             ORDER BY b.last_updated DESC
                             $t_limit_clause_after";
 if ( !empty( $t_recently_visited ) ) {
@@ -39,6 +50,7 @@ $t_query_registered_day  = "SELECT b.id as bug_id, sum(w.minutes) as minutes, ma
 							WHERE w.user_id = $t_user
 							  AND w.book_date = $t_today
 							  AND w.minutes_type = 1
+							  AND $t_project_select_clause
 							GROUP BY b.id
 							ORDER BY timestamp DESC";
 $t_result_registered_day = db_query_bound( $t_query_registered_day );
@@ -47,10 +59,11 @@ $t_week_start = strtotime( date( 'Y-m-d', strtotime( 'last sunday' ) ) );
 $t_week_end   = strtotime( date( 'Y-m-d', strtotime( 'next sunday' ) ) );
 # We can safely group by book_date, since this is always rounded to a day
 $t_query_registered_week  = "SELECT w.book_date, sum(w.minutes) as minutes
-							 FROM $t_work_table w
+							 FROM $t_work_table w JOIN $t_bug_table b ON w.bug_id = b.id
 							WHERE w.user_id = $t_user
 							  AND w.book_date BETWEEN $t_week_start AND $t_week_end
 							  AND w.minutes_type = 1
+							  AND $t_project_select_clause
 							GROUP BY book_date
 							ORDER BY book_date DESC";
 $t_result_registered_week = db_query_bound( $t_query_registered_week );
@@ -59,10 +72,11 @@ $t_last_sunday                 = strtotime( 'last sunday' );
 $t_last_week_start             = mktime( 0, 0, 0, date( 'm', $t_last_sunday ), date( 'd', $t_last_sunday ) - 7, date( 'Y', $t_last_sunday ) );
 $t_last_week_end               = $t_last_sunday - 1;
 $t_query_registered_last_week  = "SELECT w.book_date, sum(w.minutes) as minutes
-								 FROM $t_work_table w
+								 FROM $t_work_table w JOIN $t_bug_table b ON w.bug_id = b.id
 								WHERE w.user_id = $t_user
 								  AND w.book_date BETWEEN $t_last_week_start AND $t_last_week_end
 								  AND w.minutes_type = 1
+							      AND $t_project_select_clause
 								GROUP BY book_date
 								ORDER BY book_date DESC";
 $t_result_registered_last_week = db_query_bound( $t_query_registered_last_week );
@@ -70,20 +84,22 @@ $t_result_registered_last_week = db_query_bound( $t_query_registered_last_week )
 $t_month_start             = mktime( 0, 0, 0, date( 'm' ), 1 );
 $t_month_end               = mktime( 0, 0, 0, date( 'm' ) + 1, 1 ) - 1;
 $t_query_registered_month  = "SELECT sum(w.minutes) as minutes
-							 FROM $t_work_table w
+							 FROM $t_work_table w JOIN $t_bug_table b ON w.bug_id = b.id
 							WHERE w.user_id = $t_user
 							  AND w.book_date BETWEEN $t_month_start AND $t_month_end
-							  AND w.minutes_type = 1";
+							  AND w.minutes_type = 1
+							  AND $t_project_select_clause";
 $t_result_registered_month = db_query_bound( $t_query_registered_month );
 $t_row_month               = db_fetch_array( $t_result_registered_month );
 
 $t_last_month_start             = mktime( 0, 0, 0, date( 'm' ) - 1, 1 );
 $t_last_month_end               = mktime( 0, 0, 0, date( 'm' ), 1 ) - 1;
 $t_query_registered_last_month  = "SELECT sum(w.minutes) as minutes
-									 FROM $t_work_table w
+									 FROM $t_work_table w JOIN $t_bug_table b ON w.bug_id = b.id
 									WHERE w.user_id = $t_user
 									  AND w.book_date BETWEEN $t_last_month_start AND $t_last_month_end
-									  AND w.minutes_type = 1";
+									  AND w.minutes_type = 1
+									  AND $t_project_select_clause";
 $t_result_registered_last_month = db_query_bound( $t_query_registered_last_month );
 $t_row_last_month               = db_fetch_array( $t_result_registered_last_month );
 
