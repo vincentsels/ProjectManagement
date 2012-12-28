@@ -25,7 +25,7 @@ $t_access_levels = get_translated_assoc_array_for_enum( 'access_levels' );
 <form method="post" action="<?php echo plugin_page( 'resource_management_update' ) ?>">
 	<?php echo form_security_field( 'plugin_ProjectManagement_resource_management' ) ?>
 
-	<table class="width100">
+	<table class="width100" cellspacing="1">
 		<tr>
 			<td class="form-title" colspan="100%"><?php echo plugin_lang_get( "resource_management" )?></td>
 		</tr>
