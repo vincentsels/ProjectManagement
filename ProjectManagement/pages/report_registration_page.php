@@ -27,7 +27,7 @@ $t_startdate  = strtotime_safe( $f_period_start );
 $t_enddate    = strtotime_safe( $f_period_end );
 $t_query      = "SELECT w.user_id, u.username, w.book_date, b.project_id, p.name as project_name,
 						 c.id as category_id, c.name as category_name, b.id as bug_id, b.summary as bug_summary,
-						 w.work_type, w.minutes, r.hourly_rate
+						 b.status, w.work_type, w.minutes, r.hourly_rate
 					FROM $t_work_table w
 			   LEFT JOIN $t_bug_table b ON w.bug_id = b.id
 			   LEFT JOIN $t_user_table u ON w.user_id = u.id
@@ -132,6 +132,7 @@ $t_per_category  = array();
 			<div align="center"><?php echo plugin_lang_get( 'cost' ) ?></div>
 		</td>
 	</tr>
+    <tr class="spacer"/>
 
 	<?php
 
@@ -152,7 +153,7 @@ $t_per_category  = array();
 		$t_hourly_rate    = format( $row["hourly_rate"] );
 		$t_cost           = format( $row["minutes"] * $row["hourly_rate"] / 60 );
 
-		echo "<tr " . helper_alternate_class() . ">";
+		echo "<tr bgcolor=\"" . get_status_color( $row["status"] ) . "\">";
 		echo "<td><a href=\"" . $t_user_link . "\">$t_username</a></td>";
 		echo "<td>$t_book_date</td>";
 		echo "<td><a href=\"" . $t_project_link . "\">$t_project_name</a></td>";
