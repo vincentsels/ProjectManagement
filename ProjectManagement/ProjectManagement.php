@@ -13,7 +13,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 		);
 
 		$this->author  = 'Vincent Sels';
-		$this->contact = 'vincent_sels@hotmail.com';
+		$this->contact = 'vincent@selsitsolutions.com';
 		$this->url     = '';
 	}
 
