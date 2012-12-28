@@ -16,16 +16,10 @@ $f_group_by_projects = gpc_get_bool( 'group_by_projects', plugin_config_get( 'gr
 # Some checks
 $t_project_without_versions = false;
 $t_all_versions_selected = false;
-$t_project_selection_disabled = false;
 
 if ( helper_get_current_project() == ALL_PROJECTS ) {
-	if ( config_get( 'show_project_menu_bar' ) == OFF ) {
-		$t_project_selection_disabled = true;
-	} else {
-		$t_all_versions_selected = true;
-	}
-}
-if ( empty( $f_target_version ) ) {
+	$t_all_versions_selected = true;
+} else if ( empty( $f_target_version ) ) {
 	# Attempt to get the most logical one - the first non-released
 	$t_non_released = version_get_all_rows_with_subs( helper_get_current_project(), false, false );
 	if ( count( $t_non_released ) > 0 && $t_non_released[count( $t_non_released ) - 1]['date_order'] > 1 ) {
@@ -39,8 +33,6 @@ if ( $t_project_without_versions ) {
 	echo plugin_lang_get( 'project_without_versions' );
 } else if ( $t_all_versions_selected ) {
 	echo plugin_lang_get( 'all_versions_selected' );
-} else if ( $t_project_selection_disabled ) {
-	echo plugin_lang_get( 'project_selection_disabled' );
 } else {
 	# Release dates of previous and current version
 	$t_release_date_target = version_get_field( version_get_id( $f_target_version ), 'date_order' );
