@@ -52,7 +52,7 @@ while ( $row = db_fetch_array( $t_result ) ) {
 	$t_billing_row['username']      = $row["username"];
 	$t_billing_row['bug_id']        = $row["bug_id"];
 	$t_billing_row['bug_summary']   = $row["bug_summary"];
-	$t_billing_row['hours']         = $row["minutes"];
+	$t_billing_row['hours']         = $row["minutes"] / 60;
 	$t_billing_row['hourly_rate']   = format( $row["hourly_rate"] );
 	$t_billing_row['cost']          = $row["minutes"] * $row["hourly_rate"] / 60;
 
@@ -99,7 +99,6 @@ $t_total_per_customer['bug_id'] = '';
 $t_total_per_customer['bug_summary'] = '';
 $t_total_per_customer['hours'] = '';
 $t_total_per_customer['hourly_rate'] = '';
-$t_total_per_customer['cost'] = $t_total_per_customer['cost'];
 
 # Add totals to the array
 $t_billing[] = $t_total_per_customer;
