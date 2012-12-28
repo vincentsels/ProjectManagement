@@ -55,7 +55,8 @@ $t_access_levels = get_translated_assoc_array_for_enum( 'access_levels' );
 						   value="<?php echo format( $t_row['hourly_rate'] ) ?>">
 				</td>
 				<td>
-					<select style="background-color: <?php print_background_color( $t_row['color'] ) ?>; color:white" name="color_<?php echo $t_row['id'] ?>">
+					<select style="background-color: <?php print_background_color( $t_row['color'] ) ?>; color:<?php print_background_color( $t_row['color'], PLUGIN_PM_LIGHT ) ?>"
+                            name="color_<?php echo $t_row['id'] ?>">
 						<?php print_color_option_list( $t_row['color'] ) ?>
 					</select>
 				</td>

@@ -211,7 +211,7 @@ function print_na_span( $p_width ) {
  */
 function print_color_option_list( $p_val = 0 ) {
 	for ( $i = 0; $i < 360; $i += 20 ) {
-		echo '<option style="background-color:', print_background_color( $i ), '" value="' . $i . '"';
+		echo '<option style="background-color:', print_background_color( $i ), '; color:', print_background_color( $i, PLUGIN_PM_LIGHT ), '" value="' . $i . '"';
 		check_selected( $i, $p_val );
 		echo '>' . $i . str_repeat( '&nbsp;', 10 ) . '</option>';
 	}
