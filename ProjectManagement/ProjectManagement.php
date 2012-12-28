@@ -300,7 +300,8 @@ class ProjectManagementPlugin extends MantisPlugin {
         <tr <?php echo helper_alternate_class() ?>>
             <td  class="category"><?php echo plugin_lang_get( 'color' ) ?></td>
             <td>
-                <select style="background-color: <?php print_background_color( $t_row['color'] ) ?>; color:white" name="color_<?php echo $p_user_id?>">
+                <select style="background-color: <?php print_background_color( $t_row['color'] ) ?>; color:<?php print_background_color( $t_row['color'], PLUGIN_PM_LIGHT ) ?>"
+                        name="color_<?php echo $p_user_id?>">
 					<?php print_color_option_list( $t_row['color'] ) ?>
                 </select>
             </td>
