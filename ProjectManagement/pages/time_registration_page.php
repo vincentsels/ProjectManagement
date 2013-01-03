@@ -16,15 +16,7 @@ $t_bug_table      = db_get_table( 'mantis_bug_table' );
 $t_project_table  = db_get_table( 'mantis_project_table' );
 $t_category_table = db_get_table( 'mantis_category_table' );
 
-$t_project_id = helper_get_current_project();
-$t_project_select_clause = "1 = 1";
-if ( $t_project_id != ALL_PROJECTS ) {
-    $t_subprojects[] = $t_project_id;
-    foreach ( user_get_all_accessible_subprojects( auth_get_current_user_id(), $t_project_id ) as $t_subproject ) {
-        $t_subprojects[] = $t_subproject;
-    }
-    $t_project_select_clause = "b.project_id IN ( " . implode( ',', array_unique( $t_subprojects ) ) . " )";
-}
+$t_project_select_clause = get_project_select_clause();
 
 $t_const_done             = PLUGIN_PM_DONE;
 $t_const_recently_visited = PLUGIN_PM_TOKEN_RECENTLY_VISITED_COUNT;

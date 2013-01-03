@@ -38,11 +38,8 @@ $t_query      = "SELECT w.user_id, u.username, w.book_date, b.project_id, p.name
 					 AND w.book_date BETWEEN $t_startdate AND $t_enddate";
 
 if ( $f_project_id != ALL_PROJECTS ) {
-	$t_subprojects[] = $f_project_id;
-	foreach ( user_get_all_accessible_subprojects( auth_get_current_user_id(), $f_project_id ) as $t_subproject ) {
-		$t_subprojects[] = $t_subproject;
-	}
-	$t_query .= " AND b.project_id IN ( " . implode( ',', array_unique( $t_subprojects ) ) . " )";
+    $t_project_select_clause = get_project_select_clause();
+	$t_query .= " AND " . $t_project_select_clause;
 }
 
 if ( $f_user_id != ALL_USERS ) {

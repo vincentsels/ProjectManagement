@@ -22,6 +22,9 @@ $t_const_done = PLUGIN_PM_DONE;
 $t_const_paying = PLUGIN_PM_CUST_PAYING;
 $t_startdate  = strtotime_safe( $f_period_start );
 $t_enddate    = strtotime_safe( $f_period_end );
+
+$t_project_select_clause = get_project_select_clause();
+
 $t_query      = "SELECT p.name as project_name, c.name as category_name, u.username,
 						b.id as bug_id, b.summary as bug_summary,
 						sum(w.minutes) as minutes, max(r.hourly_rate) as hourly_rate,
@@ -35,6 +38,7 @@ $t_query      = "SELECT p.name as project_name, c.name as category_name, u.usern
 			   LEFT OUTER JOIN $t_bug_customer_table bc ON b.id = bc.bug_id AND $t_const_paying = bc.type
 				   WHERE w.minutes_type = $t_const_done
 					 AND w.book_date BETWEEN $t_startdate AND $t_enddate
+					 AND $t_project_select_clause
 				   GROUP BY p.name, c.name, u.username, b.id, b.summary
 				   ORDER BY p.name, c.name, u.username, b.id, b.summary";
 
