@@ -183,7 +183,6 @@ abstract class PlottableTask {
 
 		$t_minutes_na = 0;
 		$t_resource_unavailable = $g_resources[$this->handler_id]['resource_unavailable'];
-		$t_work_hours_per_day = $g_resources[$this->handler_id]['work_hours_per_day'];
 
 		# Iterate through all the non-working days of the user
 		if ( is_array( $t_resource_unavailable ) ) {
