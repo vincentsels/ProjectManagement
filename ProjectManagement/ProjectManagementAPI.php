@@ -761,6 +761,22 @@ function get_limit_clause_after_order_by( $p_limit_amount) {
 	}
 }
 
+function get_project_select_clause()
+{
+    $t_project_id = helper_get_current_project();
+    $t_project_select_clause = "1 = 1";
+    if ($t_project_id != ALL_PROJECTS) {
+        $t_subprojects = array();
+        $t_subprojects[] = $t_project_id;
+        foreach (user_get_all_accessible_subprojects(auth_get_current_user_id(), $t_project_id) as $t_subproject) {
+            $t_subprojects[] = $t_subproject;
+        }
+        $t_project_select_clause = "b.project_id IN ( " . implode(',', array_unique($t_subprojects)) . " )";
+        return $t_project_select_clause;
+    }
+    return $t_project_select_clause;
+}
+
 if ( !function_exists( 'strtotime_safe' ) ) {
 	/**
 	 * Fixes 0013332: Due date not saved successfully when date-format is set to 'd/m/Y'

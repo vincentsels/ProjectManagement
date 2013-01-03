@@ -9,15 +9,7 @@ print_pm_reports_menu( 'target_overview_page' );
 $t_current_user = auth_get_current_user_id();
 $f_user_id      = gpc_get_int( 'user_id', $t_current_user );
 
-$t_project_id = helper_get_current_project();
-$t_project_select_clause = "1 = 1";
-if ( $t_project_id != ALL_PROJECTS ) {
-    $t_subprojects[] = $t_project_id;
-    foreach ( user_get_all_accessible_subprojects( auth_get_current_user_id(), $t_project_id ) as $t_subproject ) {
-        $t_subprojects[] = $t_subproject;
-    }
-    $t_project_select_clause = "b.project_id IN ( " . implode( ',', array_unique( $t_subprojects ) ) . " )";
-}
+$t_project_select_clause = get_project_select_clause();
 
 $t_target_table   = plugin_table( 'target' );
 $t_user_table      = db_get_table( 'mantis_user_table' );
