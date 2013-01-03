@@ -173,3 +173,9 @@ input[type="text"].small-textbox {
     width: 20px;
     padding-left: 4px;
 }
+
+input[type="text"].large-textbox {
+    width: 75%;
+    min-width: 500px;
+    padding-left: 4px;
+}
