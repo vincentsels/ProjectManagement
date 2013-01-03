@@ -6,6 +6,12 @@ html_page_top1( plugin_lang_get( 'configuration' ) );
 html_page_top2();
 
 print_manage_menu();
+
+$f_options_changed = gpc_get( 'options_changed', 0 );
+if ( $f_options_changed > 0 ) {
+    echo '<div align="center"><p>Succesfully updated ' . $f_options_changed . ' setting' . ($f_options_changed > 1 ? 's' : '') . '.</p></div>';
+}
+
 print_pm_config_menu( 'config_page' );
 ?>
 
