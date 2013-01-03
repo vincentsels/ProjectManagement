@@ -69,9 +69,10 @@
 	
 	$s_plugin_ProjectManagement_decimal_separator = 'Decimaal scheidingsteken';
 	$s_plugin_ProjectManagement_thousand_separator = 'Duizendtal-scheidingsteken';
+	$s_plugin_ProjectManagement_localization = 'Localisatie';
 	
 	$s_plugin_ProjectManagement_include_bugs_with_deadline = 'Bugs met deadline meenemen';
-	$s_plugin_ProjectManagement_include_bugs_with_deadline_info = 'Neem in de pagina voor het bekijken van de verdeling van de resources ook meldingen mee met een deadline voor de opleverdatum van de doelversie.';
+	$s_plugin_ProjectManagement_include_bugs_with_deadline_info = 'Neem in de projectopvolging pagina ook meldingen mee met een deadline voor de opleverdatum van de doelversie.';
 	$s_plugin_ProjectManagement_include_bugs_with_deadline_warning = '<b>Waarschuwing:</b> dit heeft een negatieve impact op de performantie!';
 
 	$s_plugin_ProjectManagement_view_customer_payment_summary_threshold = 'Drempel voor betalende klanten te zien';
@@ -111,6 +112,7 @@
 	$s_plugin_ProjectManagement_project_selection_disabled = 'Om deze pagina te kunnen bekijken dient u de configuratie optie \'show_project_menu_bar\' op \'ON\' te zetten. Contacteer een beheerder.';
 
 	$s_plugin_ProjectManagement_unavailability = 'Onbeschikbaarheid';
+	$s_plugin_ProjectManagement_unavailability_types = 'Types van onbeschikbaarheid';
 	$s_plugin_ProjectManagement_unavailability_add_new = 'Nieuwe periode van onbeschikbaarheid toevoegen';
 	$s_plugin_ProjectManagement_unavailability_overview = 'Overzicht van periodes van onbeschikbaarheid';
 	$s_plugin_ProjectManagement_unavailability_remove = 'Periode van onbeschikbaarheid verwijderen';

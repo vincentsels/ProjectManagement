@@ -69,9 +69,10 @@
 	
 	$s_plugin_ProjectManagement_decimal_separator = 'Decimal separator';
 	$s_plugin_ProjectManagement_thousand_separator = 'Thousand separator';
+	$s_plugin_ProjectManagement_localization = 'Localization';
 	
 	$s_plugin_ProjectManagement_include_bugs_with_deadline = 'Include bugs with deadline';
-	$s_plugin_ProjectManagement_include_bugs_with_deadline_info = 'In the resource allocation screen, also include bugs with a deadline before the release date of the version.';
+	$s_plugin_ProjectManagement_include_bugs_with_deadline_info = 'In the project progress screen, also include bugs with a deadline before the release date of the version.';
 	$s_plugin_ProjectManagement_include_bugs_with_deadline_warning = '<b>Warning:</b> this option has a negative impact on the performance of this page!';
 
 	$s_plugin_ProjectManagement_view_customer_payment_summary_threshold = 'View customer payment summary threshold';
@@ -111,6 +112,7 @@
 	$s_plugin_ProjectManagement_project_selection_disabled = 'In order to view this page, the configuration \'show_project_menu_bar\' must be turned \'ON\'. Contact an administrator.';
 
 	$s_plugin_ProjectManagement_unavailability = 'Unavailability';
+	$s_plugin_ProjectManagement_unavailability_types = 'Unavailability types';
 	$s_plugin_ProjectManagement_unavailability_add_new = 'Add new period of unavailability';
 	$s_plugin_ProjectManagement_unavailability_overview = 'Overview of periods of unavailability';
 	$s_plugin_ProjectManagement_unavailability_remove = 'Remove period of unavailability';
