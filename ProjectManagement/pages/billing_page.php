@@ -72,7 +72,7 @@ while ( $row = db_fetch_array( $t_result ) ) {
 	}
 
 	foreach ( $t_all_customers as $cust_id => $cust ) {
-		if ( array_search( $cust_id, $t_paying_customers ) !== false ) {
+		if ( array_search( $cust_id, $t_paying_customers ) !== false && $t_total_percentage !== 0 ) {
 			$t_billing_row[$cust['name']] =
 				$row["minutes"] * $row["hourly_rate"] / 60 * $cust['share'] / $t_total_percentage;
 		} else {
