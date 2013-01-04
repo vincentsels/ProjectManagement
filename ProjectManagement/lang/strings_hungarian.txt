@@ -1,7 +1,8 @@
 ﻿﻿<?php
 	$s_plugin_ProjectManagement_title = 'Projekt Menedzsment'; 
 	$s_plugin_ProjectManagement_configuration = 'Konfiguráció';
-   
+   	$s_plugin_ProjectManagement_settings_updated = 'Beállítások frissítése megtörtént';
+
 	$s_plugin_ProjectManagement_work_type = 'Munka típusa';
 	$s_plugin_ProjectManagement_est = 'Terv';
 	$s_plugin_ProjectManagement_done = 'Kész';
