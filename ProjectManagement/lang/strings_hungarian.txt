@@ -1,5 +1,5 @@
-﻿﻿<?php
-	$s_plugin_ProjectManagement_title = 'Projekt Menedzsment'; 
+<?php
+	$s_plugin_ProjectManagement_title = 'Projekt Menedzsment';
 	$s_plugin_ProjectManagement_configuration = 'Konfiguráció';
    
 	$s_plugin_ProjectManagement_work_type = 'Munka típusa';
