@@ -196,6 +196,7 @@ if ( $t_project_without_versions ) {
 			 	   AND b.handler_id <> 0
 			 	   AND b.target_version <> '$f_target_version'
 			 	   AND ($f_user_id = $t_const_all_users OR b.handler_id = $f_user_id)
+			 	   AND ($f_user_id = $t_const_all_users OR w.user_id = $f_user_id)
 			 	   AND NOT EXISTS
 			 	   (
 			 	   SELECT 1
