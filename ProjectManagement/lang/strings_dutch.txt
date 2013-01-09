@@ -121,6 +121,9 @@
 	$s_plugin_ProjectManagement_unavailability_type = 'Type';
 	$s_plugin_ProjectManagement_unavailability_note = 'Notitie';
 
+	$s_plugin_ProjectManagement_unavailability_ignore_work = 'Negeer prestaties tijdens deze periodes';
+	$s_plugin_ProjectManagement_unavailability_ignore_work_info = 'Uren geboekt tijdens een periode van onbeschikbaarheid van dit type worden genegeerd op de pagina \'Opvolging resources\'.<br><b>Voorbeeld</b>: array ( 60, 80 )';
+
 	$s_plugin_ProjectManagement_unplanned = 'Niet gepland';
 	$s_plugin_ProjectManagement_planned = 'Gepland';
 	$s_plugin_ProjectManagement_unavailable = 'Onbeschikbaar';

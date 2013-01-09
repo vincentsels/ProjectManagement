@@ -110,7 +110,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 			'edit_targets_threshold'					 => DEVELOPER,
 			'unavailability_types'	                     => '10:unspecified,20:unavailable,30:out of office,40:appointment,50:private appointment,60:vacation,70:administration,80:service desk,90:other',
 			'default_unavailability_type'				 => 10,
-			'ignore_work_during_unavailability_periods' => array(60, 80),
+			'unavailability_ignore_work'                => array(60, 80),
 			'release_buffer' 							=> 21,
 			'view_target_overview_threshold'			=> REPORTER,
 			'view_all_targets_threshold'				=> MANAGER,
@@ -374,8 +374,8 @@ class ProjectManagementPlugin extends MantisPlugin {
 					trigger_error( ERROR_EMPTY_FIELD, ERROR );
 				}
 
-				$t_include_work = ( is_array( plugin_config_get( 'ignore_work_during_unavailability_periods' ) ) &&
-					in_array( $f_unavailable_type, plugin_config_get( 'ignore_work_during_unavailability_periods' ) ) ) ? 0 : 1;
+				$t_include_work = ( is_array( plugin_config_get( 'unavailability_ignore_work' ) ) &&
+					in_array( $f_unavailable_type, plugin_config_get( 'unavailability_ignore_work' ) ) ) ? 0 : 1;
 
 				resource_unavailability_period_add( $p_user_id, $f_unavailable_start, $f_unavailable_end,
 					$f_unavailable_type, $t_include_work, $f_unavailable_note );

@@ -121,6 +121,9 @@
 	$s_plugin_ProjectManagement_unavailability_type = 'Type';
 	$s_plugin_ProjectManagement_unavailability_note = 'Note';
 
+	$s_plugin_ProjectManagement_unavailability_ignore_work = 'Ignore work during these periods';
+	$s_plugin_ProjectManagement_unavailability_ignore_work_info = 'Hours registered during a period of unavailability of this type will be ignored on the \'Resource progress\' page.<br><b>Example</b>: array ( 60, 80 )';
+
 	$s_plugin_ProjectManagement_unplanned = 'Unplanned';
 	$s_plugin_ProjectManagement_planned = 'Planned';
 	$s_plugin_ProjectManagement_unavailable = 'Unavailable';
