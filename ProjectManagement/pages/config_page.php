@@ -260,6 +260,12 @@ print_pm_config_menu( 'config_page' );
             <td><input type="text" class="large-textbox" maxlength="200" name="unavailability_types" id="unavailability_types"
                                    value="<?php echo plugin_config_get( 'unavailability_types' ) ?>"></td>
         </tr>
+        <tr <?php echo helper_alternate_class() ?>>
+            <td class="category"><?php echo plugin_lang_get( 'unavailability_ignore_work' ) ?>
+                <br /><span class="small"><?php echo plugin_lang_get( 'unavailability_ignore_work_info' ) ?></span></td>
+            <td><input type="text" class="large-textbox" maxlength="200" name="unavailability_ignore_work" id="unavailability_ignore_work"
+                       value="<?php echo var_export( plugin_config_get( 'unavailability_ignore_work' ) ) ?>"></td>
+        </tr>
 
 		<tr>
 			<td class="center" colspan="2"><input type="submit" value="<?php echo lang_get( 'update' ) ?>"/></td>
