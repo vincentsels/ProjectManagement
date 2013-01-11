@@ -99,9 +99,6 @@ $t_total_per_customer['bug_summary'] = '';
 $t_total_per_customer['hours'] = '';
 $t_total_per_customer['hourly_rate'] = '';
 
-# Add totals to the array
-$t_billing[] = $t_total_per_customer;
-
 if ( $f_export && count( $t_billing ) > 0 ) {
     # Export to excel
     # Construct filename
@@ -112,6 +109,9 @@ if ( $f_export && count( $t_billing ) > 0 ) {
     $xls->addWorksheetWithHeader( 'Detail', $t_billing );
     $xls->sendWorkbook(  $t_filename . '.xls' );
 } else {
+    # Add totals to the array
+    $t_billing[] = $t_total_per_customer;
+
     html_page_top1( plugin_lang_get( 'title' ) );
     html_page_top2();
 
