@@ -298,9 +298,11 @@ function format_date_for_filename( $p_date = null, $p_include_time = true ) {
  * Optionally specify the amount of decimals to display and round at.
  * @param float $p_value the value to format.
  * @param int $p_decimals the amount of decimals to display and round at. Default = 2.
- * @return string
+ * @param $p_display_zero bool Also display 0 values. Returns an empty string if false.
+ * @return string The formatted $p_value.
  */
-function format( $p_value, $p_decimals = 2 ) {
+function format( $p_value, $p_decimals = 2, $p_display_zero = true ) {
+    if ( $p_value === 0 && !$p_display_zero ) return '';
 	return number_format( round( $p_value, $p_decimals ), $p_decimals,
 		plugin_config_get( 'decimal_separator' ),
 		plugin_config_get( 'thousand_separator' ) );

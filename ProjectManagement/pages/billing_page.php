@@ -220,7 +220,7 @@ if ( $f_export && count( $t_billing ) > 0 ) {
 		echo '<td class="right"> ' . format( $row['hourly_rate'] ) . '</td>';
 		echo '<td class="right"> ' . format( $row['cost'] ) . '</td>';
 		foreach ( $t_all_customers as $cust ) {
-			echo '<td class="right"> ' . format( $row[$cust['name']] ) . '</td>';
+			echo '<td class="right"> ' . format( $row[$cust['name']], 2, false ) . '</td>';
 		}
 		echo '</tr>';
 	}
