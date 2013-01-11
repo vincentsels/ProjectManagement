@@ -7,9 +7,10 @@ class ProjectManagementPlugin extends MantisPlugin {
 		$this->description = 'Project management plugin that adds advanced functionality for timetracking, estimations, reporting,...';
 		$this->page        = 'config_page';
 
-		$this->version  = '1.3.1';
+		$this->version  = '1.4.0';
 		$this->requires = array(
-			'MantisCore' => '1.2.0'
+			'MantisCore' => '1.2.0',
+            'ArrayExportExcel' => '0.3'
 		);
 
 		$this->author  = 'Vincent Sels';
