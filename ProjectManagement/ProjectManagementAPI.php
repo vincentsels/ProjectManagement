@@ -264,12 +264,32 @@ function parse_float( $p_floatstring ) {
 
 /**
  * Formats the specified $p_date as specified by the short_date_format configuration setting.
+ * @param $p_date int A timestamp to format.
+ * @return string The $p_date formatted as specified by the short_date_format configuration setting.
  */
 function format_short_date( $p_date = null ) {
 	if ( is_null( $p_date ) || empty( $p_date ) ) {
 		return null;
 	}
 	return date( config_get( 'short_date_format' ), $p_date );
+}
+
+/**
+ * Formats the specified $p_date in a way that's safe to use in a filename, format
+ * Y-m-d_His eg 2013-01-11_131911.
+ * @param null $p_date int A timestamp to format.
+ * @param bool $p_include_time Includes the time portion of the timestamp in the result.
+ * @return string The $p_date formatted as Y-m-d or Y-m-d_His.
+ */
+function format_date_for_filename( $p_date = null, $p_include_time = true ) {
+    if ( is_null( $p_date ) || empty( $p_date ) ) {
+        $p_date = timestamp();
+    }
+    if ( $p_include_time ) {
+        return date( 'Y-m-d_His', $p_date );
+    } else {
+        return date( 'Y-m-d', $p_date );
+    }
 }
 
 /**

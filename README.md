@@ -72,3 +72,7 @@ A lot of credit goes to Mantis plugin-guru jreese ([http://noswap.com](http://no
 In order to be able to use this feature, two small modifications have to be made to the basic Mantis installation,
 as explained in [this Mantis issue](http://www.mantisbt.org/bugs/view.php?id=14329). This is necessary until the Mantis team decides
 to include the event in their core, if they deem it appropriate.
+
+## Dependencies
+
+* [Array export to Excel](https://github.com/vincentsels/array-export-excel) (introduced at v1.4.0)

@@ -1,12 +1,7 @@
 <?php
-
 access_ensure_global_level( plugin_config_get( 'view_billing_threshold' ) );
 
-html_page_top1( plugin_lang_get( 'title' ) );
-html_page_top2();
-
-print_pm_reports_menu( 'billing_page' );
-
+$f_export = gpc_get_bool( 'export', false );
 $f_period_start = gpc_get_string( 'period_start', first_day_of_month( -1 ) );
 $f_period_end   = gpc_get_string( 'period_end', last_day_of_month( -1 ) );
 
@@ -107,7 +102,21 @@ $t_total_per_customer['hourly_rate'] = '';
 # Add totals to the array
 $t_billing[] = $t_total_per_customer;
 
-?>
+if ( $f_export && count( $t_billing ) > 0 ) {
+    # Export to excel
+    # Construct filename
+    $t_filename = format_date_for_filename( $t_startdate, false ) . '_' . format_date_for_filename( $t_enddate, false );
+    $t_filename .= '_' . format_date_for_filename( time(), true );
+
+    $xls = new ExcelExporterIncludingHeader;
+    $xls->addWorksheetWithHeader( 'Detail', $t_billing );
+    $xls->sendWorkbook(  $t_filename . '.xls' );
+} else {
+    html_page_top1( plugin_lang_get( 'title' ) );
+    html_page_top2();
+
+    print_pm_reports_menu( 'billing_page' );
+    ?>
 
 <div class="center">
 	<table class="width100">
@@ -134,7 +143,14 @@ $t_billing[] = $t_total_per_customer;
 <table class="width100" cellspacing="1">
 	<tr>
 		<td colspan="100%" class="form-title">
-			<?php echo plugin_lang_get( 'time_registration' ); ?>
+			<?php
+            echo plugin_lang_get( 'billing' );
+            echo ' <span style="font-weight:normal">';
+            $t_url = plugin_page( 'billing_page' );
+            $t_url .= '&export=true';
+            print_bracket_link( $t_url, plugin_lang_get( 'export_to_excel', 'ArrayExportExcel' ) );
+            echo '</span>';
+            ?>
 		</td>
 	</tr>
 	<tr class="row-category">
@@ -214,4 +230,5 @@ $t_billing[] = $t_total_per_customer;
 
 <?php
 html_page_bottom1( __FILE__ );
+}
 ?>
