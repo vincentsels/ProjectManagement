@@ -83,21 +83,16 @@ while ( $row = db_fetch_array( $t_result ) ) {
 }
 
 # Calculate total per customer
-$t_total_per_customer = array();
-foreach ( $t_all_customers as $cust ) {
-	foreach ( $t_billing as $row ) {
-		@$t_total_per_customer[$cust['name']] += $row[$cust['name']];
-		@$t_total_per_customer['cost'] += $row[$cust['name']];
+$t_totals_row = array();
+foreach ( $t_billing as $row ) {
+    foreach ( $t_all_customers as $cust ) {
+		@$t_totals_row[$cust['name']] += $row[$cust['name']];
+		@$t_totals_row['cost'] += $row[$cust['name']];
 	}
-	@$t_total_per_customer[$cust['name']] = @$t_total_per_customer[$cust['name']];
+    @$t_totals_row['hours'] += $row['hours'];
 }
-$t_total_per_customer['project_name'] = init_cap( 'total', true );
-$t_total_per_customer['category_name'] = '';
-$t_total_per_customer['username'] = '';
-$t_total_per_customer['bug_id'] = '';
-$t_total_per_customer['bug_summary'] = '';
-$t_total_per_customer['hours'] = '';
-$t_total_per_customer['hourly_rate'] = '';
+$t_totals_row['project_name'] = init_cap( 'total', true );
+$t_totals_row['hourly_rate'] = 0;
 
 if ( $f_export && count( $t_billing ) > 0 ) {
     # Export to excel
@@ -110,7 +105,7 @@ if ( $f_export && count( $t_billing ) > 0 ) {
     $xls->sendWorkbook(  $t_filename . '.xls' );
 } else {
     # Add totals to the array
-    $t_billing[] = $t_total_per_customer;
+    $t_billing[] = $t_totals_row;
 
     html_page_top1( plugin_lang_get( 'title' ) );
     html_page_top2();
@@ -216,9 +211,9 @@ if ( $f_export && count( $t_billing ) > 0 ) {
 		echo '<td> ' . $row['username'] . '</td>';
 		echo '<td> ' . $row['bug_id'] . '</td>';
 		echo '<td> ' . $row['bug_summary'] . '</td>';
-		echo '<td class="right"> ' . format( $row['hours'] ) . '</td>';
-		echo '<td class="right"> ' . format( $row['hourly_rate'] ) . '</td>';
-		echo '<td class="right"> ' . format( $row['cost'] ) . '</td>';
+		echo '<td class="right"> ' . format( $row['hours'], 2, false ) . '</td>';
+		echo '<td class="right"> ' . format( $row['hourly_rate'], 2, false ) . '</td>';
+		echo '<td class="right"> ' . format( $row['cost'], 2, false ) . '</td>';
 		foreach ( $t_all_customers as $cust ) {
 			echo '<td class="right"> ' . format( $row[$cust['name']], 2, false ) . '</td>';
 		}
