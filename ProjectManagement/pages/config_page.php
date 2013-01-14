@@ -177,6 +177,12 @@ print_pm_config_menu( 'config_page' );
 				name="view_billing_threshold"><?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'view_billing_threshold' ) ) ?></select>
 			</td>
 		</tr>
+        <tr class="spacer"/>
+        <tr <?php echo helper_alternate_class() ?>>
+            <td class="category"><?php echo plugin_lang_get( 'custom_fields_to_include_in_overviews' ) ?></td>
+            <td><input type="text" class="large-textbox" maxlength="200" name="custom_fields_to_include_in_overviews" id="custom_fields_to_include_in_overviews"
+                       value="<?php echo var_export( plugin_config_get( 'custom_fields_to_include_in_overviews' ) ) ?>"></td>
+        </tr>
     </table><br />
 
     <table class="width75" align="center" cellspacing="1">

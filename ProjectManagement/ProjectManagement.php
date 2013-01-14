@@ -117,7 +117,8 @@ class ProjectManagementPlugin extends MantisPlugin {
 			'view_all_targets_threshold'				=> MANAGER,
 			'group_by_projects_by_default'				=> TRUE,
 			'show_projects_by_default'					=> TRUE,
-			'work_hours_per_day'					    => array( 1 => 8, 2 => 8, 3 => 8, 4 => 8, 5 => 7, 6 => 0, 7 => 0 )
+			'work_hours_per_day'					    => array( 1 => 8, 2 => 8, 3 => 8, 4 => 8, 5 => 7, 6 => 0, 7 => 0 ),
+            'custom_fields_to_include_in_overviews'	    => array()
 		);
 	}
 

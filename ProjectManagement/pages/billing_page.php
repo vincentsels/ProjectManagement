@@ -41,6 +41,14 @@ $t_result = db_query_bound( $t_query );
 
 $t_all_customers = customer_get_all( PLUGIN_PM_CUST_PAYING );
 
+$t_custom_fields_to_include = array();
+foreach ( plugin_config_get( 'custom_fields_to_include_in_overviews' ) as $field ) {
+    $t_custom_field = custom_field_get_id_from_name( $field );
+    if( $t_custom_field !== null ) {
+        $t_custom_fields_to_include[$t_custom_field] = $field;
+    }
+}
+
 # Fill the billing array
 $t_billing = array();
 while ( $row = db_fetch_array( $t_result ) ) {
@@ -78,6 +86,11 @@ while ( $row = db_fetch_array( $t_result ) ) {
 			$t_billing_row[$cust['name']] = 0;
 		}
 	}
+
+    # Custom fields
+    foreach ( $t_custom_fields_to_include as $field_id => $field_name  ) {
+        $t_billing_row[$field_name] = custom_field_get_value( $field_id, $row["bug_id"] );
+    }
 
 	$t_billing[] = $t_billing_row;
 }
@@ -155,6 +168,11 @@ if ( $f_export && count( $t_billing ) > 0 ) {
 		<td>
 			<div align="center"><?php echo lang_get( 'category' ) ?></div>
 		</td>
+        <?php
+        foreach ( $t_custom_fields_to_include as $field_name ) {
+            echo '<td><div align="center">', $field_name, '</div></td>';
+        }
+        ?>
 		<td>
 			<div align="center"><?php echo lang_get( 'username' ) ?></div>
 		</td>
@@ -185,6 +203,11 @@ if ( $f_export && count( $t_billing ) > 0 ) {
 	</tr>
 	<tr class="row-category">
 		<td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+        <?php
+        for ( $i = 0; $i < count( $t_custom_fields_to_include ); $i++ ) {
+            echo '<td></td>';
+        }
+        ?>
 		<td>100%</td>
 		<?php
 		foreach ( $t_all_customers as $cust ) {
@@ -208,6 +231,9 @@ if ( $f_export && count( $t_billing ) > 0 ) {
 		echo '<tr ' . $t_class . '>';
 		echo '<td> ' . $row['project_name'] . '</td>';
 		echo '<td> ' . $row['category_name'] . '</td>';
+        foreach ( $t_custom_fields_to_include as $field_id => $field_name  ) {
+            echo '<td> ' . $row[$field_name] . '</td>';
+        }
 		echo '<td> ' . $row['username'] . '</td>';
 		echo '<td> ' . $row['bug_id'] . '</td>';
 		echo '<td> ' . $row['bug_summary'] . '</td>';

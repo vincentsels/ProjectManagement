@@ -99,6 +99,7 @@
 	$s_plugin_ProjectManagement_customer_share = 'Aandeel in kost';
 	$s_plugin_ProjectManagement_customer_can_approve = 'Kan goedkeuren';
 	$s_plugin_ProjectManagement_billing = 'Facturatie';
+	$s_plugin_ProjectManagement_custom_fields_to_include_in_overviews = 'Gebruikersvelden op te nemen in overzichten';
 
 	$s_plugin_ProjectManagement_targets = 'Targets';
 	$s_plugin_ProjectManagement_target_date = 'Richtdatum';
