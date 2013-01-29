@@ -170,10 +170,12 @@ class ProjectManagementPlugin extends MantisPlugin {
 		require_once( 'classes/ProjectManagementDoneColumn.class.php' );
 		require_once( 'classes/ProjectManagementEstColumn.class.php' );
 		require_once( 'classes/ProjectManagementTodoColumn.class.php' );
+        require_once( 'classes/ProjectManagementCustomersColumn.class.php' );
 		return array(
 			'ProjectManagementEstColumn',
 			'ProjectManagementDoneColumn',
-			'ProjectManagementTodoColumn'
+			'ProjectManagementTodoColumn',
+            'ProjectManagementCustomersColumn'
 		);
 	}
 
