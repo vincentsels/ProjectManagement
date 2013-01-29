@@ -5,7 +5,7 @@
  */
 class ProjectManagementCustomersColumn extends MantisColumn {
 
-    public $column = "customers_columns";
+    public $column = "customers_column";
     public $sortable = false;
 
     private $cache = array();
