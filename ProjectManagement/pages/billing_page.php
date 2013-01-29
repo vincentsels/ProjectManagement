@@ -42,18 +42,18 @@ $t_result = db_query_bound( $t_query );
 $t_all_customers = customer_get_all( PLUGIN_PM_CUST_PAYING );
 
 $t_custom_fields_to_include = array();
-foreach ( plugin_config_get( 'custom_fields_to_include_in_overviews' ) as $field_name ) {
-    $t_custom_field_id = custom_field_get_id_from_name( $field_name );
-    if( $t_custom_field_id !== null ) {
-        $t_custom_fields_to_include[$t_custom_field_id] = $field_name;
-    }
-}
 $t_plugin_columns_to_include = array();
 $t_all_plugin_columns = columns_get_plugin_columns();
-foreach ( array('projectmanagement_est_column', 'projectmanagement_done_column', 'projectmanagement_todo_column') as $plugin_col_name ) {
-    if ( isset( $t_all_plugin_columns[ $plugin_col_name ] ) ) {
-        $t_column_object = $t_all_plugin_columns[ $plugin_col_name ];
-        $t_plugin_columns_to_include[$plugin_col_name] = $t_column_object;
+foreach ( plugin_config_get( 'fields_to_include_in_overviews' ) as $field_name ) {
+    $t_custom_field_name = column_get_custom_field_name( $field_name );
+    if( $t_custom_field_name !== null ) {
+        $t_custom_field_id = custom_field_get_id_from_name( $t_custom_field_name );
+        if( $t_custom_field_id ) {
+            $t_custom_fields_to_include[$t_custom_field_id] = $t_custom_field_name;
+        }
+    } else if ( isset( $t_all_plugin_columns[$field_name] ) ) {
+        $t_column_object = $t_all_plugin_columns[$field_name];
+        $t_plugin_columns_to_include[$field_name] = $t_column_object;
     }
 }
 
@@ -103,7 +103,7 @@ while ( $row = db_fetch_array( $t_result ) ) {
     foreach ( $t_plugin_columns_to_include as $col_name => $col_object ) {
         $t_bug = bug_get( $row["bug_id"] );
         $col_object->cache(array($t_bug));
-        $t_billing_row[$col_name] = get_plugin_col_value( $col_object, $t_bug );
+        $t_billing_row[$col_object->title] = get_plugin_col_value( $col_object, $t_bug );
     }
 
 	$t_billing[] = $t_billing_row;
@@ -194,7 +194,7 @@ if ( $f_export && count( $t_billing ) > 0 ) {
 			<div align="center"><?php echo lang_get( 'username' ) ?></div>
 		</td>
 		<td>
-			<div align="center"><?php echo lang_get( 'bug' ) ?></div>
+			<div align="center"><?php echo init_cap( 'bug' ) ?></div>
 		</td>
 		<td>
 			<div align="center"><?php echo lang_get( 'summary' ) ?></div>
@@ -255,7 +255,7 @@ if ( $f_export && count( $t_billing ) > 0 ) {
             echo '<td> ' . $row[$field_name] . '</td>';
         }
         foreach ( $t_plugin_columns_to_include as $col_name => $col_obj  ) {
-            echo '<td> ' . $row[$col_name] . '</td>';
+            echo '<td> ' . $row[$col_obj->title] . '</td>';
         }
 		echo '<td> ' . $row['username'] . '</td>';
 		echo '<td> ' . $row['bug_id'] . '</td>';
