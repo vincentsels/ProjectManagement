@@ -41,7 +41,7 @@ $t_total_options_changed += maybe_set_option( 'group_by_projects_by_default', gp
 $t_total_options_changed += maybe_set_option( 'show_projects_by_default', gpc_get_bool( 'show_projects_by_default' ) );
 $t_total_options_changed += maybe_set_option( 'unavailability_types', gpc_get_string( 'unavailability_types' ) );
 $t_total_options_changed += maybe_set_option( 'unavailability_ignore_work', string_to_array( gpc_get_string( 'unavailability_ignore_work', null ) ) );
-$t_total_options_changed += maybe_set_option( 'custom_fields_to_include_in_overviews', string_to_array( gpc_get_string( 'custom_fields_to_include_in_overviews', null ) ) );
+$t_total_options_changed += maybe_set_option( 'fields_to_include_in_overviews', string_to_array( gpc_get_string( 'fields_to_include_in_overviews', null ) ) );
 
 $t_hours_for_day = array();
 for ( $i = 1; $i <= 7; $i++ ) {
