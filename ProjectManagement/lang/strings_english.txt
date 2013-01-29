@@ -99,7 +99,8 @@
 	$s_plugin_ProjectManagement_customer_share = 'Share';
 	$s_plugin_ProjectManagement_customer_can_approve = 'Can approve';
 	$s_plugin_ProjectManagement_billing = 'Billing';
-	$s_plugin_ProjectManagement_custom_fields_to_include_in_overviews = 'Custom fields to include in overviews';
+	$s_plugin_ProjectManagement_fields_to_include_in_overviews = 'Extra columns to include in overviews';
+	$s_plugin_ProjectManagement_fields_to_include_in_overviews_info = 'Both custom fields and plugin-columns are possible. Use the column names as suggested in \'Manage configuration\' > \'Manage columns\'';
 
 	$s_plugin_ProjectManagement_targets = 'Targets';
 	$s_plugin_ProjectManagement_target_date = 'Target date';
