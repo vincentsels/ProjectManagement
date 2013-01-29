@@ -799,6 +799,20 @@ function get_project_select_clause()
     return $t_project_select_clause;
 }
 
+/**
+ * Gets the specified plugin column's value for the specified $p_bug.
+ * @param MantisColumn $p_plugin_col The plugin column to get the value for.
+ * @param $p_bug object A bug to get the plugin column's value for.
+ * @return string The value of the passed column.
+ */
+function get_plugin_col_value( MantisColumn $p_plugin_col, $p_bug ) {
+    ob_start();
+    $p_plugin_col->display( $p_bug, COLUMNS_TARGET_VIEW_PAGE );
+    $t_output = ob_get_contents();
+    ob_end_clean();
+    return $t_output;
+}
+
 if ( !function_exists( 'strtotime_safe' ) ) {
 	/**
 	 * Fixes 0013332: Due date not saved successfully when date-format is set to 'd/m/Y'
