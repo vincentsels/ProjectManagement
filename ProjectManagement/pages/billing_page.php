@@ -170,6 +170,8 @@ if ( $f_export && count( $t_billing ) > 0 ) {
             echo ' <span style="font-weight:normal">';
             $t_url = plugin_page( 'billing_page' );
             $t_url .= '&export=true';
+            $t_url .= '&period_start=' . $f_period_start;
+            $t_url .= '&period_end=' . $f_period_end;
             print_bracket_link( $t_url, plugin_lang_get( 'export_to_excel', 'ArrayExportExcel' ) );
             echo '</span>';
             ?>
