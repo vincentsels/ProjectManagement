@@ -123,12 +123,28 @@ $t_totals_row['hourly_rate'] = 0;
 
 if ( $f_export && count( $t_billing ) > 0 ) {
     # Export to excel
+
     # Construct filename
     $t_filename = format_date_for_filename( $t_startdate, false ) . '_' . format_date_for_filename( $t_enddate, false );
     $t_filename .= '_' . format_date_for_filename( time(), true );
 
+    #Prepare customers
+    $t_customer_data = array();
+    $t_col_cust_name = plugin_lang_get( 'customer_name' );
+    $t_col_cust_share = plugin_lang_get( 'customer_share' );
+    foreach ( $t_all_customers as $customer ) {
+        if ( !isset( $customer['name'] ) ) {
+            continue;
+        }
+        $t_customer_row = array();
+        $t_customer_row[$t_col_cust_name] = $customer['name'];
+        $t_customer_row[$t_col_cust_share] = $customer['share'];
+        $t_customer_data[] = $t_customer_row;
+    }
+
     $xls = new ExcelExporterIncludingHeader;
     $xls->addWorksheetWithHeader( 'Detail', $t_billing );
+    $xls->addWorksheetWithHeader( 'Customers', $t_customer_data );
     $xls->sendWorkbook(  $t_filename . '.xls' );
 } else {
     # Add totals to the array
