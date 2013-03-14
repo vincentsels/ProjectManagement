@@ -1,0 +1,154 @@
+<?php
+	$s_plugin_ProjectManagement_title = 'Gestion de projet'; 
+	$s_plugin_ProjectManagement_configuration = 'Configuration';
+	$s_plugin_ProjectManagement_settings_updated = 'Config. mis à jour';
+   
+	$s_plugin_ProjectManagement_work_type = 'Type de travail';
+	$s_plugin_ProjectManagement_est = 'Estimation';
+	$s_plugin_ProjectManagement_done = 'Réalisé';
+	$s_plugin_ProjectManagement_todo = 'A faire';
+	$s_plugin_ProjectManagement_diff = 'Delta';
+	$s_plugin_ProjectManagement_total = 'total';
+   
+	$s_plugin_ProjectManagement_clear = 'Mise à zéro';
+	$s_plugin_ProjectManagement_book_date = 'Jour du l\'intervention';
+	$s_plugin_ProjectManagement_reports = 'Gest. des projets';
+	$s_plugin_ProjectManagement_time_division = 'Répartition du temps';
+	$s_plugin_ProjectManagement_per = 'Par';
+	$s_plugin_ProjectManagement_time_registration = 'Temps saisi';
+	$s_plugin_ProjectManagement_time_registration_worksheet = 'Tableau récapitulatif de la saisie de temps';
+	$s_plugin_ProjectManagement_time_registration_overview = 'Récapitulatif de la saisie de temps';
+	$s_plugin_ProjectManagement_project_progress = 'Avanc. par projet';
+	$s_plugin_ProjectManagement_resource_progress = 'Avanc. par ressource';
+	$s_plugin_ProjectManagement_resource_management = 'Gest. des ressources';
+	$s_plugin_ProjectManagement_period = 'Période';
+	$s_plugin_ProjectManagement_hours = 'Heures';
+	$s_plugin_ProjectManagement_cost = 'Coût';
+	$s_plugin_ProjectManagement_total_cost = 'Coût total';
+	$s_plugin_ProjectManagement_turn_on_recently_visited = 'Pour activer cette fonctionnalité, modifiez l'option de configuration 'recently visited'';
+	$s_plugin_ProjectManagement_recently_visited = 'Récemment visité';
+	$s_plugin_ProjectManagement_recently_registered = 'Récemment renseigné';
+	$s_plugin_ProjectManagement_day = 'Aujourd\'hui';
+	$s_plugin_ProjectManagement_week = 'Cette semaine';
+	$s_plugin_ProjectManagement_last_week = 'La semaine dernière';
+	$s_plugin_ProjectManagement_last_months = 'Les derniers mois';
+	$s_plugin_ProjectManagement_month = 'Mois';
+	$s_plugin_ProjectManagement_unassigned = 'Non affecté';
+
+	$s_plugin_ProjectManagement_hourly_rate = 'Taux horaire';
+	$s_plugin_ProjectManagement_hours_per_week = 'Heures par semaine';
+	$s_plugin_ProjectManagement_color = 'Couleur';
+	$s_plugin_ProjectManagement_deployability = 'Disponibilité';
+   
+	$s_plugin_ProjectManagement_work_types = 'Types de travail';
+	$s_plugin_ProjectManagement_work_types_info = 'Une énumération des types de travail qu'on peut réaliser pour un ticket. Pour désactiver cette fonctionnalité, spécifier une seule valeur.';
+
+	$s_plugin_ProjectManagement_edit_estimates_threshold = 'Seuil pour pouvoir modifier les estimations';
+	$s_plugin_ProjectManagement_edit_estimates_threshold_info = 'Niveau de droits nécessaire pour modifier une estimation initiale existante pour un ticket et un type de travail.';
+
+	$s_plugin_ProjectManagement_include_bookdate_threshold = 'Inclure le seuil pour la date d'enregistrement';
+	$s_plugin_ProjectManagement_include_bookdate_threshold_info = 'Permettre aux utilisateurs avec ce niveau de droits (ou supérieur) de spécifier une date d'enregistrement lors de la saisie du temps passé.';
+
+	$s_plugin_ProjectManagement_work_type_thresholds = 'Seuil par type de travail';
+	$s_plugin_ProjectManagement_work_type_thresholds_info = 'Un utilisateur avec un niveau de droits inférieur à ceux spécifiés ne pourra pas voir ou modifier les types de travail indiqués.<br><b>Syntaxe</b> : array ( val => ACCLEVEL[, val2 => ACCLEVEL2,...] )<br><b>Exemple</b>: array ( 20 => REPORTER, 50 => DEVELOPER )';
+
+	$s_plugin_ProjectManagement_finish_upon_resolving = 'Types de travail à clôturer lors de la résolution';
+	$s_plugin_ProjectManagement_finish_upon_resolving_info = 'Indiquez pour quels types de travail les heures 'A faire' doivent être automatiquement mis à zéro lors de la <b>résolution</b> du ticket.<br><b>Exemple</b>: array ( 20, 50 )';
+
+	$s_plugin_ProjectManagement_finish_upon_closing = 'Types de travail à clôturer lors de la fermeture';
+	$s_plugin_ProjectManagement_finish_upon_closing_info = 'Indiquez pour quels types de travail les heures 'A faire' doivent être automatiquement mis à zéro lors de la <b>fermeture</b> du ticket.<br><b>Exemple</b>: array ( 20, 50 )';
+
+	$s_plugin_ProjectManagement_enable_time_registration_threshold = 'Activer seuil de saisie de temps';
+	$s_plugin_ProjectManagement_view_time_reg_summary_threshold = 'Seuil pour afficher le résumé du temps saisi';
+	$s_plugin_ProjectManagement_view_time_registration_worksheet_threshold = 'Seuil pour afficher la fiche de saisie du temps';
+	$s_plugin_ProjectManagement_view_report_registration_threshold = 'Seuil pour afficher le rapport du temps saisi';
+	$s_plugin_ProjectManagement_view_resource_management_threshold = 'Seuil pour afficher la gestion des ressources';
+	$s_plugin_ProjectManagement_view_project_progress_threshold = 'Seuil pour afficher le résumé d'allocation de ressources';
+	$s_plugin_ProjectManagement_view_target_overview_threshold = 'Seuil pour afficher le résumé des objectifs';
+	$s_plugin_ProjectManagement_view_all_targets_threshold = 'Seuil pour voir les objectifs des autres utilisateurs';
+	$s_plugin_ProjectManagement_admin_threshold = 'Seuil d'administration du plugiciels';
+
+	$s_plugin_ProjectManagement_decimal_separator = 'Séparateur décimal';
+	$s_plugin_ProjectManagement_thousand_separator = 'Séparateur de milliers';
+	$s_plugin_ProjectManagement_localization = 'Localisation';
+
+	$s_plugin_ProjectManagement_include_bugs_with_deadline = 'Inclure les tickets avec une échéance';
+	$s_plugin_ProjectManagement_include_bugs_with_deadline_info = 'Sur la page d'avancement par projet, inclure les tickets avec une date d'échéance avant la date de publication de la version sélectionnée.';
+	$s_plugin_ProjectManagement_include_bugs_with_deadline_warning = '<b>Attention :</b> cette option dégrade la performance de cette page!';
+
+	$s_plugin_ProjectManagement_view_customer_payment_summary_threshold = 'Seuil pour afficher le résumé des clients payeurs';
+	$s_plugin_ProjectManagement_enable_customer_payment_threshold = 'Activer seuil de paiement client';
+	$s_plugin_ProjectManagement_enable_customer_payment_threshold_info = 'Restreint le payement à certains clients seulement';
+	$s_plugin_ProjectManagement_enable_customer_approval_threshold = 'Activer seuil de validation client';
+	$s_plugin_ProjectManagement_enable_customer_approval_threshold_info = 'Permettre aux clients de valider la réalisation des tickets.';
+	$s_plugin_ProjectManagement_view_billing_threshold = 'Seuil pour voir la facturation';
+
+	$s_plugin_ProjectManagement_default_owner = 'Propriétaire par défaut des objectifs par type de travail';
+	$s_plugin_ProjectManagement_default_owner_info = 'Par type de travail un propriétaire par défaut peut être présélectionné. Les valeurs possibles sont 'REPORTER' et 'DEVELOPER'. Toute autre valeur sera ignorée.';
+
+	$s_plugin_ProjectManagement_customer_section = 'Section client';
+	$s_plugin_ProjectManagement_paying_customers = 'Client payeur';
+	$s_plugin_ProjectManagement_integration_custom_dev = 'Intégration de fonctionnalités spécifiques';
+	$s_plugin_ProjectManagement_integration_custom_dev_info = 'Intégration d'une fonctionnalité de base avec des fonctionnalités spécifiques existantes.';
+	$s_plugin_ProjectManagement_approving_customers = 'Clients valideurs';
+	$s_plugin_ProjectManagement_general_configuration = 'Configuration du plugiciels';
+	$s_plugin_ProjectManagement_customer_management = 'Configuration des clients';
+	$s_plugin_ProjectManagement_add_new_customer = 'Ajouter un client';
+	$s_plugin_ProjectManagement_edit_customer = 'Modifier un client';
+	$s_plugin_ProjectManagement_customer_name = 'Nom du client';
+	$s_plugin_ProjectManagement_customer_share = 'Partage';
+	$s_plugin_ProjectManagement_customer_can_approve = 'Peut valider';
+	$s_plugin_ProjectManagement_billing = 'Facturation';
+	$s_plugin_ProjectManagement_custom_fields_to_include_in_overviews = 'Champs personnalisés à inclure dans les résumés';
+
+	$s_plugin_ProjectManagement_targets = 'Objectifs';
+	$s_plugin_ProjectManagement_target_date = 'Date ciblée';
+	$s_plugin_ProjectManagement_overdue = 'Dépassé';
+	$s_plugin_ProjectManagement_owner = 'Propriétaire';
+	$s_plugin_ProjectManagement_completed = 'Terminé';
+	$s_plugin_ProjectManagement_new_target = 'Nouvel objectif';
+	$s_plugin_ProjectManagement_target_overview = 'Résumé des objectifs';
+
+	$s_plugin_ProjectManagement_project_without_versions = 'Pour voir cette page, un projet avec des versions et des dates de 'release' doit être sélectionné';
+	$s_plugin_ProjectManagement_all_versions_selected = 'Pour voir cette page un projet individuel doit être sélectionné';
+	$s_plugin_ProjectManagement_project_selection_disabled = 'Pour voir cette page, l'option de configuration 'show_project_menu_bar' doit être activée. Contactez un administrateur.';
+
+	$s_plugin_ProjectManagement_unavailability = 'Indisponible';
+	$s_plugin_ProjectManagement_unavailability_types = 'Types d'indisponibilité';
+	$s_plugin_ProjectManagement_unavailability_add_new = 'Ajouter une période d'indisponibilité';
+	$s_plugin_ProjectManagement_unavailability_overview = 'Résumé des périodes d'indisponibilité';
+	$s_plugin_ProjectManagement_unavailability_remove = 'Supprimer une période d'indisponibilité';
+	$s_plugin_ProjectManagement_unavailability_period = 'Période';
+	$s_plugin_ProjectManagement_unavailability_type = 'Type d'indisponibilité';
+	$s_plugin_ProjectManagement_unavailability_note = 'Note';
+
+	$s_plugin_ProjectManagement_unavailability_ignore_work = 'Ignorer le travail réalisé pendant cette période';
+	$s_plugin_ProjectManagement_unavailability_ignore_work_info = 'Les heures saisies pendant ce type d'indisponibilité seront ignorées par la page 'Avancement par ressource'.<br><b>Exemple</b>: array ( 60, 80 )';
+
+	$s_plugin_ProjectManagement_unplanned = 'Non planifié';
+	$s_plugin_ProjectManagement_planned = 'Planifié';
+	$s_plugin_ProjectManagement_unavailable = 'Indisponible';
+	$s_plugin_ProjectManagement_finished = 'Terminé';
+	$s_plugin_ProjectManagement_select_target_version = 'Sélectionner une version cible';
+	$s_plugin_ProjectManagement_select_from_version = 'Spécifier une version de référence (optionnelle)';
+	$s_plugin_ProjectManagement_select_from_date = '<i>ou</i> date de référence';
+	$s_plugin_ProjectManagement_reference_date = 'Date de référence';
+	$s_plugin_ProjectManagement_release_date = 'Date de publication';
+	$s_plugin_ProjectManagement_last_dev_day = 'Dernier jour de réalisation';
+	$s_plugin_ProjectManagement_group_by_projects = 'Regrouper par projet et catégorie';
+	$s_plugin_ProjectManagement_group_by_projects_by_default = 'Regrouper par projet et catégorie par défaut';
+	$s_plugin_ProjectManagement_show_projects_by_default = 'Par défaut, afficher tout de suite les projets pour chaque ressource';
+	$s_plugin_ProjectManagement_release_buffer = 'Tampon (jours) avant publication';
+
+	$s_plugin_ProjectManagement_error_enddate_before_startdate = 'La date de fin doit être > que date de début.';
+
+	$s_plugin_ProjectManagement_work_hours_per_day = 'Heures travaillées par jour';
+	$s_plugin_ProjectManagement_monday = 'lundi';
+	$s_plugin_ProjectManagement_tuesday = 'mardi';
+	$s_plugin_ProjectManagement_wednesday = 'mercredi';
+	$s_plugin_ProjectManagement_thursday = 'jeudi';
+	$s_plugin_ProjectManagement_friday = 'vendredi';
+	$s_plugin_ProjectManagement_saturday = 'samedi';
+	$s_plugin_ProjectManagement_sunday = 'dimanche';
+	$s_plugin_ProjectManagement_project = 'projet';
+?>
