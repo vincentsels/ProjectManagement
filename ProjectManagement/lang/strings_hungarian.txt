@@ -1,5 +1,5 @@
-﻿﻿<?php
-	$s_plugin_ProjectManagement_title = 'Projekt Menedzsment'; 
+<?php
+	$s_plugin_ProjectManagement_title = 'Projekt Menedzsment';
 	$s_plugin_ProjectManagement_configuration = 'Konfiguráció';
    	$s_plugin_ProjectManagement_settings_updated = 'Beállítások frissítése megtörtént';
 
@@ -9,7 +9,7 @@
 	$s_plugin_ProjectManagement_todo = 'Feladat';
 	$s_plugin_ProjectManagement_diff = 'Különbség';
 	$s_plugin_ProjectManagement_total = 'teljes';
-   
+
 	$s_plugin_ProjectManagement_clear = 'Tisztít';
 	$s_plugin_ProjectManagement_book_date = 'Időpont';
 	$s_plugin_ProjectManagement_reports = 'Projekt menedzsment';
@@ -20,7 +20,7 @@
 	$s_plugin_ProjectManagement_time_registration_overview = 'Idő nyilvántartás összefoglaló';
 	$s_plugin_ProjectManagement_project_progress = 'Projekt haladás';
 	$s_plugin_ProjectManagement_resource_progress = 'Erőforrás felhasználás';
-	$s_plugin_ProjectManagement_resource_menedzsment = 'Erőforrás menedzsment';
+	$s_plugin_ProjectManagement_resource_management = 'Erőforrás menedzsment';
 	$s_plugin_ProjectManagement_period = 'Periódus';
 	$s_plugin_ProjectManagement_hours = 'Óra';
 	$s_plugin_ProjectManagement_cost = 'Díj';
@@ -39,7 +39,7 @@
 	$s_plugin_ProjectManagement_hours_per_week = 'heti óraszám';
 	$s_plugin_ProjectManagement_color = 'Szín';
 	$s_plugin_ProjectManagement_deployability = 'Terhelhetőség';
-   
+
 	$s_plugin_ProjectManagement_work_types = 'Munka típusa';
 	$s_plugin_ProjectManagement_work_types_info = 'Ezen felsorolás a hibajegyeken végrehajtható munkafajtákat tartalmazza. Használjon csupán egyet a funkció kikapcsolásához.';
 
@@ -62,7 +62,7 @@
 	$s_plugin_ProjectManagement_view_time_reg_summary_threshold = 'Teljes munkaráfordítás megtekintési küszöb';
 	$s_plugin_ProjectManagement_view_time_registration_worksheet_threshold = 'Munka ráfordítási űrlap megtekintési küszöb';
 	$s_plugin_ProjectManagement_view_report_registration_threshold = 'Munka ráfordítási jelentés megtekintési küszöb';
-	$s_plugin_ProjectManagement_view_resource_menedzsment_threshold = 'Erőforrás menedzsment megtekintési küszöb';
+	$s_plugin_ProjectManagement_view_resource_management_threshold = 'Erőforrás menedzsment megtekintési küszöb';
 	$s_plugin_ProjectManagement_view_project_progress_threshold = 'Erőforrás allokáció megtekintési küszöb';
 	$s_plugin_ProjectManagement_view_target_overview_threshold = 'Feladat áttekintő megtekintési küszöb';
 	$s_plugin_ProjectManagement_view_all_targets_threshold = 'Más felhasználók feladatainak láthatósága megtekintési küszöb';
@@ -91,7 +91,7 @@
 	$s_plugin_ProjectManagement_integration_custom_dev_info = 'Az alaprendszer egyedi fejlesztésekkel bővítve.';
 	$s_plugin_ProjectManagement_approving_customers = 'Jóváhagyó ügyfelek';
 	$s_plugin_ProjectManagement_general_configuration = 'Plugin konfiguráció';
-	$s_plugin_ProjectManagement_customer_menedzsment = 'Ügyfél konfiguráció';
+	$s_plugin_ProjectManagement_customer_management = 'Ügyfél konfiguráció';
 	$s_plugin_ProjectManagement_add_new_customer = 'Új ügyfél';
 	$s_plugin_ProjectManagement_edit_customer = 'Ügyfél módosítása';
 	$s_plugin_ProjectManagement_customer_name = 'Ügyfél neve';
