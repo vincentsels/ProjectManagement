@@ -134,18 +134,10 @@ $t_row_last_month               = db_fetch_array( $t_result_registered_last_mont
 			</tr>
 
 			<tr class="row-category">
-				<td>
-					<div align="center"><?php echo lang_get( 'last_update' ) ?></div>
-				</td>
-				<td>
-					<div align="center"><?php echo lang_get( 'project_name' ) ?></div>
-				</td>
-				<td>
-					<div align="center"><?php echo lang_get( 'summary' ) ?></div>
-				</td>
-				<td>
-					<div align="center"><?php echo plugin_lang_get( 'done' ) ?></div>
-				</td>
+				<td><?php echo lang_get( 'last_update' ) ?></td>
+				<td><?php echo lang_get( 'project_name' ) ?></td>
+				<td><?php echo lang_get( 'summary' ) ?></td>
+				<td><?php echo plugin_lang_get( 'done' ) ?></td>
 			</tr>
 			<tr class="spacer"/>
 
@@ -207,12 +199,8 @@ $t_row_last_month               = db_fetch_array( $t_result_registered_last_mont
 			</td>
 		</tr>
 		<tr class="row-category">
-			<td>
-				<div align="center"><?php echo init_cap( 'bug' ) ?></div>
-			</td>
-			<td>
-				<div align="center"><?php echo init_cap( 'hours', true ) ?></div>
-			</td>
+			<td><?php echo init_cap( 'bug' ) ?></td>
+			<td><?php echo init_cap( 'hours', true ) ?></td>
 		</tr>
 		<tr class="spacer"/>
 
@@ -247,12 +235,8 @@ $t_row_last_month               = db_fetch_array( $t_result_registered_last_mont
 			</td>
 		</tr>
 		<tr class="row-category">
-			<td>
-				<div align="center"><?php echo plugin_lang_get( 'book_date' ) ?></div>
-			</td>
-			<td>
-				<div align="center"><?php echo plugin_lang_get( 'hours' ) ?></div>
-			</td>
+			<td><?php echo plugin_lang_get( 'book_date' ) ?></td>
+			<td><?php echo plugin_lang_get( 'hours' ) ?></td>
 		</tr>
 		<tr class="spacer"/>
 
@@ -288,12 +272,8 @@ $t_row_last_month               = db_fetch_array( $t_result_registered_last_mont
 			</td>
 		</tr>
 		<tr class="row-category">
-			<td>
-				<div align="center"><?php echo plugin_lang_get( 'book_date' ) ?></div>
-			</td>
-			<td>
-				<div align="center"><?php echo plugin_lang_get( 'hours' ) ?></div>
-			</td>
+			<td><?php echo plugin_lang_get( 'book_date' ) ?></td>
+			<td><?php echo plugin_lang_get( 'hours' ) ?></td>
 		</tr>
 		<tr class="spacer"/>
 
@@ -329,12 +309,8 @@ $t_row_last_month               = db_fetch_array( $t_result_registered_last_mont
 			</td>
 		</tr>
 		<tr class="row-category">
-			<td>
-				<div align="center"><?php echo plugin_lang_get( 'month' ) ?></div>
-			</td>
-			<td>
-				<div align="center"><?php echo plugin_lang_get( 'hours' ) ?></div>
-			</td>
+			<td><?php echo plugin_lang_get( 'month' ) ?></td>
+			<td><?php echo plugin_lang_get( 'hours' ) ?></td>
 		</tr>
 		<tr class="spacer"/>
 
