@@ -75,6 +75,13 @@ print_pm_config_menu( 'config_page' );
 			<td><input type="text" class="large-textbox" maxlength="200" name="finish_upon_closing" id="finish_upon_closing"
 					   value="<?php var_export( plugin_config_get( 'finish_upon_closing' ) ) ?>"></td>
 		</tr>
+        <tr class="spacer"/>
+        <tr <?php echo helper_alternate_class() ?>>
+            <td class="category"><?php echo plugin_lang_get( 'work_types_for_customer' ) ?><br/>
+                <span class="small"><?php echo plugin_lang_get( 'work_types_for_customer_info' ) ?></span></td>
+            <td><input type="text" class="large-textbox" maxlength="200" name="work_types_for_customer" id="work_types_for_customer"
+                       value="<?php var_export( plugin_config_get( 'work_types_for_customer' ) ) ?>"></td>
+        </tr>
     </table><br />
 
     <table class="width75" align="center" cellspacing="1">
@@ -177,27 +184,6 @@ print_pm_config_menu( 'config_page' );
 				name="view_billing_threshold"><?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'view_billing_threshold' ) ) ?></select>
 			</td>
 		</tr>
-        <tr class="spacer"/>
-        <tr <?php echo helper_alternate_class() ?>>
-            <td class="category"><?php echo plugin_lang_get( 'fields_to_include_in_overviews' ) ?>
-                <br /><span class="small"><?php echo plugin_lang_get( 'fields_to_include_in_overviews_info' ) ?></span>
-            </td>
-            <td><input type="text" class="large-textbox" maxlength="200" name="fields_to_include_in_overviews" id="fields_to_include_in_overviews"
-                       value="<?php echo var_export( plugin_config_get( 'fields_to_include_in_overviews' ) ) ?>"></td>
-        </tr>
-    </table><br />
-
-    <table class="width75" align="center" cellspacing="1">
-        <tr>
-            <td class="form-title"
-                colspan="2"><?php echo plugin_lang_get( 'targets' ) ?></td>
-        </tr>
-		<tr <?php echo helper_alternate_class() ?>>
-			<td width="30%" class="category"><?php echo plugin_lang_get( 'default_owner' ) ?><br/>
-				<span class="small"><?php echo plugin_lang_get( 'default_owner_info' ) ?></span></td>
-			<td><input type="text" class="large-textbox" maxlength="200" name="default_owner" id="default_owner"
-					   value="<?php var_export( plugin_config_get( 'default_owner' ) ) ?>"></td>
-		</tr>
     </table><br />
 
     <table class="width75" align="center" cellspacing="1">
@@ -273,6 +259,14 @@ print_pm_config_menu( 'config_page' );
                 <br /><span class="small"><?php echo plugin_lang_get( 'unavailability_ignore_work_info' ) ?></span></td>
             <td><input type="text" class="large-textbox" maxlength="200" name="unavailability_ignore_work" id="unavailability_ignore_work"
                        value="<?php echo var_export( plugin_config_get( 'unavailability_ignore_work' ) ) ?>"></td>
+        </tr>
+        <tr class="spacer"/>
+        <tr <?php echo helper_alternate_class() ?>>
+            <td class="category"><?php echo plugin_lang_get( 'fields_to_include_in_overviews' ) ?>
+                <br /><span class="small"><?php echo plugin_lang_get( 'fields_to_include_in_overviews_info' ) ?></span>
+            </td>
+            <td><input type="text" class="large-textbox" maxlength="200" name="fields_to_include_in_overviews" id="fields_to_include_in_overviews"
+                       value="<?php echo var_export( plugin_config_get( 'fields_to_include_in_overviews' ) ) ?>"></td>
         </tr>
 
 		<tr>

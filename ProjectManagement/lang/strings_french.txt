@@ -83,9 +83,6 @@
 	$s_plugin_ProjectManagement_enable_customer_approval_threshold_info = 'Permettre aux clients de valider la réalisation des tickets.';
 	$s_plugin_ProjectManagement_view_billing_threshold = 'Seuil pour voir la facturation';
 
-	$s_plugin_ProjectManagement_default_owner = 'Propriétaire par défaut des objectifs par type de travail';
-	$s_plugin_ProjectManagement_default_owner_info = 'Par type de travail un propriétaire par défaut peut être présélectionné. Les valeurs possibles sont \'REPORTER\' et \'DEVELOPER\'. Toute autre valeur sera ignorée.';
-
 	$s_plugin_ProjectManagement_customer_section = 'Section client';
 	$s_plugin_ProjectManagement_paying_customers = 'Client payeur';
 	$s_plugin_ProjectManagement_integration_custom_dev = 'Intégration de fonctionnalités spécifiques';

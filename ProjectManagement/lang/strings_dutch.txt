@@ -58,6 +58,9 @@
 	$s_plugin_ProjectManagement_finish_upon_closing = 'Types werk te beëindigen bij afsluiten';
 	$s_plugin_ProjectManagement_finish_upon_closing_info = 'Specifiëer voor welke types van werk de \'todo\' automatisch op 0 gezet moet worden bij het afsluiten van het ticket.<br><b>Voorbeeld</b>: array ( 80 )';
 
+	$s_plugin_ProjectManagement_work_types_for_customer = 'Types werk voor klanten';
+	$s_plugin_ProjectManagement_work_types_for_customer_info = 'Deze types van werk worden beschouwd als toehorende aan klanten, en worden genegeerd in de berekening van estimations, done of todo in alle rapporten en schermen.<br><b>Voorbeeld</b>: array ( 20 )';
+
 	$s_plugin_ProjectManagement_enable_time_registration_threshold = 'Drempel voor tijdsregistratie';
 	$s_plugin_ProjectManagement_view_time_reg_summary_threshold = 'Drempel voor bekijken samenvatting tijdsregistratie';
 	$s_plugin_ProjectManagement_view_time_registration_worksheet_threshold = 'Drempel voor tijdsregistratie via worksheet';
@@ -82,9 +85,6 @@
 	$s_plugin_ProjectManagement_enable_customer_approval_threshold = 'Drempel voor goedkeuring door klanten';
 	$s_plugin_ProjectManagement_enable_customer_approval_threshold_info = 'Laat klanten toe om aan te duiden of ze ontwikkeling aan bepaalde meldingen goedkeuren.';
 	$s_plugin_ProjectManagement_view_billing_threshold = 'Drempel voor bekijken facturatiepagina';
-
-	$s_plugin_ProjectManagement_default_owner = 'Standaard target owner voor type werk';
-	$s_plugin_ProjectManagement_default_owner_info = 'Per type werk kan een standaard target owner gekozen worden. REPORTER kent de aanmelder van de melding toe als owner, DEVELOPER kent de behandelaar toe als owner. Andere waarden worden genegeerd.';
 
 	$s_plugin_ProjectManagement_customer_section = 'Klanten sectie';
 	$s_plugin_ProjectManagement_paying_customers = 'Betalende klanten';
