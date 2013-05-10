@@ -155,6 +155,7 @@ if ( $t_project_without_versions ) {
 	$t_res_unav_table        = plugin_table( 'resource_unavailable' );
 	$t_const_done		 	 = PLUGIN_PM_DONE;
 	$t_const_all_users		 = ALL_USERS;
+    $t_customer_work_type_exclusion_clause = build_customer_worktype_exclude_clause('work_type');
 
 	# Populate the user and project structure.
 	$t_users_to_list = array();
@@ -197,6 +198,7 @@ if ( $t_project_without_versions ) {
 			 	   AND b.target_version <> '$f_target_version'
 			 	   AND ($f_user_id = $t_const_all_users OR b.handler_id = $f_user_id)
 			 	   AND ($f_user_id = $t_const_all_users OR w.user_id = $f_user_id)
+			 	   AND $t_customer_work_type_exclusion_clause
 			 	   AND NOT EXISTS
 			 	   (
 			 	   SELECT 1

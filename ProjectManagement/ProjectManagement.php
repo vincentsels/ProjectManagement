@@ -489,9 +489,11 @@ class ProjectManagementPlugin extends MantisPlugin {
 		# Fetch time registration summary
 		if ( access_has_bug_level( plugin_config_get( 'view_time_reg_summary_threshold' ), $p_bug_id ) ) {
 			$t_table  = plugin_table( 'work' );
+            $t_customer_work_type_exclusion_clause = build_customer_worktype_exclude_clause('work_type');
 			$t_query  = "SELECT work_type, minutes_type, sum(minutes) as minutes
 						   FROM $t_table
 						  WHERE bug_id = $p_bug_id
+						    AND $t_customer_work_type_exclusion_clause
 						  GROUP BY work_type, minutes_type
 						  ORDER BY work_type, minutes_type";
 			$t_result = db_query_bound( $t_query );
@@ -552,7 +554,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 		$t_query_fetch_est  = "SELECT work_type, minutes as est
                                  FROM $t_work_table
                                 WHERE bug_id = $p_bug_id
-                                 AND minutes_type = $t_est";
+                                  AND minutes_type = $t_est";
 		$t_result_fetch_est = db_query_bound( $t_query_fetch_est );
 
 		# Fetch totals total of done of all work types
