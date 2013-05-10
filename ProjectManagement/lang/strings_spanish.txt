@@ -83,9 +83,6 @@
 	$s_plugin_ProjectManagement_enable_customer_approval_threshold_info = 'Permitir a los clientes indicar si aprueban el desarrollo en bugs especificos.';
 	$s_plugin_ProjectManagement_view_billing_threshold = 'Ver umbral de facturacion';
 
-	$s_plugin_ProjectManagement_default_owner = 'Propietario por defecto para tipos de trabajo';
-	$s_plugin_ProjectManagement_default_owner_info = 'Para cada tipo de trabajo, se puede asignar un propietario por defecto para el objetivo. El REPORTADOR asigna al reportador del bug como propietario, el DESARROLLADOR asigna el manejador como propietario. El resto de valores se ignoran.';
-
 	$s_plugin_ProjectManagement_customer_section = 'Seccion de cliente';
 	$s_plugin_ProjectManagement_paying_customers = 'Clientes pagadores';
 	$s_plugin_ProjectManagement_integration_custom_dev = 'Desarrollo especifico de integracion';
