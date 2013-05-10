@@ -19,6 +19,7 @@ $t_startdate  = strtotime_safe( $f_period_start );
 $t_enddate    = strtotime_safe( $f_period_end );
 
 $t_project_select_clause = get_project_select_clause();
+$t_customer_work_type_exclusion_clause = build_customer_worktype_exclude_clause('work_type');
 
 $t_query      = "SELECT p.name as project_name, c.name as category_name, u.username,
 						b.id as bug_id, b.summary as bug_summary,
@@ -34,6 +35,7 @@ $t_query      = "SELECT p.name as project_name, c.name as category_name, u.usern
 				   WHERE w.minutes_type = $t_const_done
 					 AND w.book_date BETWEEN $t_startdate AND $t_enddate
 					 AND $t_project_select_clause
+					 AND $t_customer_work_type_exclusion_clause
 				   GROUP BY p.name, c.name, u.username, b.id, b.summary
 				   ORDER BY p.name, c.name, u.username, b.id, b.summary";
 

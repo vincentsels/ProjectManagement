@@ -24,10 +24,12 @@ class ProjectManagementTodoColumn extends MantisColumn {
 		}
 
 		$t_bug_ids = implode( ',', $t_bug_ids );
+        $t_customer_work_type_exclusion_clause = build_customer_worktype_exclude_clause('work_type');
 
 		$t_query  = "SELECT bug_id, minutes_type, work_type, sum(minutes) as minutes
                        FROM $t_work_table
                       WHERE bug_id IN ( $t_bug_ids )
+                        AND $t_customer_work_type_exclusion_clause
                       GROUP BY bug_id, minutes_type, work_type
                       ORDER BY bug_id, minutes_type, work_type";
 		$t_result = db_query_bound( $t_query );

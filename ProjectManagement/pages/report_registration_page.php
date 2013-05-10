@@ -21,6 +21,7 @@ $t_bug_table      = db_get_table( 'mantis_bug_table' );
 $t_project_table  = db_get_table( 'mantis_project_table' );
 $t_category_table = db_get_table( 'mantis_category_table' );
 $t_work_types     = MantisEnum::getAssocArrayIndexedByValues( plugin_config_get( 'work_types' ) );
+$t_customer_work_type_exclusion_clause = build_customer_worktype_exclude_clause('work_type');
 
 $t_const_done = PLUGIN_PM_DONE;
 $t_startdate  = strtotime_safe( $f_period_start );
@@ -35,7 +36,8 @@ $t_query      = "SELECT w.user_id, u.username, w.book_date, b.project_id, p.name
 			   LEFT JOIN $t_category_table c ON b.category_id = c.id
 			   LEFT OUTER JOIN $t_resource_table r ON w.user_id = r.user_id
 				   WHERE w.minutes_type = $t_const_done
-					 AND w.book_date BETWEEN $t_startdate AND $t_enddate";
+					 AND w.book_date BETWEEN $t_startdate AND $t_enddate
+					 AND $t_customer_work_type_exclusion_clause";
 
 if ( $f_project_id != ALL_PROJECTS ) {
     $t_project_select_clause = get_project_select_clause();
