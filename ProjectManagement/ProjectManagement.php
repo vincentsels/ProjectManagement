@@ -515,9 +515,9 @@ class ProjectManagementPlugin extends MantisPlugin {
 			$t_todo = get_actual_work_todo( $t_work );
 
 			echo '<tr ' . helper_alternate_class() . '>';
-			echo '<td class="category">Est</td><td>' . minutes_to_time( $t_est, true ) . '</td>
-			<td class="category">Done</td><td>' . minutes_to_time( $t_done, false ) . '</td>
-			<td class="category">Todo</td><td>' . minutes_to_time( $t_todo, true ) . '</td></tr>';
+			echo '<td class="category">' . plugin_lang_get( 'est' ) . '</td><td>' . minutes_to_time( $t_est, true ) . '</td>
+			<td class="category">' . plugin_lang_get( 'done' ) . '</td><td>' . minutes_to_time( $t_done, false ) . '</td>
+			<td class="category">' . plugin_lang_get( 'todo' ) . '</td><td>' . minutes_to_time( $t_todo, true ) . '</td></tr>';
 		}
 
 		# Fetch customer payment summary
