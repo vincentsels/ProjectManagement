@@ -326,12 +326,12 @@ $t_row_last_month               = db_fetch_array( $t_result_registered_last_mont
 		<tr class="spacer"/>
 
 		<tr <?php echo helper_alternate_class() ?>>
-			<td><?php echo date( 'F' ) ?></td>
+			<td><?php plugin_lang_get( echo date( 'F' ) ( ?></td>
 			<td class="right"><?php echo minutes_to_time( $t_row_month["minutes"], false ) ?></td>
 		</tr>
 
 		<tr <?php echo helper_alternate_class() ?>>
-			<td><?php echo date( 'F', mktime( 0, 0, 0, date( 'm' ) - 1, 1 ) ) ?></td>
+			<td><?php plugin_lang_get( echo date( 'F', mktime( 0, 0, 0, date( 'm' ) - 1, 1 ) ) ) ?></td>
 			<td class="right"><?php echo minutes_to_time( $t_row_last_month["minutes"], false ) ?></td>
 		</tr>
 
