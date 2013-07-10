@@ -262,8 +262,7 @@ function print_resource_unavailability_list( $p_user_id ) {
 	# First print an empty entry to avoid accidental deletion!
 	echo '<option value="" selected="selected"></option>';
 
-	$t_config_var_value = plugin_config_get( 'unavailability_types' );
-	$t_enum_values      = MantisEnum::getAssocArrayIndexedByValues( $t_config_var_value );
+	$t_enum_values      = plugin_lang_get_enum ( 'unavailability_types' ); 
 	while ( $t_row = db_fetch_array( $t_result ) ) {
 		$t_period_string =
 			date( config_get( 'short_date_format' ), $t_row["start_date"] ) . ' - ' .
