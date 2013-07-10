@@ -573,7 +573,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 		$t_result_fetch_todo = db_query_bound( $t_query_fetch_todo );
 
 		# Get the different worktypes as an array
-		$t_work_types = MantisEnum::getAssocArrayIndexedByValues( plugin_config_get( 'work_types' ) );
+		$t_work_types = plugin_lang_get_enum( 'work_types' );
 
 		# Remove worktypes which are off limits for this account
 		$t_limited_work_types = plugin_config_get( 'work_type_thresholds' );
