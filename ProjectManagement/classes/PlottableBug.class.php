@@ -39,8 +39,7 @@ class PlottableBug extends PlottableTask {
 
 		# Step 1: Calculate the est, done, work and overdue
 
-		// TODO: Validate if the new call is needed here or not
-		$t_worktypes = plugin_lang_get_enum( 'work_types' ); // MantisEnum::getAssocArrayIndexedByValues( plugin_config_get( 'work_types' ) );
+		$t_worktypes = MantisEnum::getAssocArrayIndexedByValues( plugin_config_get( 'work_types' ) );
 
 		$this->todo = 0;
 		foreach ( $t_worktypes as $t_work_type => $t_value ) {
