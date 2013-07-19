@@ -163,5 +163,5 @@
 	$s_plugin_ProjectManagement_September = 'September';
 	$s_plugin_ProjectManagement_October = 'October';
 	$s_plugin_ProjectManagement_November = 'November';
-	$s_plugin_ProjectManagement_December = 'December
-?>
+	$s_plugin_ProjectManagement_December = 'December';
+
