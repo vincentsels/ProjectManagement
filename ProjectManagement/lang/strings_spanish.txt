@@ -1,5 +1,4 @@
 <?php
-	$s_plugin_ProjectManagement_ein = '';
     $s_plugin_ProjectManagement_title = 'Gestion de proyectos'; 
 	$s_plugin_ProjectManagement_configuration = 'Configuracion';
 	$s_plugin_ProjectManagement_settings_updated = 'Parametros actualizados';
