@@ -1,8 +1,4 @@
 <?php
-	$s_plugin_ProjectManagement_work_types_enum_string = '10:Preventa,15:Gestión,20:Análisis funcional,30:Análisis técnico,50:Desarrollo,70:Documentación,80:Validación,90:Despliegue';
-	$s_plugin_ProjectManagement_unavailability_types_enum_string = '10:No especificado,20:No disponible,30:Fuera de la oficina,40:Reunido,50:Ocupado,60:Vacaciones,70:Festivo';
-	//$s_plugin_ProjectManagement_unavailability_types_enum_string = '10:No especificado,20:No disponible,30:Fuera de la oficina,40:Reunido,50:Reunión privada,60:Vacaciones,70:Festivo,80:Service desk,90:Otro';
-	
 	$s_plugin_ProjectManagement_title = 'Gestión de proyectos'; 
 	$s_plugin_ProjectManagement_configuration = 'Configuración';
 	$s_plugin_ProjectManagement_settings_updated = 'Parámetros actualizados';
