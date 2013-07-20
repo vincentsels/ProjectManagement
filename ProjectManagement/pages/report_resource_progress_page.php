@@ -32,7 +32,7 @@ if ( helper_get_current_project() == ALL_PROJECTS ) {
 if ( $t_project_without_versions ) {
 	echo plugin_lang_get( 'project_without_versions' );
 } else if ( $t_all_versions_selected ) {
-	echo plugin_lang_get( 'all_versions_selected' );
+	echo plugin_lang_get( 'all_versions_selected' ) . 'pp';
 } else if ( version_get_id( $f_target_version ) === false ) {
 	echo plugin_lang_get( 'project_without_versions' );
 } else {

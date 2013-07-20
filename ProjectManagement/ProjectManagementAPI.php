@@ -8,6 +8,16 @@ define( 'PLUGIN_PM_REMAINING', 3 );
 define( 'PLUGIN_PM_DIFF', 4 );
 define( 'PLUGIN_PM_OVERDUE', 5 );
 define( 'PLUGIN_PM_DONE_BEFORE_REFDATE', 6 );
+define( 'PLUGIN_PM_COMPLETED', 7 );
+
+define( 'PLUGIN_PM_BUG_VIEW_MODE_1', 1 );
+define( 'PLUGIN_PM_BUG_VIEW_MODE_2', 2 );
+
+define( 'PLUGIN_PM_ASSOCIATION_ALL', 1 );
+define( 'PLUGIN_PM_ASSOCIATION_AUTO', 2 );
+define( 'PLUGIN_PM_ASSOCIATION_MANUAL', 3 );
+define( 'PLUGIN_PM_ASSOCIATION_DEFAULT', PLUGIN_PM_ASSOCIATION_ALL );
+
 
 define( 'PLUGIN_PM_WORKTYPE_TOTAL', 100 );
 define( 'PLUGIN_PM_TOKEN_RECENTLY_VISITED', 6876 ); # Has to be unique among plugins !!
@@ -31,6 +41,12 @@ define( 'PLUGIN_PM_PROJ_ID_NONWORKING', -2 );
 define( 'PLUGIN_PM_PROJ_ID_PLANNED', -3 );
 
 define( 'PLUGIN_PM_DUMMY_BUG', 999999 );
+
+define( 'PLUGIN_PM_BILLABLE_BEHAVIOR_OPTIONAL_UNSELECTED', 1 );
+define( 'PLUGIN_PM_BILLABLE_BEHAVIOR_OPTIONAL_SELECTED', 2 );
+define( 'PLUGIN_PM_BILLABLE_BEHAVIOR_ALWAYS_REQUIRED', 3 );
+define( 'PLUGIN_PM_BILLABLE_BEHAVIOR_NEVER_REQUIRED', 4 );
+define( 'PLUGIN_PM_BILLABLE_BEHAVIOR_NEVER_BILLABLE', 5 );
 
 # Enums
 
@@ -62,7 +78,6 @@ function plugin_lang_get_enum( $p_enum_name ) {
 	
 	return $t_enum_values;
 }
-
 
 /**
  * Converts the specified amount of minutes to a string formatted as 'HH:MM'.
@@ -119,7 +134,7 @@ function time_to_minutes( $p_time, $p_allow_negative = true, $p_throw_error_on_i
 		$t_days = trim( $p_time, 'Dd ' );
 		if ( empty( $t_days ) || ( !is_numeric( $t_days ) || ( $t_days < 0 && !$p_allow_negative ) ) ) {
 			if ( $p_throw_error_on_invalid_input ) {
-				trigger_error( ERROR_CUSTOM_FIELD_INVALID_VALUE, E_USER_ERROR );
+				trigger_error( plugin_lang_get( 'time_error' ), E_USER_ERROR );
 			} else {
 				return null;
 			}
@@ -132,7 +147,7 @@ function time_to_minutes( $p_time, $p_allow_negative = true, $p_throw_error_on_i
 		foreach ( $t_time_array as $t_key => $t_value ) {
 			if ( !empty( $t_value ) && ( !is_numeric( $t_value ) || ( $t_value < 0 && !$p_allow_negative ) ) ) {
 				if ( $p_throw_error_on_invalid_input ) {
-					trigger_error( ERROR_CUSTOM_FIELD_INVALID_VALUE, E_USER_ERROR );
+					trigger_error( plugin_lang_get( 'time_error' ), E_USER_ERROR );
 				} else {
 					return null;
 				}
@@ -153,7 +168,7 @@ function time_to_minutes( $p_time, $p_allow_negative = true, $p_throw_error_on_i
 			$t_minutes += abs( $t_time_array[0] ) * 60;
 		} else {
 			if ( $p_throw_error_on_invalid_input || ( $t_value < 0 && !$p_allow_negative ) ) {
-				trigger_error( ERROR_CUSTOM_FIELD_INVALID_VALUE, E_USER_ERROR );
+				trigger_error( plugin_lang_get( 'time_error' ), E_USER_ERROR );
 			} else {
 				return null;
 			}
@@ -171,7 +186,7 @@ function time_to_minutes( $p_time, $p_allow_negative = true, $p_throw_error_on_i
  * Update the work of the specified $p_bug_id.
  * @return number number of affected rows.
  */
-function set_work( $p_bug_id, $p_work_type, $p_minutes_type, $p_minutes, $p_book_date, $p_action ) {
+function set_work( $p_bug_id, $p_work_type, $p_minutes_type, $p_minutes, $p_book_date, $p_action, $p_info ) {
 	$t_rows_affected = 0;
 	$t_table         = plugin_table( 'work' );
 	$t_user_id       = auth_get_current_user_id();
@@ -184,17 +199,30 @@ function set_work( $p_bug_id, $p_work_type, $p_minutes_type, $p_minutes, $p_book
 
 	if ( $p_action == ACTION::UPDATE || $p_action == ACTION::INSERT_OR_UPDATE ) {
 		#Update and check for rows affected
-		$t_query = "UPDATE $t_table SET minutes = $p_minutes, timestamp = $t_timestamp, user_id = $t_user_id, book_date= $p_book_date
-				WHERE bug_id = $p_bug_id AND work_type = $p_work_type AND minutes_type = $p_minutes_type";
+		if ( empty( $p_info ) ) {
+			$t_query = "UPDATE $t_table SET minutes = $p_minutes, timestamp = $t_timestamp, user_id = $t_user_id, book_date= $p_book_date
+					WHERE bug_id = $p_bug_id AND work_type = $p_work_type AND minutes_type = $p_minutes_type";
+		} else {
+			$t_query = "UPDATE $t_table SET minutes = $p_minutes, timestamp = $t_timestamp, user_id = $t_user_id, book_date= $p_book_date, info = '$p_info'
+					WHERE bug_id = $p_bug_id AND work_type = $p_work_type AND minutes_type = $p_minutes_type";
+		}
 		db_query_bound( $t_query );
+		
 		$t_rows_affected = db_affected_rows();
 	}
 	if ( $p_action == ACTION::INSERT || ( $p_action == ACTION::INSERT_OR_UPDATE && $t_rows_affected == 0 ) ) {
 		#Insert and check for rows affected
-		$t_query = "INSERT INTO $t_table ( bug_id, user_id, work_type, minutes_type,
-					minutes, book_date, timestamp )
-					VALUES ( $p_bug_id, $t_user_id, $p_work_type, $p_minutes_type,
-					$p_minutes, $p_book_date, $t_timestamp )";
+		if ( empty( $p_info ) ) {
+			$t_query = "INSERT INTO $t_table ( bug_id, user_id, work_type, minutes_type,
+						minutes, book_date, timestamp )
+						VALUES ( $p_bug_id, $t_user_id, $p_work_type, $p_minutes_type,
+						$p_minutes, $p_book_date, $t_timestamp )";
+		} else {
+			$t_query = "INSERT INTO $t_table ( bug_id, user_id, work_type, minutes_type,
+						minutes, book_date, info, timestamp )
+						VALUES ( $p_bug_id, $t_user_id, $p_work_type, $p_minutes_type,
+						$p_minutes, $p_book_date, '$p_info', $t_timestamp )";
+		}
 		db_query_bound( $t_query );
 		$t_rows_affected = db_affected_rows();
 	}
@@ -206,6 +234,33 @@ function set_work( $p_bug_id, $p_work_type, $p_minutes_type, $p_minutes, $p_book
 	}
 
 	return $t_rows_affected;
+}
+
+/**
+ * Update the work of the specified $p_bug_id, if time is different to the previous work, and previus work exists.
+ * @return number number of affected rows.
+ */
+function set_work_if_minutes_changed( $p_bug_id, $p_work_type, $p_minutes_type, $p_minutes, $p_book_date, $p_action, $p_info = null) {
+	$t_rows_affected = 0;
+	$t_table         = plugin_table( 'work' );
+	$t_user_id       = auth_get_current_user_id();
+	$t_timestamp     = time();
+	
+	$t_query        = "SELECT minutes
+					FROM $t_table
+					WHERE bug_id = $p_bug_id
+						AND work_type = $p_work_type
+						AND minutes_type = $p_minutes_type
+					ORDER BY timestamp DESC LIMIT 1";
+	$t_result       = db_query_bound( $t_query );
+	$t_row          = db_fetch_array( $t_result );
+	$t_old          = ( $t_row == false ? null : $t_row["minutes"] );
+
+	if ( $t_old == null || $t_old === $p_minutes ) {
+		return 0;
+	}
+	
+	return set_work($p_bug_id, $p_work_type, $p_minutes_type, $p_minutes, $p_book_date, $p_action, $p_info);
 }
 
 /**
@@ -273,6 +328,20 @@ function get_translated_assoc_array_for_enum( $p_enum_string ) {
 }
 
 /**
+ * Returns an array of key value pairs containing the key of the specified $p_enum_string
+ * and the translated label as its value.
+ * @param string $p_enum_string the enum string (without trailing 'enum_string'
+ */
+function get_plugin_translated_assoc_array_for_enum( $p_enum_string ) {
+	$t_untranslated = MantisEnum::getAssocArrayIndexedByValues( plugin_config_get( $p_enum_string . '_enum_string' ) );
+	$t_translated   = array();
+	foreach ( $t_untranslated as $t_key => $t_value ) {
+		$t_translated[$t_key] = get_enum_element( $p_enum_string, $t_key );
+	}
+	return $t_translated;
+}
+
+/**
  * Locale-aware floatval
  * @link http://www.php.net/manual/en/function.floatval.php#92563
  * @param string $floatString
@@ -295,6 +364,13 @@ function format_short_date( $p_date = null ) {
 		return null;
 	}
 	return date( config_get( 'short_date_format' ), $p_date );
+}
+
+function format_date_complete ( $p_date = null ) {
+	if ( is_null( $p_date ) || empty( $p_date ) ) {
+		return null;
+	}
+	return date( config_get("complete_date_format"), $p_date );
 }
 
 /**
@@ -478,6 +554,67 @@ function customer_get_all( $p_type = PLUGIN_PM_CUST_BOTH ) {
 }
 
 /**
+ * Retrieves an array of all customers associated to a bug, indexed by the customer_id.
+ * @param int $p_type Optionally specify to only retrieve customers that 'can approve'.
+ * @return array A list of all customers.
+ */
+function customer_get_by_bug( $p_bug_id, $p_type = PLUGIN_PM_CUST_BOTH ) {
+	$row = bug_get_row ( $p_bug_id );
+	return customer_get_by_project ( $row["project_id"], $p_type );
+}
+
+
+/**
+ * Retrieves an array of all customers associated to a project, indexed by the customer_id.
+ * @param int $p_type Optionally specify to only retrieve customers that 'can approve'.
+ * @return array A list of all customers.
+ */
+function customer_get_by_project( $p_project_id, $p_type = PLUGIN_PM_CUST_BOTH ) {
+
+	$t_customer_table         = plugin_table( 'customer' );
+	$t_project_customer_table = plugin_table( 'project_customer' );
+	$t_association_mode_all   = PLUGIN_PM_ASSOCIATION_ALL;
+
+	$t_query_cust  = 
+			"SELECT id, name, share, can_approve, association_mode
+			FROM $t_customer_table
+			WHERE association_mode = $t_association_mode_all
+			";
+	
+	if ( $p_type == PLUGIN_PM_CUST_APPROVING ) {
+		$t_query_cust .= " AND can_approve = 1";
+	}
+	
+	$t_query_cust .= "
+			UNION
+			
+			SELECT C.id, C.name, C.share, C.can_approve, C.association_mode
+			FROM $t_project_customer_table P
+			LEFT JOIN $t_customer_table C ON C.id = P.customer_id
+			WHERE P.project_id = $p_project_id 
+				AND C.association_mode <> $t_association_mode_all
+			";
+	
+	if ( $p_type == PLUGIN_PM_CUST_APPROVING ) {
+		$t_query_cust .= " AND can_approve = 1";
+	}
+	
+	$t_query_cust .= " ORDER BY name";
+
+
+	//$t_customer_table = plugin_table( 'customer' );
+	//$t_query_cust = "SELECT *  FROM $t_customer_table";
+	$t_cust = array();
+
+	$t_result_cust = db_query_bound( $t_query_cust );
+	while ( $row = db_fetch_array( $t_result_cust ) ) {
+		$t_cust[$row['id']] = $row;
+	}
+
+	return $t_cust;
+}
+
+/**
  * Gets an array with the selected customer_id's for the specified bug.
  * @param $p_bug_id
  * @param $p_type
@@ -570,6 +707,49 @@ function bug_customer_update_or_insert( $p_bug_id, $p_cust_string, $p_type = PLU
 }
 
 /**
+ * Gets an array with the selected bug_id.
+ * @param $p_bug_id
+ * @return array the bug info in PM
+ */
+function pm_bug_get( $p_bug_id ) {
+	$t_bug = null;
+	
+	if ( !is_null( $p_bug_id ) ) {
+		$t_bug_table  = plugin_table( 'bug' );
+		$t_query_bug  = "SELECT * FROM $t_bug_table WHERE bug_id = $p_bug_id";
+		$t_result_bug = db_query_bound( $t_query_bug );
+		$t_bug = db_fetch_array( $t_result_bug );
+	}
+	
+	return $t_bug;
+}
+
+function pm_bug_update_or_insert( $p_bug_id, $p_is_billable = 0 ) {
+	$t_bug = pm_bug_get( $p_bug_id );
+	$t_bug_table  = plugin_table( 'bug' );
+	$t_is_billable = ( $p_is_billable ? '1' : '0' );
+	
+	if ( $t_bug != null && $t_bug["is_billable"] != $t_is_billable ) {
+		$t_query = "UPDATE $t_bug_table SET is_billable = $t_is_billable
+	                where bug_id = $p_bug_id";
+		db_query_bound( $t_query );
+	}
+	else if ( $t_bug == null ) {
+		$t_query = "INSERT INTO $t_bug_table (bug_id, is_billable)
+	                VALUES($p_bug_id, $t_is_billable)";
+		db_query_bound( $t_query );
+	}
+}
+
+/**
+ * Indicates if the given bug status enforce paying_customers to be required
+ * if is_billable is true.
+ */
+function pm_bug_is_billable_affecting_required_paying_customers( $p_bug_data_status ) {
+	return $p_bug_data_status >= plugin_config_get( 'billable_mandatory_minimun_status' );
+}
+
+/**
  * Returns the days between two given dates, or between the given date and today if only one is supplied.
  * Returns a positive number if the given date is in the past, negative if it is in the future.
  */
@@ -610,15 +790,15 @@ function target_update( $p_bug_id, $p_work_type, $p_owner_id, $p_target_date, $p
 
 		# Log updated record to history
 		if ( $t_old["owner_id"] != $p_owner_id ) {
-			history_log_event_direct( $p_bug_id, plugin_lang_get( 'owner' ) . " ($t_work_types[$p_work_type])",
+			history_log_event_direct( $p_bug_id, sprintf( plugin_lang_get( 'history_owner_changed' ), $t_work_types[$p_work_type] ),
 				user_get_name( $t_old["owner_id"] ), user_get_name( $p_owner_id ) );
 		}
 		if ( $t_old["target_date"] != $p_target_date ) {
-			history_log_event_direct( $p_bug_id, plugin_lang_get( 'target_date' ) . " ($t_work_types[$p_work_type])",
+			history_log_event_direct( $p_bug_id, sprintf( plugin_lang_get( 'history_change_target' ), $t_work_types[$p_work_type] ),
 				format_short_date( $t_old["target_date"] ), format_short_date( $p_target_date ) );
 		}
 		if ( $t_old["completed_date"] != $p_completed_date ) {
-			history_log_event_direct( $p_bug_id, plugin_lang_get( 'completed' ) . " ($t_work_types[$p_work_type])",
+			history_log_event_direct( $p_bug_id, sprintf( plugin_lang_get( 'history_completed_date' ), $t_work_types[$p_work_type] ),
 				format_short_date( $t_old["completed_date"] ), format_short_date( $p_completed_date ) );
 		}
 	} else {
@@ -627,8 +807,90 @@ function target_update( $p_bug_id, $p_work_type, $p_owner_id, $p_target_date, $p
 		db_query_bound( $t_query );
 
 		# Log new record to history
-		history_log_event_direct( $p_bug_id, plugin_lang_get( 'new_target' ) . " ($t_work_types[$p_work_type])",
-			null, format_short_date( $p_target_date ) . ' (' . user_get_name( $p_owner_id ) . ')' );
+		history_log_event_direct( $p_bug_id, sprintf( plugin_lang_get( 'history_new_target' ), $t_work_types[$p_work_type] ),
+			null, format_short_date( $p_completed_date ) . ' (' . user_get_name( $p_owner_id ) . ')' );
+	}
+}
+
+function target_update_target_date( $p_bug_id, $p_work_type, $p_owner_id, $p_target_date ) {
+	if ( $p_target_date == null ) {
+		trigger_error( plugin_lang_get( 'date_error' ), E_USER_ERROR );
+	}
+
+	$t_work_types = MantisEnum::getAssocArrayIndexedByValues( plugin_config_get( 'work_types' ) );
+	$t_target_table = plugin_table( 'target' );
+
+	$t_query = "SELECT * FROM $t_target_table WHERE bug_id = $p_bug_id AND work_type = $p_work_type";
+	$t_result = db_query_bound( $t_query );
+	$t_exists = false;
+	if ( db_num_rows( $t_result ) > 0 ) {
+		$t_exists = true;
+		$t_old = db_fetch_array( $t_result );
+	}
+
+	if ( $t_exists ) {
+		$t_query = "UPDATE $t_target_table
+					   SET owner_id = $p_owner_id, target_date = $p_target_date
+					 WHERE bug_id = $p_bug_id
+					   AND work_type = $p_work_type";
+		db_query_bound( $t_query );
+
+		# Log updated record to history
+		if ( $t_old["owner_id"] != $p_owner_id ) {
+			history_log_event_direct( $p_bug_id, sprintf( plugin_lang_get( 'history_owner_changed' ), $t_work_types[$p_work_type] ),
+				user_get_name( $t_old["owner_id"] ), user_get_name( $p_owner_id ) );
+		}
+		if ( $t_old["target_date"] != $p_target_date ) {
+			history_log_event_direct( $p_bug_id, sprintf( plugin_lang_get( 'history_change_target' ), $t_work_types[$p_work_type] ),
+				format_short_date( $t_old["target_date"] ), format_short_date( $p_target_date ) );
+		}
+	} else {
+		$t_query = "INSERT INTO $t_target_table(bug_id, work_type, owner_id, target_date, completed_date)
+	                VALUES($p_bug_id, $p_work_type, $p_owner_id, $p_target_date, NULL)";
+		db_query_bound( $t_query );
+
+		# Log new record to history
+		history_log_event_direct( $p_bug_id, sprintf( plugin_lang_get( 'history_new_target' ), $t_work_types[$p_work_type] ),
+			null, format_short_date( $p_completed_date ) . ' (' . user_get_name( $p_owner_id ) . ')' );
+	}
+}
+
+function target_update_completed_date( $p_bug_id, $p_work_type, $p_owner_id, $p_completed_date ) {
+	$t_work_types = MantisEnum::getAssocArrayIndexedByValues( plugin_config_get( 'work_types' ) );
+	$t_target_table = plugin_table( 'target' );
+
+	$t_query = "SELECT * FROM $t_target_table WHERE bug_id = $p_bug_id AND work_type = $p_work_type";
+	$t_result = db_query_bound( $t_query );
+	$t_exists = false;
+	if ( db_num_rows( $t_result ) > 0 ) {
+		$t_exists = true;
+		$t_old = db_fetch_array( $t_result );
+	}
+
+	if ( $t_exists ) {
+		$t_query = "UPDATE $t_target_table
+					   SET owner_id = $p_owner_id, completed_date = $p_completed_date
+					 WHERE bug_id = $p_bug_id
+					   AND work_type = $p_work_type";
+		db_query_bound( $t_query );
+
+		# Log updated record to history
+		if ( $t_old["owner_id"] != $p_owner_id ) {
+			history_log_event_direct( $p_bug_id, sprintf( plugin_lang_get( 'history_owner_changed' ), $t_work_types[$p_work_type] ),
+				user_get_name( $t_old["owner_id"] ), user_get_name( $p_owner_id ) );
+		}
+		if ( $t_old["completed_date"] != $p_completed_date ) {
+			history_log_event_direct( $p_bug_id, sprintf( plugin_lang_get( 'history_completed_date' ), $t_work_types[$p_work_type] ),
+				format_short_date( $t_old["completed_date"] ), format_short_date( $p_completed_date ) );
+		}
+	} else {
+		$t_query = "INSERT INTO $t_target_table(bug_id, work_type, owner_id, target_date, completed_date)
+	                VALUES($p_bug_id, $p_work_type, $p_owner_id, $p_completed_date, $p_completed_date)";
+		db_query_bound( $t_query );
+
+		# Log new record to history
+		history_log_event_direct( $p_bug_id, sprintf( plugin_lang_get( 'history_new_target' ), $t_work_types[$p_work_type] ),
+			null, format_short_date( $p_completed_date ) . ' (' . user_get_name( $p_owner_id ) . ')' );
 	}
 }
 
@@ -790,6 +1052,19 @@ function get_all_tasks( $f_target_version, $f_user_id = ALL_USERS, $p_include_bu
 	return $t_result;
 }
 
+function set_project_customer ( $p_project_id, $p_customer_id ) {
+	$t_project_customer_table = plugin_table( 'project_customer' );
+
+	$t_query = "SELECT * FROM $t_project_customer_table WHERE project_id = $p_project_id AND customer_id = $p_customer_id";
+	$t_result       = db_query_bound( $t_query );
+	$t_row          = db_fetch_array( $t_result );
+
+	if ( $t_row == false ) {
+		$t_query = "INSERT INTO $t_project_customer_table (project_id, customer_id) values ($p_project_id, $p_customer_id)";
+		db_query_bound( $t_query );
+	}
+}
+
 function get_limit_clause_after_select( $p_limit_amount ) {
 	if ( !stristr( config_get( 'db_type', '' ), 'mssql') ) {
 		return ' ';
@@ -838,6 +1113,79 @@ function get_plugin_col_value( MantisColumn $p_plugin_col, $p_bug ) {
     return $t_output;
 }
 
+/*
+ * Indicates the billable state fot the given severity.
+ */
+function is_billable ( $p_severity, $p_current_value = -1 ) {
+	$t_is_billable = $p_current_value;
+	$t_billable_behavior_over_severity_enum = plugin_config_get ( 'billable_behavior_over_severity' );
+	
+	if ( array_key_exists ( $p_severity, $t_billable_behavior_over_severity_enum ) ) {
+		if ( $t_billable_behavior_over_severity_enum[$p_severity] == PLUGIN_PM_BILLABLE_BEHAVIOR_ALWAYS_REQUIRED ) {
+			$t_is_billable =  true;
+		}
+		else if ( $t_billable_behavior_over_severity_enum[$p_severity] == PLUGIN_PM_BILLABLE_BEHAVIOR_NEVER_REQUIRED ) {
+			$t_is_billable =  false;
+		}
+		else if ( $t_billable_behavior_over_severity_enum[$p_severity] == PLUGIN_PM_BILLABLE_BEHAVIOR_NEVER_BILLABLE ) {
+			$t_is_billable =  false;
+		}
+		else if ( $t_is_billable == -1 ) {
+			if ( $t_billable_behavior_over_severity_enum[$p_severity] == PLUGIN_PM_BILLABLE_BEHAVIOR_OPTIONAL_UNSELECTED ) {
+				$t_is_billable =  false;
+			}
+			else if ( $t_billable_behavior_over_severity_enum[$p_severity] == PLUGIN_PM_BILLABLE_BEHAVIOR_OPTIONAL_SELECTED ) {
+				$t_is_billable =  true;
+			}
+		}
+	}
+	
+	return $t_is_billable;
+}
+
+function get_billable_behavior_over_severity ( $p_severity ) {
+	$t_billable_behavior_over_severity = PLUGIN_PM_BILLABLE_BEHAVIOR_OPTIONAL_UNSELECTED;
+	$t_billable_behavior_over_severity_enum = plugin_config_get ( 'billable_behavior_over_severity' );
+	if ( array_key_exists ( $p_severity, $t_billable_behavior_over_severity_enum ) ) {
+		$t_billable_behavior_over_severity = $t_billable_behavior_over_severity_enum[$p_severity];
+	}
+	
+	return $t_billable_behavior_over_severity;
+}
+
+function get_severity_enum() {
+	$t_config_var_value = config_get( 'severity_enum_string' );
+
+	$t_enum_values = MantisEnum::getValues( $t_config_var_value );
+	$t_enum_list = array();
+	
+	foreach ( $t_enum_values as $t_key ) {
+		$t_enum_list[$t_key] = get_enum_element( 'severity', $t_key );
+	}
+	
+	return $t_enum_list;
+}
+
+/**
+ * Returns a list of all status options
+ * @param int $p_user_auth User's access level
+ * @param int $p_current_value Current issue's status
+ * @param int $p_project_id
+ * @return array
+ */
+function get_status_option_list_all( $p_user_auth = 0, $p_current_value = 0, $p_project_id = ALL_PROJECTS ) {
+	$t_config_var_value = config_get( 'status_enum_string', null, null, $p_project_id );
+
+	$t_enum_values = MantisEnum::getValues( $t_config_var_value );
+	$t_enum_list = array();
+
+	foreach ( $t_enum_values as $t_enum_value ) {
+		$t_enum_list[$t_enum_value] = get_enum_element( 'status', $t_enum_value );
+	}
+
+	return $t_enum_list;
+}
+
 if ( !function_exists( 'strtotime_safe' ) ) {
 	/**
 	 * Fixes 0013332: Due date not saved successfully when date-format is set to 'd/m/Y'
@@ -880,4 +1228,3 @@ if ( !function_exists( 'strtotime_safe' ) ) {
         return $t_exclude_clause;
     }
 }
-?>

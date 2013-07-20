@@ -1,21 +1,36 @@
 <?php
+	$s_plugin_ProjectManagement_work_types_enum_string = '10:Presales,15:Management,20:Functional Analysis,30:Technical Analysis,50:Development,70:Documentation,80:Testing,90:Deploying';
+	$s_plugin_ProjectManagement_unavailability_types_enum_string = '10:Unspecified,20:Unavailable,30:Out of office,40:Appointment,50:Private appointment,60:Holidays,70:Festive';
+	//$s_plugin_ProjectManagement_unavailability_types_enum_string = '10:unspecified,20:unavailable,30:out of office,40:appointment,50:private appointment,60:vacation,70:administration,80:service desk,90:other';
+	
 	$s_plugin_ProjectManagement_title = 'Project Management'; 
 	$s_plugin_ProjectManagement_configuration = 'Configuration';
 	$s_plugin_ProjectManagement_settings_updated = 'Settings updated';
-   
+	$s_plugin_ProjectManagement_timerecord_menu = 'Jump to Time registration';
+
 	$s_plugin_ProjectManagement_work_type = 'Type of work';
-	$s_plugin_ProjectManagement_est = 'Est';
+	$s_plugin_ProjectManagement_est = 'Estimated';
 	$s_plugin_ProjectManagement_done = 'Done';
 	$s_plugin_ProjectManagement_todo = 'Todo';
 	$s_plugin_ProjectManagement_diff = 'Difference';
 	$s_plugin_ProjectManagement_total = 'total';
-   
+
+	$s_plugin_ProjectManagement_association_mode_title = 'Association mode';
+	$s_plugin_ProjectManagement_association_mode_info = 'Defines the default relation of the customer with projects.';
+	$s_plugin_ProjectManagement_association_mode_all = 'Always associated to all projects';
+	$s_plugin_ProjectManagement_association_mode_auto = 'Associated by default to all projects';
+	$s_plugin_ProjectManagement_association_mode_manual = 'Manual association';
+
 	$s_plugin_ProjectManagement_clear = 'Clear';
 	$s_plugin_ProjectManagement_book_date = 'Book date';
 	$s_plugin_ProjectManagement_reports = 'Project management';
+	$s_plugin_ProjectManagement_report_by_project_users = "Projects brief - Register per User";
+	$s_plugin_ProjectManagement_report_by_project_work_types = "Projects brief - Register per Type of work";
+	$s_plugin_ProjectManagement_report_by_project_detail = "Projects details";
 	$s_plugin_ProjectManagement_time_division = 'Time division';
 	$s_plugin_ProjectManagement_per = 'Per';
 	$s_plugin_ProjectManagement_time_registration = 'Time registration';
+	$s_plugin_ProjectManagement_time_dashboard = 'Dashboard';
 	$s_plugin_ProjectManagement_time_registration_worksheet = 'Time registration worksheet';
 	$s_plugin_ProjectManagement_time_registration_overview = 'Time registration overview';
 	$s_plugin_ProjectManagement_project_progress = 'Project progress';
@@ -34,21 +49,21 @@
 	$s_plugin_ProjectManagement_last_months = 'Last months';
 	$s_plugin_ProjectManagement_month = 'Month';
 	$s_plugin_ProjectManagement_unassigned = 'Unassigned';
-	
+
 	$s_plugin_ProjectManagement_hourly_rate = 'Hourly rate';
 	$s_plugin_ProjectManagement_hours_per_week = 'Hours per week';
 	$s_plugin_ProjectManagement_color = 'Color';
 	$s_plugin_ProjectManagement_deployability = 'Deployability';
-   
+
 	$s_plugin_ProjectManagement_work_types = 'Types of work';
 	$s_plugin_ProjectManagement_work_types_info = 'An enumeration containing the differend kinds of work someone can perform on a ticket. Use only one to ignore this feature.';
 	
 	$s_plugin_ProjectManagement_edit_estimates_threshold = 'Edit estimations threshold';
 	$s_plugin_ProjectManagement_edit_estimates_threshold_info = 'Once a starting estimation was supplied for a certain ticket and type of work, it can no longer by modified unless with this permission.';
-	
+
 	$s_plugin_ProjectManagement_include_bookdate_threshold = 'Include bookdate threshold';
 	$s_plugin_ProjectManagement_include_bookdate_threshold_info = 'Allows users with this security profile or higher to include a different book date when registering hours worked.';
-		
+
 	$s_plugin_ProjectManagement_work_type_thresholds = 'Thresholds for types of work';
 	$s_plugin_ProjectManagement_work_type_thresholds_info = 'Users with an access level lower than the one specified can\'t see or modify the specified type of work.<br><b>Syntax</b>: array ( val => ACCLEVEL[, val2 => ACCLEVEL2,...] )<br><b>Example</b>: array ( 20 => REPORTER, 50 => DEVELOPER )';
 
@@ -70,6 +85,12 @@
 	$s_plugin_ProjectManagement_view_target_overview_threshold = 'View target overview threshold';
 	$s_plugin_ProjectManagement_view_all_targets_threshold = 'Threshold for viewing other users\' targets';
 	$s_plugin_ProjectManagement_admin_threshold = 'Plugin administrator threshold';
+	$s_plugin_ProjectManagement_admin_own_threshold = 'Manage own registers threshold';
+	$s_plugin_ProjectManagement_edit_targets_threshold = 'Manage targets threshold';
+	$s_plugin_ProjectManagement_show_all_work_types_on_bug_targets = 'Show all work types available on ticket';
+	$s_plugin_ProjectManagement_show_all_work_types_on_bug_targets_info = 'Show all work types available on targets table in the ticket view';
+	$s_plugin_ProjectManagement_bug_view_mode = 'View mode on ticket';
+	$s_plugin_ProjectManagement_bug_view_mode_info = 'Only two options available: 1 or 2';
 	
 	$s_plugin_ProjectManagement_decimal_separator = 'Decimal separator';
 	$s_plugin_ProjectManagement_thousand_separator = 'Thousand separator';
@@ -85,8 +106,16 @@
 	$s_plugin_ProjectManagement_enable_customer_approval_threshold = 'Enable customer approval threshold';
 	$s_plugin_ProjectManagement_enable_customer_approval_threshold_info = 'Allows customers to indicate whether or not they approve development on specific bugs.';
 	$s_plugin_ProjectManagement_view_billing_threshold = 'View billing threshold';
+	$s_plugin_ProjectManagement_billable_mandatory_minimun_status = 'Estado mínimo para requerir que se indiquen los clientes a facturar';
+	$s_plugin_ProjectManagement_billable_behavior_over_severity = 'Comportamiento del requisito de facturable según la severidad del ticket';
+	$s_plugin_ProjectManagement_billable_behavior_over_severity_optional_unselected = 'Optional, unselected by default';
+	$s_plugin_ProjectManagement_billable_behavior_over_severity_optional_selected = 'Optional, selected by default';
+	$s_plugin_ProjectManagement_billable_behavior_over_severity_always_required = 'Always required';
+	$s_plugin_ProjectManagement_billable_behavior_over_severity_never_required = 'Never required';
+	$s_plugin_ProjectManagement_billable_behavior_over_severity_never_billable = 'Never billable';
 
 	$s_plugin_ProjectManagement_customer_section = 'Customer section';
+	$s_plugin_ProjectManagement_is_billable = 'Issue is billable';
 	$s_plugin_ProjectManagement_paying_customers = 'Paying customers';
 	$s_plugin_ProjectManagement_integration_custom_dev = 'Integration custom development';
 	$s_plugin_ProjectManagement_integration_custom_dev_info = 'Integration of a core functionality with existing custom features.';
@@ -94,10 +123,12 @@
 	$s_plugin_ProjectManagement_general_configuration = 'Plugin configuration';
 	$s_plugin_ProjectManagement_customer_management = 'Customer configuration';
 	$s_plugin_ProjectManagement_add_new_customer = 'Add new customer';
+	$s_plugin_ProjectManagement_add_customer = 'Add customer';
 	$s_plugin_ProjectManagement_edit_customer = 'Edit customer';
 	$s_plugin_ProjectManagement_customer_name = 'Customer name';
 	$s_plugin_ProjectManagement_customer_share = 'Share';
 	$s_plugin_ProjectManagement_customer_can_approve = 'Can approve';
+	$s_plugin_ProjectManagement_customer_association_mode = 'Association mode';
 	$s_plugin_ProjectManagement_billing = 'Billing';
 	$s_plugin_ProjectManagement_fields_to_include_in_overviews = 'Extra columns to include in overviews';
 	$s_plugin_ProjectManagement_fields_to_include_in_overviews_info = 'Both custom fields and plugin-columns are possible. Use the column names as suggested in \'Manage configuration\' > \'Manage columns\'';
@@ -114,9 +145,13 @@
 	$s_plugin_ProjectManagement_all_versions_selected = 'In order to view this page, a specific project must be selected instead of \'All projects\'.';
 	$s_plugin_ProjectManagement_project_selection_disabled = 'In order to view this page, the configuration \'show_project_menu_bar\' must be turned \'ON\'. Contact an administrator.';
 
+	$s_plugin_ProjectManagement_unavailability_account_title = 'Unavailability';
+	$s_plugin_ProjectManagement_unavailability_period_title = 'Unavailability periods';
+	$s_plugin_ProjectManagement_unavailability_past_period_title = 'Past unavailability periods';
 	$s_plugin_ProjectManagement_unavailability = 'Unavailability';
 	$s_plugin_ProjectManagement_unavailability_types = 'Unavailability types';
-	$s_plugin_ProjectManagement_unavailability_add_new = 'Add new period of unavailability';
+	$s_plugin_ProjectManagement_unavailability_add_new_title = 'Add new period of unavailability';
+	$s_plugin_ProjectManagement_unavailability_add_new = 'Add';
 	$s_plugin_ProjectManagement_unavailability_overview = 'Overview of periods of unavailability';
 	$s_plugin_ProjectManagement_unavailability_remove = 'Remove period of unavailability';
 	$s_plugin_ProjectManagement_unavailability_period = 'Period';
@@ -126,6 +161,15 @@
 	$s_plugin_ProjectManagement_unavailability_ignore_work = 'Ignore work during these periods';
 	$s_plugin_ProjectManagement_unavailability_ignore_work_info = 'Hours registered during a period of unavailability of this type will be ignored on the \'Resource progress\' page.<br><b>Example</b>: array ( 60, 80 )';
 
+	$s_plugin_ProjectManagement_user = 'User';
+	$s_plugin_ProjectManagement_information = 'Information';
+	$s_plugin_ProjectManagement_entry_date = 'Entry Date (automatic)';
+	$s_plugin_ProjectManagement_time_error = 'Please enter a valid number in field Hours!';
+	$s_plugin_ProjectManagement_date_error = 'Please enter a valid date';
+	$s_plugin_ProjectManagement_minutes_type = 'Time type';
+	$s_plugin_ProjectManagement_add_time_registration = 'Add';
+	$s_plugin_ProjectManagement_delete_time_registration = 'Delete';
+	
 	$s_plugin_ProjectManagement_unplanned = 'Unplanned';
 	$s_plugin_ProjectManagement_planned = 'Planned';
 	$s_plugin_ProjectManagement_unavailable = 'Unavailable';
@@ -164,4 +208,11 @@
 	$s_plugin_ProjectManagement_October = 'October';
 	$s_plugin_ProjectManagement_November = 'November';
 	$s_plugin_ProjectManagement_December = 'December';
-
+	
+	$s_plugin_ProjectManagement_history_deleted = 'Time registration deleted';
+	$s_plugin_ProjectManagement_history_added = 'Time registration added for \'%1$s\': %2$s';
+	$s_plugin_ProjectManagement_history_completed_date = 'Completed date updated for \'%1$s\'';
+	$s_plugin_ProjectManagement_history_owner_changed = 'Owner changed for \'%1$s\'';
+	$s_plugin_ProjectManagement_history_new_target = 'New target for \'%1$s\'';
+	$s_plugin_ProjectManagement_history_change_target = 'Target updated for \'%1$s\'';
+	$s_plugin_ProjectManagement_todo_without_est_warning = 'Pendant work is not used while estimated time is not defined';

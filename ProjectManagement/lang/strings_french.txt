@@ -96,7 +96,6 @@
 	$s_plugin_ProjectManagement_customer_share = 'Partage';
 	$s_plugin_ProjectManagement_customer_can_approve = 'Peut valider';
 	$s_plugin_ProjectManagement_billing = 'Facturation';
-	$s_plugin_ProjectManagement_custom_fields_to_include_in_overviews = 'Champs personnalisés à inclure dans les résumés';
 
 	$s_plugin_ProjectManagement_targets = 'Objectifs';
 	$s_plugin_ProjectManagement_target_date = 'Date ciblée';
@@ -147,5 +146,4 @@
 	$s_plugin_ProjectManagement_friday = 'vendredi';
 	$s_plugin_ProjectManagement_saturday = 'samedi';
 	$s_plugin_ProjectManagement_sunday = 'dimanche';
-	$s_plugin_ProjectManagement_project = 'projet';
 ?>

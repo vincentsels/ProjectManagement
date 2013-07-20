@@ -1,0 +1,58 @@
+Issue view:
+	- Added link at the top of the issue view (EVENT_MENU_ISSUE).
+
+Created view 2:
+	- Register time for work type and minutes type.
+	- Added 'info' field in table 'work'
+	- Substract 'todo' when 'done' is informed
+	- When minutes_type=='est' => target_date=book_date
+	- When minutes_type=='done' => done=done+minutes / todo=todo-minutes
+	- When minutes_type=='completed' (new just for select) => completed_date=book_date / done=done+minutes / todo=0
+	- Remove own time register (if admin_own_threshold)
+	- Remove others time register (if admin_threshold)
+	- Show/Hide all work types on target table (show_all_work_types_on_bug_targets)
+	- When a 'todo' is defined without 'est', 'todo' is shown in red and with a tooltip containing the error
+	
+Config options:
+	- [bug_view_mode][new] View selection: 1 (original) or 2 (purposed)
+	- [show_all_work_types_on_bug_targets][new] Show/Hide all work types on target table. Only works on view 2
+	- [admin_own_threshold][new] Enabled to remove custom registers. Only works on view 2
+	- [edit_targets_threshold][old] Enable to modify targets over the targets table. It was defined on function config, but now is updatable from config page
+	- [billable_mandatory_minimun_status] Select the minimun status for billable required shows the error
+	- [billable_behavior_over_severity] Define behavior of billing requirement according to severity
+
+
+General:
+	- More specific errors
+	- More detailed history actions
+
+Customers:
+	- Added 'association_mode' field in table 'customer'
+	- Created 'project_customer' table
+	- Customer management page updated with 'association_mode' field
+	- When a new project is created, the customers with association_mode='auto' are attached automatically
+	- From project, you can attach/detach customers, except those marked with association_mode='all'
+	- When a issue is resolved or closed, 'all customers' is transformed in the current customers list. It avoids future billing changes when adding a new customer to the project.
+	- 'paying_customers' is required only if 'is_billable' is set to true, and the issue has adquired the minimum status (currently, the minimum status is defined hardcoded in 'pm_bug_is_billable_affecting_required_paying_customers')
+
+Reports:
+	- Added 'dashboard' report
+	- Error control added for 'Resource progress' report
+	- Added validation in 'print_progressbar_span' and 'print_progress_span' to avoid error when no resources are defined (only exploited when $g_show_detailed_errors=ON)
+	- Show hourly rate and cost only is user has 'view_billing_threshold' permissions
+
+Report 'Time registration overview':
+	- Layout adjustment to avoid paddings and margins
+	- Collapsible panels
+	
+Report 'Billing':
+	- Shows only issues marked as billable
+	
+Account configuration:
+	- Moved the unavailability management to a self account preferences menu
+	- Added list of future and past unavailability, allowing to remove just for future
+	
+	
+*** TODO's ***
+- Upgrade plugin task to upgrade database in a existing installation
+- update_bug_form has 2 view options... decide which is better and delete the other

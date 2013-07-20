@@ -14,6 +14,8 @@ function maybe_set_option( $name, $value ) {
 
 $t_total_options_changed = 0;
 $t_total_options_changed += maybe_set_option( 'work_types', gpc_get_string( 'work_types' ) );
+$t_total_options_changed += maybe_set_option( 'edit_targets_threshold', gpc_get_int( 'edit_targets_threshold' ) );
+$t_total_options_changed += maybe_set_option( 'show_all_work_types_on_bug_targets', gpc_get_bool( 'show_all_work_types_on_bug_targets' ) );
 $t_total_options_changed += maybe_set_option( 'edit_estimates_threshold', gpc_get_int( 'edit_estimates_threshold' ) );
 $t_total_options_changed += maybe_set_option( 'view_time_reg_summary_threshold', gpc_get_int( 'view_time_reg_summary_threshold' ) );
 $t_total_options_changed += maybe_set_option( 'include_bookdate_threshold', gpc_get_int( 'include_bookdate_threshold' ) );
@@ -21,6 +23,7 @@ $t_total_options_changed += maybe_set_option( 'work_type_thresholds', string_to_
 $t_total_options_changed += maybe_set_option( 'finish_upon_resolving', string_to_array( gpc_get_string( 'finish_upon_resolving', null ) ) );
 $t_total_options_changed += maybe_set_option( 'finish_upon_closing', string_to_array( gpc_get_string( 'finish_upon_closing', null ) ) );
 $t_total_options_changed += maybe_set_option( 'work_types_for_customer', string_to_array( gpc_get_string( 'work_types_for_customer', null ) ) );
+$t_total_options_changed += maybe_set_option( 'bug_view_mode', gpc_get_string( 'bug_view_mode' ) );
 $t_total_options_changed += maybe_set_option( 'enable_time_registration_threshold', gpc_get_int( 'enable_time_registration_threshold' ) );
 $t_total_options_changed += maybe_set_option( 'view_registration_worksheet_threshold', gpc_get_int( 'view_registration_worksheet_threshold' ) );
 $t_total_options_changed += maybe_set_option( 'view_registration_report_threshold', gpc_get_int( 'view_registration_report_threshold' ) );
@@ -36,12 +39,20 @@ $t_total_options_changed += maybe_set_option( 'enable_customer_payment_threshold
 $t_total_options_changed += maybe_set_option( 'enable_customer_approval_threshold', gpc_get_int( 'enable_customer_approval_threshold' ) );
 $t_total_options_changed += maybe_set_option( 'view_customer_payment_summary_threshold', gpc_get_int( 'view_customer_payment_summary_threshold' ) );
 $t_total_options_changed += maybe_set_option( 'view_billing_threshold', gpc_get_int( 'view_billing_threshold' ) );
+$t_total_options_changed += maybe_set_option( 'billable_mandatory_minimun_status', gpc_get_int( 'billable_mandatory_minimun_status' ) );
 $t_total_options_changed += maybe_set_option( 'release_buffer', gpc_get_string( 'release_buffer' ) );
 $t_total_options_changed += maybe_set_option( 'group_by_projects_by_default', gpc_get_bool( 'group_by_projects_by_default' ) );
 $t_total_options_changed += maybe_set_option( 'show_projects_by_default', gpc_get_bool( 'show_projects_by_default' ) );
 $t_total_options_changed += maybe_set_option( 'unavailability_types', gpc_get_string( 'unavailability_types' ) );
 $t_total_options_changed += maybe_set_option( 'unavailability_ignore_work', string_to_array( gpc_get_string( 'unavailability_ignore_work', null ) ) );
 $t_total_options_changed += maybe_set_option( 'fields_to_include_in_overviews', string_to_array( gpc_get_string( 'fields_to_include_in_overviews', null ) ) );
+
+$t_billable_behavior_over_severity = array();
+$t_severity_enum = get_severity_enum();
+foreach ( $t_severity_enum as $t_key => $t_value ) {
+	$t_billable_behavior_over_severity[$t_key] = gpc_get_int( 'billable_behavior_over_severity_' . $t_key, 1 );
+}
+plugin_config_set( 'billable_behavior_over_severity', $t_billable_behavior_over_severity );
 
 $t_hours_for_day = array();
 for ( $i = 1; $i <= 7; $i++ ) {

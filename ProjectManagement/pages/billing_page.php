@@ -10,6 +10,7 @@ $t_resource_table     = plugin_table( 'resource' );
 $t_bug_customer_table = plugin_table( 'bug_customer' );
 $t_user_table         = db_get_table( 'mantis_user_table' );
 $t_bug_table          = db_get_table( 'mantis_bug_table' );
+$t_pm_bug_table       = plugin_table( 'bug' );
 $t_project_table      = db_get_table( 'mantis_project_table' );
 $t_category_table     = db_get_table( 'mantis_category_table' );
 
@@ -21,7 +22,7 @@ $t_enddate    = strtotime_safe( $f_period_end );
 $t_project_select_clause = get_project_select_clause();
 $t_customer_work_type_exclusion_clause = build_customer_worktype_exclude_clause('work_type');
 
-$t_query      = "SELECT p.name as project_name, c.name as category_name, u.username,
+$t_query      = "SELECT p.name as project_name, c.name as category_name, u.username, u.realname,
 						b.id as bug_id, b.summary as bug_summary,
 						sum(w.minutes) as minutes, max(r.hourly_rate) as hourly_rate,
 						max(bc.customers) as customers
@@ -36,6 +37,7 @@ $t_query      = "SELECT p.name as project_name, c.name as category_name, u.usern
 					 AND w.book_date BETWEEN $t_startdate AND $t_enddate
 					 AND $t_project_select_clause
 					 AND $t_customer_work_type_exclusion_clause
+					 AND b.id IN (SELECT bug_id FROM $t_pm_bug_table WHERE is_billable = 1)
 				   GROUP BY p.name, c.name, u.username, b.id, b.summary
 				   ORDER BY p.name, c.name, u.username, b.id, b.summary";
 
@@ -67,6 +69,7 @@ while ( $row = db_fetch_array( $t_result ) ) {
 	$t_billing_row['project_name']  = $row["project_name"];
 	$t_billing_row['category_name'] = $row["category_name"];
 	$t_billing_row['username']      = $row["username"];
+	$t_billing_row['realname']      = $row["realname"];
 	$t_billing_row['bug_id']        = $row["bug_id"];
 	$t_billing_row['bug_summary']   = $row["bug_summary"];
 	$t_billing_row['hours']         = $row["minutes"] / 60;
@@ -263,6 +266,10 @@ if ( $f_export && count( $t_billing ) > 0 ) {
 	<?php
 	foreach ( $t_billing as $row ) {
 		$t_class = helper_alternate_class();
+		$bug_view_link = string_get_bug_view_link( $row["bug_id"], null, false );
+		if ( $row["bug_id"] == null ) {
+			$bug_view_link = '';
+		}
 		if ( array_search( $row, $t_billing ) == count( $t_billing ) - 1 ) {
 			# Total row
 			echo '<tr class="spacer" />';
@@ -277,14 +284,14 @@ if ( $f_export && count( $t_billing ) > 0 ) {
         foreach ( $t_plugin_columns_to_include as $col_name => $col_obj  ) {
             echo '<td> ' . $row[$col_obj->title] . '</td>';
         }
-		echo '<td> ' . $row['username'] . '</td>';
-		echo '<td> ' . $row['bug_id'] . '</td>';
+		echo '<td> ' . $row['realname'] . '</td>';
+		echo '<td> ' . $bug_view_link . '</td>';
 		echo '<td> ' . $row['bug_summary'] . '</td>';
-		echo '<td class="right"> ' . format( $row['hours'], 2, false ) . '</td>';
-		echo '<td class="right"> ' . format( $row['hourly_rate'], 2, false ) . '</td>';
-		echo '<td class="right"> ' . format( $row['cost'], 2, false ) . '</td>';
+		echo '<td><div class="right">' . format( $row['hours'], 2, false ) . '</div></td>';
+		echo '<td><div class="right">' . format( $row['hourly_rate'], 2, false ) . ' ' . ($row['hourly_rate'] ? plugin_config_get ( 'currency_symbol' ) : '') . '</div></td>';
+		echo '<td><div class="right">' . format( $row['cost'], 2, false ) . ' ' . ($row['cost'] ? plugin_config_get ( 'currency_symbol' ) : '') . '</div></td>';
 		foreach ( $t_all_customers as $cust ) {
-			echo '<td class="right"> ' . format( $row[$cust['name']], 2, false ) . '</td>';
+			echo '<td><div class="right">' . format( $row[$cust['name']], 2, false ) . ' ' . ($row[$cust['name']] ? plugin_config_get ( 'currency_symbol' ) : '') . '</div></td>';
 		}
 		echo '</tr>';
 	}
