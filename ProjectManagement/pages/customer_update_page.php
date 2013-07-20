@@ -10,6 +10,7 @@ $f_customer_id = gpc_get_int( 'customer_id', null );
 $t_name = null;
 $t_share = null;
 $t_can_approve = null;
+$t_association_mode = null;
 
 if ( !empty( $f_customer_id ) ) {
 	$t_customer_table = plugin_table( 'customer' );
@@ -20,6 +21,7 @@ if ( !empty( $f_customer_id ) ) {
 		$t_name = $t_customer['name'];
 		$t_share = format( $t_customer['share'], 5 );
 		$t_can_approve = $t_customer['can_approve'];
+		$t_association_mode = $t_customer['association_mode'];
 	}
 }
 
@@ -56,6 +58,14 @@ print_pm_config_menu();
 			<td class="category"><?php echo plugin_lang_get( 'customer_can_approve' ) ?><br/>
 			<td><input type="checkbox" name="customer_can_approve"
 					   id="customer_can_approve" <?php echo $t_can_approve == 1 ? 'checked="checked" ' : '' ?>>
+			</td>
+		</tr>
+		<tr <?php echo helper_alternate_class() ?>>
+			<td width="30%" class="category"><?php echo plugin_lang_get( 'association_mode_title' ) ?><br/>
+				<span class="small"><?php echo plugin_lang_get( 'association_mode_info' ) ?></span>
+			</td>
+			<td>
+				<?php print_association_mode_option_list ($t_association_mode) ?>
 			</td>
 		</tr>
 		<tr>

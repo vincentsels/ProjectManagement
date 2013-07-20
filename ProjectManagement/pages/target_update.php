@@ -18,24 +18,24 @@ if ( count( $t_work_types ) > 0 ) {
 				!access_has_global_level( $t_work_type_thresholds[$t_work_type] ) )
 				continue; # Ignore otherwise
 
-			$f_data[$t_bug_id][$t_work_type]["target_date"] =
-				strtotime_safe( gpc_get_string( $t_bug_id . '_target_date_' . $t_work_type,
-					date( config_get( 'short_date_format' ) ), null ), true );
-			$f_data[$t_bug_id][$t_work_type]["owner_id"] =
-				gpc_get_int( $t_bug_id . '_owner_id_' . $t_work_type, -1 );
+			$t_target_date_as_string = gpc_get_string( $t_bug_id . '_target_date_' . $t_work_type, null );
+			$t_completed_date_as_string = gpc_get_string( $t_bug_id . '_completed_date_' . $t_work_type, null );
+			
+			# Check if input fields exists
+			if ($t_target_date_as_string != null || $t_completed_date_as_string != null ) {
+				$f_data[$t_bug_id][$t_work_type]["target_date"] = strtotime_safe( $t_target_date_as_string, true );
+				$f_data[$t_bug_id][$t_work_type]["owner_id"] = gpc_get_int( $t_bug_id . '_owner_id_' . $t_work_type, -1 );
 
-			$t_completed_date_as_string = gpc_get_string( $t_bug_id . '_completed_date_' . $t_work_type,
-				date( config_get( 'short_date_format' ) ), null );
-			if ( !is_null( $t_completed_date_as_string ) ) {
-				$f_data[$t_bug_id][$t_work_type]["completed_date"] =
-					strtotime_safe( $t_completed_date_as_string, true );
-			}
+				if ( !is_null( $t_completed_date_as_string ) ) {
+					$f_data[$t_bug_id][$t_work_type]["completed_date"] = strtotime_safe( $t_completed_date_as_string, true );
+				}
 
-			# Check for errors
-			if ( !empty( $f_data[$t_bug_id][$t_work_type]["target_date"] ) &&
-				$f_data[$t_bug_id][$t_work_type]["owner_id"] == -1 ) {
-				error_parameters( $t_work_types[$t_work_type] );
-				trigger_error( ERROR_CUSTOM_FIELD_INVALID_VALUE, E_USER_ERROR );
+				# Check for errors
+				if ( !empty( $f_data[$t_bug_id][$t_work_type]["target_date"] ) &&
+					$f_data[$t_bug_id][$t_work_type]["owner_id"] == -1 ) {
+					error_parameters( $t_work_types[$t_work_type] );
+					trigger_error( plugin_lang_get( 'date_error' ), E_USER_ERROR );
+				}
 			}
 		}
 	}
@@ -43,8 +43,7 @@ if ( count( $t_work_types ) > 0 ) {
 	foreach ( $f_data as $t_bug_id => $t_work_type_data ) {
 		foreach ( $t_work_type_data as $t_work_type => $t_data ) {
 			if ( !empty( $t_data["target_date"] ) ) {
-				target_update( $t_bug_id, $t_work_type,
-					$t_data["owner_id"], $t_data["target_date"], $t_data["completed_date"] );
+				target_update( $t_bug_id, $t_work_type, $t_data["owner_id"], $t_data["target_date"], $t_data["completed_date"] );
 			}
 		}
 	}
