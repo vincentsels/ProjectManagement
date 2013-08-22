@@ -481,6 +481,8 @@ class ProjectManagementPlugin extends MantisPlugin {
 				}
 			}
 		}
+
+		return $p_bug_data;
 	}
 
 	function view_bug_pm_summary( $p_event, $p_bug_id ) {
