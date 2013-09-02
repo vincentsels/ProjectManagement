@@ -44,7 +44,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 						id			I		NOTNULL UNSIGNED AUTOINCREMENT PRIMARY,
 						name		C(64)	NOTNULL,
 						share		F(3,5)	NOTNULL DEFAULT 0,
-						can_approve	L		NOTNULL DEFAULT 1
+						can_approve	L		NOTNULL DEFAULT \" '1' \"
 						" ) ),
 			array( 'CreateTableSQL', array( plugin_table( 'bug_customer' ), "
 						bug_id		I		NOTNULL UNSIGNED PRIMARY,
@@ -70,7 +70,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 						start_date  	   I	   NOTNULL UNSIGNED,
 						end_date  	  	   I	   NOTNULL UNSIGNED,
 						type			   I2	   NOTNULL UNSIGNED DEFAULT 10,
-						include_work	   L       NOTNULL DEFAULT 0,
+						include_work	   L       NOTNULL DEFAULT \" '0' \",
 						note	           C(64)
 						" ) ),
 			array( 'AddColumnSQL', array( plugin_table( 'resource' ), 'deployability I NOTNULL UNSIGNED DEFAULT 80' ) )
