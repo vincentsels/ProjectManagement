@@ -7,7 +7,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 		$this->description = 'Project management plugin that adds advanced functionality for timetracking, estimations, reporting,...';
 		$this->page        = 'config_page';
 
-		$this->version  = '1.4.0';
+		$this->version  = '1.4.1';
 		$this->requires = array(
 			'MantisCore' => '1.2.0',
             'ArrayExportExcel' => '0.3'
@@ -73,7 +73,8 @@ class ProjectManagementPlugin extends MantisPlugin {
 						include_work	   L       NOTNULL DEFAULT \" '0' \",
 						note	           C(64)
 						" ) ),
-			array( 'AddColumnSQL', array( plugin_table( 'resource' ), 'deployability I NOTNULL UNSIGNED DEFAULT 80' ) )
+			array( 'AddColumnSQL', array( plugin_table( 'resource' ), 'deployability I NOTNULL UNSIGNED DEFAULT 80' ) ),
+            array( 'UpdateFunction', '', array() ) # required to trigger a new schema version
 			);
 	}
 
@@ -98,6 +99,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 			'display_detailed_bug_link'				  => TRUE,
 			'finish_upon_resolving'					  => array( 20, 50 ),
 			'finish_upon_closing'						=> array( 80 ),
+            'work_types_for_customer'                   => array( 20 ),
 			'decimal_separator'						  => ',',
 			'thousand_separator'						 => '',
 			'include_bugs_with_deadline'				 => ON,
@@ -105,9 +107,6 @@ class ProjectManagementPlugin extends MantisPlugin {
 			'enable_customer_payment_threshold'		  => DEVELOPER,
 			'enable_customer_approval_threshold'		 => UPDATER,
 			'view_billing_threshold'					 => MANAGER,
-			'default_owner'							  => array( 20 => REPORTER,
-																   50 => DEVELOPER,
-																   80 => REPORTER ),
 			'edit_targets_threshold'					 => DEVELOPER,
 			'unavailability_types'	                     => '10:unspecified,20:unavailable,30:out of office,40:appointment,50:private appointment,60:vacation,70:administration,80:service desk,90:other',
 			'default_unavailability_type'				 => 10,
@@ -178,6 +177,25 @@ class ProjectManagementPlugin extends MantisPlugin {
             'ProjectManagementCustomersColumn'
 		);
 	}
+
+    function upgrade( $p_schema ) {
+        if ( $p_schema == 11 ) {
+            # In v1.4.1 config option 'default_owner' no longer exists and is replaced by option
+            # 'work_types_for_customer'. Migration required.
+
+            $default_owners = plugin_config_get( 'default_owner' );
+            $work_types_for_reporter_and_under = array();
+            foreach ( $default_owners as $work_type => $owner ) {
+                if ( $owner <= REPORTER ) {
+                    $work_types_for_reporter_and_under[] = $work_type;
+                }
+            }
+            plugin_config_set( 'work_types_for_customer', $work_types_for_reporter_and_under );
+            plugin_config_delete( 'default_owner' );
+        }
+
+        return true;
+    }
 
 	function main_menu( $p_event, $p_bug_id ) {
 		$t_pagename = plugin_lang_get( 'reports' );
@@ -463,6 +481,8 @@ class ProjectManagementPlugin extends MantisPlugin {
 				}
 			}
 		}
+
+		return $p_bug_data;
 	}
 
 	function view_bug_pm_summary( $p_event, $p_bug_id ) {
@@ -471,9 +491,11 @@ class ProjectManagementPlugin extends MantisPlugin {
 		# Fetch time registration summary
 		if ( access_has_bug_level( plugin_config_get( 'view_time_reg_summary_threshold' ), $p_bug_id ) ) {
 			$t_table  = plugin_table( 'work' );
+            $t_customer_work_type_exclusion_clause = build_customer_worktype_exclude_clause('work_type');
 			$t_query  = "SELECT work_type, minutes_type, sum(minutes) as minutes
 						   FROM $t_table
 						  WHERE bug_id = $p_bug_id
+						    AND $t_customer_work_type_exclusion_clause
 						  GROUP BY work_type, minutes_type
 						  ORDER BY work_type, minutes_type";
 			$t_result = db_query_bound( $t_query );
@@ -534,7 +556,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 		$t_query_fetch_est  = "SELECT work_type, minutes as est
                                  FROM $t_work_table
                                 WHERE bug_id = $p_bug_id
-                                 AND minutes_type = $t_est";
+                                  AND minutes_type = $t_est";
 		$t_result_fetch_est = db_query_bound( $t_query_fetch_est );
 
 		# Fetch totals total of done of all work types
@@ -961,16 +983,19 @@ class ProjectManagementPlugin extends MantisPlugin {
 						$t_days_overdue_class = '';
 						$t_completed_date     = null;
 						# Find the default owner for this work type
-						$t_default_owners = plugin_config_get( 'default_owner' );
-						@$t_owner_type = $t_default_owners[$t_work_type_code];
-						if ( $t_owner_type == REPORTER ) {
-							$t_reporter_id = bug_get_field( $p_bug_id, 'reporter_id' );
-							$t_owner_id    = is_null( $t_reporter_id ) ? -1 : $t_reporter_id;
-						} else if ( $t_owner_type == DEVELOPER ) {
+						$t_customer_work_types = plugin_config_get( 'work_types_for_customer' );
+                        $t_work_type_for_customer = false;
+                        foreach ( $t_customer_work_types as $work_type ) {
+                            if ( $work_type == $t_work_type_code ) {
+                                $t_work_type_for_customer = true;
+                            }
+                        }
+						if ( $t_work_type_for_customer ) {
+                            $t_reporter_id = bug_get_field( $p_bug_id, 'reporter_id' );
+                            $t_owner_id    = is_null( $t_reporter_id ) ? -1 : $t_reporter_id;
+                        } else {
 							$t_handler_id = bug_get_field( $p_bug_id, 'handler_id' );
 							$t_owner_id   = is_null( $t_handler_id ) ? -1 : $t_handler_id;
-						} else {
-							$t_owner_id = -1;
 						}
 					}
 

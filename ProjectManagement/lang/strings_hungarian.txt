@@ -82,9 +82,6 @@
 	$s_plugin_ProjectManagement_enable_customer_approval_threshold_info = 'Ügyfél oldali jóváhagyás a kért hibajavítás megkezdésére.';
 	$s_plugin_ProjectManagement_view_billing_threshold = 'Számlák megtekintésének küszöbe';
 
-	$s_plugin_ProjectManagement_default_owner = 'Munkatípusok alapértelmezett tulajdonosa';
-	$s_plugin_ProjectManagement_default_owner_info = 'Munkatípusonként az alapértelmezett tulajdonos.<br><b>Példa</b>: array ( 20 => REPORTER, 50 => DEVELOPER )';
-
 	$s_plugin_ProjectManagement_customer_section = 'Ügyfél szakasz';
 	$s_plugin_ProjectManagement_paying_customers = 'Fizető ügyfelek';
 	$s_plugin_ProjectManagement_integration_custom_dev = 'Egyedi igények';

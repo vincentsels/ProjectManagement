@@ -714,6 +714,7 @@ function get_all_tasks( $f_target_version, $f_user_id = ALL_USERS, $p_include_bu
 	$t_hierarchy_table       = db_get_table( 'mantis_project_hierarchy_table' );
 	$t_project_version_table = db_get_table( 'mantis_project_version_table' );
 	$t_work_table            = plugin_table( 'work' );
+    $t_customer_work_type_exclusion_clause = build_customer_worktype_exclude_clause('w.work_type');
 
 	$t_query = "SELECT pp.id as parent_project_id, pp.name as parent_project,
 				  pc.id as project_id, pc.name as project_name, c.id as category_id, c.name as category_name,
@@ -725,7 +726,8 @@ function get_all_tasks( $f_target_version, $f_user_id = ALL_USERS, $p_include_bu
 				  LEFT OUTER JOIN $t_hierarchy_table h ON pc.id = h.child_id
 				  LEFT OUTER JOIN $t_project_table pp ON h.parent_id = pp.id
 				  LEFT OUTER JOIN $t_work_table w ON b.id = w.bug_id
-				 WHERE (b.target_version = '$f_target_version'";
+				 WHERE (b.target_version = '$f_target_version'
+				   AND $t_customer_work_type_exclusion_clause";
 
 	if ( ON == $p_include_bugs_with_deadline ) {
 		# First get the release date of the currently targeted version
@@ -836,6 +838,23 @@ if ( !function_exists( 'strtotime_safe' ) ) {
 			return strtotime( $p_date );
 		}
 	}
-}
 
+    /**
+     * If relevant, builds a clause to exclude all customer work types from a query. Excludes the 'WHERE' or 'AND' part.
+     * @param $p_column_name string The entire name of the work_type column name, if needed with the table alias prefix.
+     * @return string either a string in the form of $p_column_name IN (x, y) or an empty string.
+     */
+    function build_customer_worktype_exclude_clause( $p_column_name ) {
+        $t_exclude_clause = '';
+        plugin_push_current( 'ProjectManagement' );
+        $t_work_types_for_cust = plugin_config_get( 'work_types_for_customer' );
+        plugin_pop_current();
+        if ( is_array( $t_work_types_for_cust ) && count( $t_work_types_for_cust ) > 0 ) {
+            $t_exclude_clause = ' ' . $p_column_name . ' NOT IN (' . implode( ',', $t_work_types_for_cust ) . ') ';
+        } else {
+            $t_exclude_clause = ' 1=1 ';
+        }
+        return $t_exclude_clause;
+    }
+}
 ?>
