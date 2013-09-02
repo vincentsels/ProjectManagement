@@ -22,9 +22,14 @@ $t_const_done             = PLUGIN_PM_DONE;
 $t_const_recently_visited = PLUGIN_PM_TOKEN_RECENTLY_VISITED_COUNT;
 $t_limit_clause_before    = get_limit_clause_after_select( $t_const_recently_visited );
 $t_limit_clause_after     = get_limit_clause_after_order_by( $t_const_recently_visited );
+$t_customer_work_type_exclusion_clause = build_customer_worktype_exclude_clause('work_type');
 $t_query_recent           = "SELECT $t_limit_clause_before b.last_updated, b.handler_id, b.project_id, p.name as project_name,
                             c.id as category_id, c.name as category_name, b.id as bug_id, b.summary as bug_summary, b.status,
-                            (SELECT SUM(minutes) FROM $t_work_table w WHERE w.bug_id = b.id AND minutes_type = $t_const_done) as done
+                            (SELECT SUM(minutes)
+                               FROM $t_work_table w
+                              WHERE w.bug_id = b.id
+                                AND minutes_type = $t_const_done
+                                AND $t_customer_work_type_exclusion_clause) as done
                              FROM $t_bug_table b
                              LEFT JOIN $t_project_table p ON b.project_id = p.id
                              LEFT JOIN $t_category_table c ON b.category_id = c.id
@@ -38,11 +43,13 @@ if ( !empty( $t_recently_visited ) ) {
 
 $t_today                 = strtotime( date( 'Y-m-d' ) );
 $t_query_registered_day  = "SELECT b.id as bug_id, sum(w.minutes) as minutes, max(w.timestamp) as timestamp
-							 FROM $t_work_table w JOIN $t_bug_table b ON w.bug_id = b.id
+							 FROM $t_work_table w
+							 JOIN $t_bug_table b ON w.bug_id = b.id
 							WHERE w.user_id = $t_user
 							  AND w.book_date = $t_today
 							  AND w.minutes_type = 1
 							  AND $t_project_select_clause
+							  AND $t_customer_work_type_exclusion_clause
 							GROUP BY b.id
 							ORDER BY timestamp DESC";
 $t_result_registered_day = db_query_bound( $t_query_registered_day );
@@ -56,6 +63,7 @@ $t_query_registered_week  = "SELECT w.book_date, sum(w.minutes) as minutes
 							  AND w.book_date BETWEEN $t_week_start AND $t_week_end
 							  AND w.minutes_type = 1
 							  AND $t_project_select_clause
+							  AND $t_customer_work_type_exclusion_clause
 							GROUP BY book_date
 							ORDER BY book_date DESC";
 $t_result_registered_week = db_query_bound( $t_query_registered_week );
@@ -69,6 +77,7 @@ $t_query_registered_last_week  = "SELECT w.book_date, sum(w.minutes) as minutes
 								  AND w.book_date BETWEEN $t_last_week_start AND $t_last_week_end
 								  AND w.minutes_type = 1
 							      AND $t_project_select_clause
+							      AND $t_customer_work_type_exclusion_clause
 								GROUP BY book_date
 								ORDER BY book_date DESC";
 $t_result_registered_last_week = db_query_bound( $t_query_registered_last_week );
@@ -80,7 +89,8 @@ $t_query_registered_month  = "SELECT sum(w.minutes) as minutes
 							WHERE w.user_id = $t_user
 							  AND w.book_date BETWEEN $t_month_start AND $t_month_end
 							  AND w.minutes_type = 1
-							  AND $t_project_select_clause";
+							  AND $t_project_select_clause
+							  AND $t_customer_work_type_exclusion_clause";
 $t_result_registered_month = db_query_bound( $t_query_registered_month );
 $t_row_month               = db_fetch_array( $t_result_registered_month );
 
@@ -91,7 +101,8 @@ $t_query_registered_last_month  = "SELECT sum(w.minutes) as minutes
 									WHERE w.user_id = $t_user
 									  AND w.book_date BETWEEN $t_last_month_start AND $t_last_month_end
 									  AND w.minutes_type = 1
-									  AND $t_project_select_clause";
+									  AND $t_project_select_clause
+									  AND $t_customer_work_type_exclusion_clause";
 $t_result_registered_last_month = db_query_bound( $t_query_registered_last_month );
 $t_row_last_month               = db_fetch_array( $t_result_registered_last_month );
 

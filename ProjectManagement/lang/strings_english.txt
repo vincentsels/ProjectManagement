@@ -58,6 +58,9 @@
 	$s_plugin_ProjectManagement_finish_upon_closing = 'Worktypes to finish upon closing';
 	$s_plugin_ProjectManagement_finish_upon_closing_info = 'Specify for which types of work the hours \'todo\' should automatically be set to zero upon closing the bug.<br><b>Example</b>: array ( 20, 50 )';
 
+	$s_plugin_ProjectManagement_work_types_for_customer = 'Customer worktypes';
+	$s_plugin_ProjectManagement_work_types_for_customer_info = 'These types of work are considered to be performed by customers, and will be excluded from the calculations of estimations, done and todo in all reports.<br><b>Example</b>: array ( 20 )';
+
 	$s_plugin_ProjectManagement_enable_time_registration_threshold = 'Enable time registration threshold';
 	$s_plugin_ProjectManagement_view_time_reg_summary_threshold = 'View summary of time registration threshold';
 	$s_plugin_ProjectManagement_view_time_registration_worksheet_threshold = 'View time registration worksheet threshold';
@@ -82,9 +85,6 @@
 	$s_plugin_ProjectManagement_enable_customer_approval_threshold = 'Enable customer approval threshold';
 	$s_plugin_ProjectManagement_enable_customer_approval_threshold_info = 'Allows customers to indicate whether or not they approve development on specific bugs.';
 	$s_plugin_ProjectManagement_view_billing_threshold = 'View billing threshold';
-
-	$s_plugin_ProjectManagement_default_owner = 'Default target owner for types of work';
-	$s_plugin_ProjectManagement_default_owner_info = 'Per type of work, a default owner for the target can be chosen. REPORTER assigns the reporter of the bug as the owner, DEVELOPER assigns the handler as owner. Other values are ignored.';
 
 	$s_plugin_ProjectManagement_customer_section = 'Customer section';
 	$s_plugin_ProjectManagement_paying_customers = 'Paying customers';
