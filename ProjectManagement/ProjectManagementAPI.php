@@ -41,6 +41,29 @@ class Action {
 	const DELETE           = 3;
 }
 
+
+/* 
+ * TODO: Review if is the correct place for this function!!
+ */
+function plugin_get_enum_element( $p_enum_name, $p_val, $p_user = null, $p_project = null ) {
+	$config_var = plugin_config_get( $p_enum_name, null, $p_user, $p_project );
+	$string_var = plugin_lang_get( $p_enum_name . '_enum_string' );
+
+	return MantisEnum::getLocalizedLabel( $config_var, $string_var, $p_val );
+}
+
+function plugin_lang_get_enum( $p_enum_name ) {
+	$t_config_var_value = plugin_config_get( $p_enum_name );
+	$t_enum_values      = MantisEnum::getAssocArrayIndexedByValues( $t_config_var_value );
+	
+	foreach ( $t_enum_values as $t_key => $t_value ) {
+		$t_enum_values[$t_key] = plugin_get_enum_element ( $p_enum_name, $t_key );
+	}
+	
+	return $t_enum_values;
+}
+
+
 /**
  * Converts the specified amount of minutes to a string formatted as 'HH:MM'.
  * @param float $p_minutes an amount of minutes.

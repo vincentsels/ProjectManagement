@@ -88,8 +88,20 @@ function print_plugin_enum_string_option_list( $p_enum_name, $p_val = 0 ) {
 	foreach ( $t_enum_values as $t_key => $t_value ) {
 		echo '<option value="' . $t_key . '"';
 		check_selected( $p_val, $t_key );
-		echo '>' . $t_value . '</option>';
+		echo '>' . plugin_get_enum_element ( $p_enum_name, $t_key ) . '</option>';
 	}
+}
+
+function print_plugin_enum_string_selected_value( $p_enum_name, $p_val = 0 ) {
+	$t_config_var_value = plugin_config_get( $p_enum_name );
+	$t_enum_values      = MantisEnum::getAssocArrayIndexedByValues( $t_config_var_value );
+
+	foreach ( $t_enum_values as $t_key => $t_value ) {
+		if ( $p_val == $t_key ) 
+			return plugin_get_enum_element ( $p_enum_name, $t_key );
+	}
+	
+	return null;
 }
 
 /***
@@ -250,8 +262,7 @@ function print_resource_unavailability_list( $p_user_id ) {
 	# First print an empty entry to avoid accidental deletion!
 	echo '<option value="" selected="selected"></option>';
 
-	$t_config_var_value = plugin_config_get( 'unavailability_types' );
-	$t_enum_values      = MantisEnum::getAssocArrayIndexedByValues( $t_config_var_value );
+	$t_enum_values      = plugin_lang_get_enum ( 'unavailability_types' ); 
 	while ( $t_row = db_fetch_array( $t_result ) ) {
 		$t_period_string =
 			date( config_get( 'short_date_format' ), $t_row["start_date"] ) . ' - ' .

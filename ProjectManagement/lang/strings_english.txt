@@ -151,4 +151,17 @@
 	$s_plugin_ProjectManagement_friday = 'friday';
 	$s_plugin_ProjectManagement_saturday = 'saturday';
 	$s_plugin_ProjectManagement_sunday = 'sunday';
-?>
+	
+	$s_plugin_ProjectManagement_January = 'January';
+	$s_plugin_ProjectManagement_February = 'February';
+	$s_plugin_ProjectManagement_March = 'March';
+	$s_plugin_ProjectManagement_April = 'April';
+	$s_plugin_ProjectManagement_May = 'May';
+	$s_plugin_ProjectManagement_June = 'June';
+	$s_plugin_ProjectManagement_July = 'July';
+	$s_plugin_ProjectManagement_August = 'August';
+	$s_plugin_ProjectManagement_September = 'September';
+	$s_plugin_ProjectManagement_October = 'October';
+	$s_plugin_ProjectManagement_November = 'November';
+	$s_plugin_ProjectManagement_December = 'December';
+

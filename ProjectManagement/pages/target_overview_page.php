@@ -102,7 +102,7 @@ if ( access_has_global_level( plugin_config_get( 'view_all_targets_threshold' ) 
 		$t_category_name  = $row["category_name"];
 		$t_bug_id    	  = string_get_bug_view_link( $row['bug_id'], null, false );
 		$t_bug_summary    = $row["summary"];
-		$t_work_type	  = MantisEnum::getLabel( plugin_config_get( "work_types" ), $row["work_type"] );
+		$t_work_type	  = plugin_get_enum_element( 'work_types', $row["work_type"]  );
 		$t_target_date    = date( config_get( 'short_date_format' ), $row["target_date"] );
 
 		$t_days_overdue       = days_between( $row["target_date"] ) * -1;

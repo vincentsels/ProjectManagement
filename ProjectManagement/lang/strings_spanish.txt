@@ -1,5 +1,6 @@
 <?php
-  $s_plugin_ProjectManagement_title = 'Gestion de proyectos'; 
+	$s_plugin_ProjectManagement_ein = '';
+    $s_plugin_ProjectManagement_title = 'Gestion de proyectos'; 
 	$s_plugin_ProjectManagement_configuration = 'Configuracion';
 	$s_plugin_ProjectManagement_settings_updated = 'Parametros actualizados';
    
@@ -148,4 +149,17 @@
 	$s_plugin_ProjectManagement_friday = 'viernes';
 	$s_plugin_ProjectManagement_saturday = 'sabado';
 	$s_plugin_ProjectManagement_sunday = 'domingo';
+	
+	$s_plugin_ProjectManagement_January = 'Enero';
+	$s_plugin_ProjectManagement_February = 'Febrero';
+	$s_plugin_ProjectManagement_March = 'Marzo';
+	$s_plugin_ProjectManagement_April = 'Abril';
+	$s_plugin_ProjectManagement_May = 'Mayo';
+	$s_plugin_ProjectManagement_June = 'Junio';
+	$s_plugin_ProjectManagement_July = 'Julio';
+	$s_plugin_ProjectManagement_August = 'Agosto';
+	$s_plugin_ProjectManagement_September = 'Septiembre';
+	$s_plugin_ProjectManagement_October = 'Octubre';
+	$s_plugin_ProjectManagement_November = 'Noviembre';
+	$s_plugin_ProjectManagement_December = 'Diciembre';
 ?>

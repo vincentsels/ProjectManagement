@@ -517,9 +517,9 @@ class ProjectManagementPlugin extends MantisPlugin {
 			$t_todo = get_actual_work_todo( $t_work );
 
 			echo '<tr ' . helper_alternate_class() . '>';
-			echo '<td class="category">Est</td><td>' . minutes_to_time( $t_est, true ) . '</td>
-			<td class="category">Done</td><td>' . minutes_to_time( $t_done, false ) . '</td>
-			<td class="category">Todo</td><td>' . minutes_to_time( $t_todo, true ) . '</td></tr>';
+			echo '<td class="category">' . plugin_lang_get( 'est' ) . '</td><td>' . minutes_to_time( $t_est, true ) . '</td>
+			<td class="category">' . plugin_lang_get( 'done' ) . '</td><td>' . minutes_to_time( $t_done, false ) . '</td>
+			<td class="category">' . plugin_lang_get( 'todo' ) . '</td><td>' . minutes_to_time( $t_todo, true ) . '</td></tr>';
 		}
 
 		# Fetch customer payment summary
@@ -575,7 +575,7 @@ class ProjectManagementPlugin extends MantisPlugin {
 		$t_result_fetch_todo = db_query_bound( $t_query_fetch_todo );
 
 		# Get the different worktypes as an array
-		$t_work_types = MantisEnum::getAssocArrayIndexedByValues( plugin_config_get( 'work_types' ) );
+		$t_work_types = plugin_lang_get_enum( 'work_types' );
 
 		# Remove worktypes which are off limits for this account
 		$t_limited_work_types = plugin_config_get( 'work_type_thresholds' );

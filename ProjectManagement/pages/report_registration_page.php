@@ -20,7 +20,7 @@ $t_user_table     = db_get_table( 'mantis_user_table' );
 $t_bug_table      = db_get_table( 'mantis_bug_table' );
 $t_project_table  = db_get_table( 'mantis_project_table' );
 $t_category_table = db_get_table( 'mantis_category_table' );
-$t_work_types     = MantisEnum::getAssocArrayIndexedByValues( plugin_config_get( 'work_types' ) );
+$t_work_types     = plugin_lang_get_enum( 'work_types' );
 $t_customer_work_type_exclusion_clause = build_customer_worktype_exclude_clause('work_type');
 
 $t_const_done = PLUGIN_PM_DONE;
@@ -146,7 +146,7 @@ $t_per_category  = array();
 		$t_category_link  = $t_plugin_page . '&category_id=' . $row["category_id"];
 		$t_bug_summary    = $row["bug_summary"];
 		$t_book_date      = date( config_get( 'short_date_format' ), $row["book_date"] );
-		$t_work_type      = MantisEnum::getLabel( plugin_config_get( "work_types" ), $row["work_type"] );
+		$t_work_type      = plugin_get_enum_element( 'work_types', $row["work_type"]  );
 		$t_work_type_link = $t_plugin_page . '&work_type=' . $row["work_type"];
 		$t_hours          = format( $row["minutes"] / 60 );
 		$t_hourly_rate    = format( $row["hourly_rate"] );

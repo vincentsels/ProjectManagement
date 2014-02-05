@@ -33,6 +33,8 @@ if ( $t_project_without_versions ) {
 	echo plugin_lang_get( 'project_without_versions' );
 } else if ( $t_all_versions_selected ) {
 	echo plugin_lang_get( 'all_versions_selected' );
+} else if ( version_get_id( $f_target_version ) === false ) {
+	echo plugin_lang_get( 'project_without_versions' );
 } else {
 	# Release dates of previous and current version
 	$t_release_date_target = version_get_field( version_get_id( $f_target_version ), 'date_order' );
