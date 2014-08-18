@@ -118,3 +118,10 @@ to include the event in their core, if they deem it appropriate.
            AND 
                ut.bugnote_id = nt.id 
 </code></pre>
+
+
+{{code|<php>
+$title    = Title::newFromText($titleText);
+$article  = new Article($title);
+$wikitext = $article->getContent();
+</php>}}
