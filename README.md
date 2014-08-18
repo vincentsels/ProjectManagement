@@ -85,9 +85,9 @@ to include the event in their core, if they deem it appropriate.
         (bug_id, user_id, work_type, minutes_type, minutes, book_date, timestamp) 
             SELECT 
                 bug_id, 
-                3 as user_id, 
+                3 as user_id, -- a real user_id
                 50 as work_type, -- develop
-                0 as minutes_type, -- done
+                0 as minutes_type, -- estimate
                 (estimate*60) as minutes,
                 timestamp as book_date,
                 timestamp
