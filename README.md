@@ -80,7 +80,7 @@ to include the event in their core, if they deem it appropriate.
 ## HowTo - Import data from [timecard plugin](https://github.com/mantisbt-plugins/timecard) to ProjectManagement plugin
 
 * Import timecard estimate table:
-<pre><code>
+```
     INSERT INTO mantis_plugin_ProjectManagement_work_table
         (bug_id, user_id, work_type, minutes_type, minutes, book_date, timestamp) 
             SELECT 
@@ -93,11 +93,11 @@ to include the event in their core, if they deem it appropriate.
                 timestamp
             FROM 
                 mantis_plugin_Timecard_estimate_table 
-</code></pre>
+```
 
 * Import timecard update table:
 
-<pre><code>
+```
     INSERT INTO mantis_plugin_ProjectManagement_work_table
        (bug_id, user_id, work_type, minutes_type, minutes, book_date, timestamp) 
            SELECT 
@@ -117,11 +117,4 @@ to include the event in their core, if they deem it appropriate.
                ut.user_id = nt.reporter_id
            AND 
                ut.bugnote_id = nt.id 
-</code></pre>
-
-
-{{code|<php>
-$title    = Title::newFromText($titleText);
-$article  = new Article($title);
-$wikitext = $article->getContent();
-</php>}}
+```
