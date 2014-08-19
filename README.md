@@ -77,7 +77,9 @@ to include the event in their core, if they deem it appropriate.
 
 * [Array export to Excel](https://github.com/vincentsels/array-export-excel) (introduced at v1.4.0)
 
-## HowTo - Import data from [timecard plugin](https://github.com/mantisbt-plugins/timecard) to ProjectManagement plugin
+## How to 
+
+## Import data from [timecard plugin](https://github.com/mantisbt-plugins/timecard) to ProjectManagement plugin
 
 * Import timecard estimate table:
 ```
