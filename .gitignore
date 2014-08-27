@@ -42,3 +42,4 @@ library/FirePHPCore
 *.zip
 *.rar
 *.patch
+/nbproject/private/
