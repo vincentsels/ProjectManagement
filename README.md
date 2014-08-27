@@ -76,3 +76,47 @@ to include the event in their core, if they deem it appropriate.
 ## Dependencies
 
 * [Array export to Excel](https://github.com/vincentsels/array-export-excel) (introduced at v1.4.0)
+
+## How-to's
+
+## Import data from [timecard plugin](https://github.com/mantisbt-plugins/timecard) to ProjectManagement plugin
+
+* Import timecard estimate table:
+```
+    INSERT INTO mantis_plugin_ProjectManagement_work_table
+        (bug_id, user_id, work_type, minutes_type, minutes, book_date, timestamp) 
+            SELECT 
+                bug_id, 
+                3 as user_id, -- a real user_id
+                50 as work_type, -- develop
+                0 as minutes_type, -- estimate
+                (estimate*60) as minutes,
+                timestamp as book_date,
+                timestamp
+            FROM 
+                mantis_plugin_Timecard_estimate_table 
+```
+
+* Import timecard update table:
+
+```
+    INSERT INTO mantis_plugin_ProjectManagement_work_table
+       (bug_id, user_id, work_type, minutes_type, minutes, book_date, timestamp) 
+           SELECT 
+               ut.bug_id, 
+               ut.user_id, 
+               50 as work_type, -- develop
+               1 as minutes_type, -- done 
+               (ut.spent*60) as minutes,
+               nt.date_submitted as book_date,
+               nt.date_submitted as timestamp
+           FROM 
+               mantis_plugin_Timecard_update_table  ut,
+               mantis_bugnote_table nt
+           WHERE
+               ut.bug_id = nt.bug_id
+           AND
+               ut.user_id = nt.reporter_id
+           AND 
+               ut.bugnote_id = nt.id 
+```
