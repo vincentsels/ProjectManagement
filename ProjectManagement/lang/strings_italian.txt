@@ -15,7 +15,7 @@
 	$s_plugin_ProjectManagement_reports = 'Gestione progetto';
 	$s_plugin_ProjectManagement_time_division = 'Suddivisione tempo';
 	$s_plugin_ProjectManagement_per = 'Per';
-	$s_plugin_ProjectManagement_time_registration = 'Time registration';
+	$s_plugin_ProjectManagement_time_registration = 'Registrazione tempo';
 	$s_plugin_ProjectManagement_time_registration_worksheet = 'Foglio registrazione tempi';
 	$s_plugin_ProjectManagement_time_registration_overview = 'Panoramica ragistrazione tempi';
 	$s_plugin_ProjectManagement_project_progress = 'Avanzamento progetto';
