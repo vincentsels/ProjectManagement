@@ -90,7 +90,7 @@
 	$s_plugin_ProjectManagement_paying_customers = 'Clienti paganti';
 	$s_plugin_ProjectManagement_integration_custom_dev = 'Integration custom development';
 	$s_plugin_ProjectManagement_integration_custom_dev_info = 'Integration of a core functionality with existing custom features.';
-	$s_plugin_ProjectManagement_approving_customers = 'Approving customers';
+	$s_plugin_ProjectManagement_approving_customers = 'Approvazione clienti';
 	$s_plugin_ProjectManagement_general_configuration = 'Configurazione plugin';
 	$s_plugin_ProjectManagement_customer_management = 'Configurazione del cliente';
 	$s_plugin_ProjectManagement_add_new_customer = 'Aggiungi nuovo cliente';
